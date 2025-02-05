@@ -28,6 +28,13 @@ export default function RecipePage() {
             setSizing(btn.dataset.data)
         }
     }
+    let time = "";
+    if (data.time){
+        let th = Math.floor(data.time/60); let tm = data.time%60;
+        console.log(data.time,th,tm)
+        if (th > 0) {time += th + " hr" + (th>1 ? "s " : " ")}
+        if (tm > 0) {time += tm + " min"}
+    }
 
     return (<>
         <Head>
@@ -39,14 +46,14 @@ export default function RecipePage() {
                     {1 === 2 ? <span>FAVE</span> : <></> }
                     <span className={"recipe-name"}>{data.name}</span>
                     <span className={"recipes-category"}>{data.cat}</span>
-                    <span className={"recipe-time"}>{data.time + "M"}</span>
-                    <span style={{position: "absolute", right: 0}}>
+                    <span className={"recipe-time"}>{time}</span>
+                    <button className={"back-btn"}>
                         <a href={"/"}>BACK</a>
-                    </span>
+                    </button>
                 </div>
                 <div className={"sizing"}>
                     <span className={"sizing-text"}>SIZING</span>
-                    {sizingArray.map(x => <button id={x===1 ? "checkedSizingBtn" : ""} className={"sizing-button"} data-data={x} onClick={handleSizing}>{x.toFixed(2) +"x"}</button> )}
+                    {sizingArray.map(x => <button key={"sizing-btn-"+x} id={x===1 ? "checkedSizingBtn" : ""} className={"sizing-button"} data-data={x} onClick={handleSizing}>{x.toFixed(2) +"x"}</button> )}
                 </div>
             </div>
             <div className={"bot"}>

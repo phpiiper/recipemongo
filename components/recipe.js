@@ -4,8 +4,8 @@ export default function Recipe( {recipe} ){
     let time = "";
     if (r.time){
         let th = Math.floor(r.time/60); let tm = r.time%60
-        if (th > 0) {time += th + "H "}
-        if (tm > 0) {time += tm + "M"}
+        if (th > 0) {time += th + " hr" + (th>1 ? "s " : " ")}
+        if (tm > 0) {time += tm + " min"}
     }
 return (
     <div className={"recipe-div"}>
