@@ -97,7 +97,6 @@ export default function Editor({isConnected}) {
         return (<div id={"editor-page"}><h1>NOT CONNECTED</h1><a href="/">[GO BACK]</a></div>)
     }
 
-
     return (
     <div id={"editor-page"}>
         <div id={"editor-page-header"}>
@@ -109,11 +108,10 @@ export default function Editor({isConnected}) {
         <EditorPageMeta recipe={recipe} categories={categories} setRecipe={setRecipe}/>
 
 
-        <div id={"editor-page-steps"} style={{display: "none"}}>
+        <div id={"editor-page-steps"}>
             <h2>STEPS</h2>
             <div className={"edit-steps"}>
                 {recipe.steps.map((value, index) => <EditStep recipe={recipe} key={"step" + index} stepIndex={index} v={value} setRecipe={setRecipe}/>)}
-
             </div>
             <div id={"edit-bot-btns"}>
                 <button onClick={addStepFunc} className={"add"}>+ Add Step</button>

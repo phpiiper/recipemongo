@@ -7,52 +7,6 @@ import KeyboardDoubleArrowDownOutlinedIcon from '@mui/icons-material/KeyboardDou
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 export default function EditIngredient({ ingredient = {}, recipe, Index, setRecipe }) {
-    /*
-      ingredient examples:
-
-    {
-      "ingredient": "Kosher Salt"
-    },
-    {
-      "ingredient": "Black Pepper",
-      "comment": [
-        "Ground"
-      ]
-    },
-    {
-      "ingredient": "Parsley",
-      "comment": [
-        "Fresh, Chopped",
-        "For garnish"
-      ]
-    },
-    {
-      "type": "alternatives",
-      "ingredients": [
-        {
-          "amount": 10.5,
-          "size": "lbs",
-          "ingredient": "Sirloin Roast"
-        },
-        {
-          "amount": 10.5,
-          "size": "lbs",
-          "ingredient": "Beef Tenderloin"
-        }
-      ]
-    }
-
-      recipe example:
-          {
-    "_id": "67a0ef207cb12c99e4bd77c7",
-    "name": "Beef Stroganoff",
-    "cat": "Red Meat",
-    "time": 60,
-    "ingredients": [],
-    "steps": [ ],
-    "id": "VYJ1HJB4"
-  }
-    */
 
     // Ensure ingredient values are never undefined or null
     const safeIngredient = {
@@ -206,13 +160,12 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
 
     return (
         <div className={"edit-ingredient-div"}>
-            <button onClick={del}><RemoveIcon /></button>
             <TextField
                 id="amount"
                 value={safeIngredient.amount}
                 onChange={handleInputChange}
                 placeholder={"##"}
-                style={{ width: "4rem" }}
+                style={{ width: "4rem", minWidth: "4rem" }}
                 inputProps={{
                     'aria-label': 'amount'
                 }}
@@ -222,35 +175,42 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 value={safeIngredient.size}
                 onChange={handleInputChange}
                 placeholder={"Measurement"}
-                style={{ width: "10rem" }}
+                style={{ width: "10rem", minWidth: "8rem" }}
                 inputProps={{
                     'aria-label': 'size'
                 }}
             />
-            <button onClick={(e) => paste(e, "ingredient")}><ContentPasteGoOutlinedIcon /></button>
-            <TextField
-                id="ingredient"
-                value={safeIngredient.ingredient}
-                onChange={handleInputChange}
-                placeholder={"Ingredient Name"}
-                style={{ width: "15rem" }}
-                inputProps={{
-                    'aria-label': 'ingredient'
-                }}
-            />
-            <button onClick={(e) => paste(e, "comment")}><ContentPasteGoOutlinedIcon /></button>
-            <TextField
-                id="comment"
-                value={safeIngredient.comment}
-                onChange={handleInputChange}
-                placeholder={"Comments"}
-                style={{ width: "13rem" }}
-                inputProps={{
-                    'aria-label': 'comment'
-                }}
-            />
-            <button onClick={() => move("up")}><KeyboardDoubleArrowUpOutlinedIcon /></button>
-            <button onClick={() => move("down")}><KeyboardDoubleArrowDownOutlinedIcon /></button>
+            <div style={{display: "flex", gap: "0.5rem"}}>
+                <button onClick={(e) => paste(e, "ingredient")}><ContentPasteGoOutlinedIcon /></button>
+                <TextField
+                    id="ingredient"
+                    value={safeIngredient.ingredient}
+                    onChange={handleInputChange}
+                    placeholder={"Ingredient Name"}
+                    style={{ width: "15rem" }}
+                    inputProps={{
+                        'aria-label': 'ingredient'
+                    }}
+                />
+            </div>
+            <div style={{display: "flex", gap: "0.5rem"}}>
+                <button onClick={(e) => paste(e, "comment")}><ContentPasteGoOutlinedIcon /></button>
+                <TextField
+                    id="comment"
+                    value={safeIngredient.comment}
+                    onChange={handleInputChange}
+                    placeholder={"Comments"}
+                    style={{ width: "13rem" }}
+                    inputProps={{
+                        'aria-label': 'comment'
+                    }}
+                />
+            </div>
+            <div className={"last"} style={{display: "flex", gap: "0.5rem", justifyContent: "right"}}>
+                <button onClick={() => move("up")}><KeyboardDoubleArrowUpOutlinedIcon /></button>
+                <button onClick={() => move("down")}><KeyboardDoubleArrowDownOutlinedIcon /></button>
+                <button style={{marginLeft:"2rem"}} onClick={del}><RemoveIcon /></button>
+            </div>
         </div>
     );
 }
