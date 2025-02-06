@@ -41,6 +41,14 @@ export default function RecipePage() {
         <Head>
             <title>{"RecipesV4" + " | " + data.name}</title>
         </Head>
+        <style>
+            <style jsx global>{`
+           html,body {
+             height: 100% !important;
+             overflow: hidden !important;
+           }
+         `}</style>
+        </style>
         <div id={"recipe-page"}>
             <div className={"top"}>
                 <div className={"meta"}>
@@ -65,7 +73,7 @@ export default function RecipePage() {
                 </div>
                 <div id={"ingredients-div"}>
                     <h1>INGREDIENTS</h1>
-                    {ig.map((x,index) => <Ingredient ingredient={x} key={data.id + "-i-" + index} sizing={sizing}/>) }
+                    {ig.map((x,index) => <Ingredient ingredient={x} key={data.id + "-i-" + index} sizing={sizing} index={index}/>) }
                 </div>
             </div>
         </div>

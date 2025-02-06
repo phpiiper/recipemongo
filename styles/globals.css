@@ -111,8 +111,6 @@ h1 {
   border: 2px solid black;
   padding: 0.5rem;
 }
-
-
 .ingredient-div-category {
   border: 2px solid black;
   padding: 0.5rem;
@@ -243,7 +241,7 @@ input#edit-time {width: 4rem;}
 #editor-page-steps, #editor-page-ingredients {
   width: 98%; padding: 0.5rem;
   border: 2px solid black;
-  max-height: 550px;
+  max-height: 550px; /* 550px */
   overflow: auto;
   display: flex; flex-direction: column;
   gap: 0.5rem;
@@ -397,3 +395,10 @@ input#edit-time {width: 4rem;}
   border: none;
 }
 } /* END MEDIA QUERY */
+
+@media (max-width: 1200px){
+  #recipe-page #steps-div, #recipe-page #ingredients-div {
+    max-height: 400px; /* 550px */
+    max-height: calc(100vh - 50px - 115px - 4rem);
+  }
+}

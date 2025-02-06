@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Fraction from "fraction.js";
-export default function Ingredient( {ingredient, sizing=1} ){
+export default function Ingredient( {ingredient, index=0, sizing=1} ){
     let i = ingredient; let amount;
     if (i.amount){
         let amt = Array.isArray(i.amount) ? i.amount.map(x => x*sizing) : (i.amount * sizing);
@@ -22,7 +22,7 @@ export default function Ingredient( {ingredient, sizing=1} ){
             <div className={"ingredient-div-category"}>
                 <span>{i.type.toUpperCase()}</span>
                 {i.ingredients.map((x) => (
-                <div className={"ingredient-div-category-item"} key={crypto.randomUUID()}>
+                <div className={"ingredient-div-category-item"} key={"ing-cat-"+index}>
                     <span>{">"}</span>
                     <Ingredient ingredient={x} sizing={sizing}/>
                 </div>
