@@ -33,7 +33,6 @@ export default function RecipePage() {
     let time = "";
     if (data.time){
         let th = Math.floor(data.time/60); let tm = data.time%60;
-        console.log(data.time,th,tm)
         if (th > 0) {time += th + " hr" + (th>1 ? "s " : " ")}
         if (tm > 0) {time += tm + " min"}
     }
@@ -56,7 +55,7 @@ export default function RecipePage() {
                 </div>
                 <div className={"sizing"}>
                     <span className={"sizing-text"}>SIZING</span>
-                    {sizingArray.map(x => <button key={"sizing-btn-"+x} id={x===1 ? "checkedSizingBtn" : ""} className={"sizing-button"} data-data={x}>{x.toFixed(2) +"x"}</button> )}
+                    {sizingArray.map(x => <button key={"sizing-btn-"+x} id={x===1 ? "checkedSizingBtn" : ""} className={"sizing-button"} data-data={x} onClick={handleSizing}>{x.toFixed(2) +"x"}</button> )}
                 </div>
             </div>
             <div className={"bot"}>

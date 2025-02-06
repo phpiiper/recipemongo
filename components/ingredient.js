@@ -24,7 +24,7 @@ export default function Ingredient( {ingredient, sizing=1} ){
                 {i.ingredients.map((x) => (
                 <div className={"ingredient-div-category-item"} key={crypto.randomUUID()}>
                     <span>{">"}</span>
-                    <Ingredient ingredient={x}/>
+                    <Ingredient ingredient={x} sizing={sizing}/>
                 </div>
                 ))}
             </div>
