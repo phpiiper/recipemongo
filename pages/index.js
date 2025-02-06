@@ -1,6 +1,9 @@
+"use client"
 import client from "@/lib/mongoconnect";
 import * as React from "react";
-import RecipeList from "@/components/recipelist"
+import RecipeList from "@/components/recipelist";
+import { signIn, signOut, useSession } from "next-auth/react"
+
 export const getServerSideProps = async () => {
   try {
     await client.connect();
@@ -17,11 +20,32 @@ export const getServerSideProps = async () => {
 
 
 export default function Home({isConnected}) {
+    const { status } = useSession();
+  const testFunc = function(){
+    fetch('/api/recipe.handler', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          name: 'Fake Recipe'
+        }),
+    })
+        .then((response) => response.json())
+        .then((data) => console.log(data));
+  }
   return (
     <>
       {isConnected ? (<div id={"content"}>
-            <h1 style={{textAlign:"center"}}>Recipes V4</h1>
-              <RecipeList />
+            <div id={"home-bar"}>
+              {(status === "unauthenticated") ? <button onClick={() => signIn()}>Sign in</button> : <></>}
+              {(status === "authenticated") ?
+                  <button onClick={() => signOut()}>Sign Out</button> : <></>}
+              <h1 style={{textAlign:"center"}}>Recipes V4</h1>
+              {(status === "authenticated") ?
+                  <button><a href={"editor"}>Recipe Editor</a></button> : <></>}
+            </div>
+              <RecipeList status={status === "authenticated"}/>
           </div>
       ) : (
         <h1>NOT CONNECTED</h1>

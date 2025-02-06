@@ -5,9 +5,11 @@ import * as React from "react";
 import Ingredient from "@/components/ingredient"
 import Step from "@/components/step"
 import {useState} from "react";
+import { useSession } from "next-auth/react"
 const fetcher = (url) => fetch(url).then(res => res.json())
 
 export default function RecipePage() {
+    const { status } = useSession();
     const [sizing, setSizing] = useState(1);
     const r = useRouter();
     const { recipe_id } = r.query;
@@ -44,6 +46,7 @@ export default function RecipePage() {
             <div className={"top"}>
                 <div className={"meta"}>
                     {1 === 2 ? <span>FAVE</span> : <></> }
+                    {status === "authenticated" ? <a href={"../editor?id=" + recipe_id}>[EDIT RECIPE]</a> : <></> }
                     <span className={"recipe-name"}>{data.name}</span>
                     <span className={"recipes-category"}>{data.cat}</span>
                     <span className={"recipe-time"}>{time}</span>
@@ -53,7 +56,7 @@ export default function RecipePage() {
                 </div>
                 <div className={"sizing"}>
                     <span className={"sizing-text"}>SIZING</span>
-                    {sizingArray.map(x => <button key={"sizing-btn-"+x} id={x===1 ? "checkedSizingBtn" : ""} className={"sizing-button"} data-data={x} onClick={handleSizing}>{x.toFixed(2) +"x"}</button> )}
+                    {sizingArray.map(x => <button key={"sizing-btn-"+x} id={x===1 ? "checkedSizingBtn" : ""} className={"sizing-button"} data-data={x}>{x.toFixed(2) +"x"}</button> )}
                 </div>
             </div>
             <div className={"bot"}>
