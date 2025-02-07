@@ -21,19 +21,6 @@ export const getServerSideProps = async () => {
 
 export default function Home({isConnected}) {
     const { status } = useSession();
-  const testFunc = function(){
-    fetch('/api/recipe.handler', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-          name: 'Fake Recipe'
-        }),
-    })
-        .then((response) => response.json())
-        .then((data) => console.log(data));
-  }
   return (
     <>
       {isConnected ? (<div id={"content"}>

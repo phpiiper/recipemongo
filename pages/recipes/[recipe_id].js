@@ -73,7 +73,7 @@ export default function RecipePage() {
                 </div>
                 <div id={"ingredients-div"}>
                     <h1>INGREDIENTS</h1>
-                    {ig.map((x,index) => <Ingredient ingredient={x} key={data.id + "-i-" + index} sizing={sizing} index={index}/>) }
+                    {ig.map((x,index) => <Ingredient ingredient={x} key={data.id + "-i-" + index} sizing={sizing} ingIndex={index}/>) }
                 </div>
             </div>
         </div>

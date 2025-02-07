@@ -1,6 +1,6 @@
 import * as React from "react";
 import TextField from '@mui/material/TextField';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import RemoveIcon from '@mui/icons-material/Remove';
 import ContentPasteGoOutlinedIcon from '@mui/icons-material/ContentPasteGoOutlined';
 import KeyboardDoubleArrowUpOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowUpOutlined';
 import KeyboardDoubleArrowDownOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowDownOutlined';
@@ -52,7 +52,7 @@ export default function EditStep({v, recipe, stepIndex, setRecipe}) {
             />
             <div className={"edit-step-options"}>
                 <button onClick={paste}><ContentPasteGoOutlinedIcon /></button>
-                <button onClick={del}><DeleteOutlinedIcon /></button>
+                <button onClick={del}><RemoveIcon /></button>
                 <button onClick={() => move("up")}><KeyboardDoubleArrowUpOutlinedIcon /></button>
                 <button onClick={() => move("down")}><KeyboardDoubleArrowDownOutlinedIcon /></button>
             </div>

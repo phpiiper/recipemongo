@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoClient } from 'mongodb';
-import { compare } from 'bcryptjs';
+import { compare } from 'bcrypt';
 
 export default NextAuth({
     session: {
@@ -25,7 +25,7 @@ export default NextAuth({
                     }
 
                     // const checkPassword = await compare(credentials.password, result.password);
-                    const checkPassword = await (credentials.password == result.password)
+                    const checkPassword = await compare(credentials.password, result.password)
                     if (!checkPassword) {
                         throw new Error('Password doesn’t match');
                     }

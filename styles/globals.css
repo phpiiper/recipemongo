@@ -220,6 +220,10 @@ h1 {
   gap: 1rem;
 }
 #editor-page h1 {text-align: center;}
+#editor-page-ingredients > h2, #editor-page-steps > h2  {
+  font-size: 1.25rem;
+  text-align: center;
+}
 #editor-page-header {
   display: flex; gap: 1rem;
   align-items: center;
@@ -338,7 +342,31 @@ input#edit-time {width: 4rem;}
   gap: 0.5rem;
 }
 
+#recipe-editor-helper {
+  margin: 2rem;
+  padding: 1rem;
+  background-color: white;
+  height: calc(100% - 4rem);
+  display: flex; flex-direction: column;
+  gap: 0.5rem;
+  overflow: auto;
+}
+#recipe-editor-helper .container {
+  padding: 1rem; border: 2px solid black;
+  display: flex; flex-direction: column;
+  gap: 0.5rem;
+}
+#recipe-editor-helper .symbol-help {
+  display: flex; gap: 1rem;
+  align-items: center;
 
+}
+
+
+
+
+
+/* MEDIA QUERIES */
 
 @media (max-width: 600px){
   #recipe-page {
@@ -398,7 +426,6 @@ input#edit-time {width: 4rem;}
 
 @media (max-width: 1200px){
   #recipe-page #steps-div, #recipe-page #ingredients-div {
-    max-height: 400px; /* 550px */
     max-height: calc(100vh - 50px - 115px - 4rem);
   }
 }
