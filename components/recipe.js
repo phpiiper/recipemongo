@@ -1,4 +1,6 @@
 import * as React from 'react';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import EditIcon from '@mui/icons-material/Edit';
 export default function Recipe( {recipe, status} ){
     let r = recipe;
     let time = "";
@@ -10,11 +12,11 @@ export default function Recipe( {recipe, status} ){
 return (
     <div className={"recipe-div"}>
         <span className={"recipe-category"}>{r.cat}</span>
-        <span className={"recipe-name"}>{r.name}</span>
+        <span className={"recipe-name"}><a href={`/recipes/${r.id}`}>{r.name}</a></span>
         <span className={"recipe-time"}>{time}</span>
         <div style={{display: "flex", gap: "1rem"}}>
-            <button className={"recipes-button"}><a href={`/recipes/${r.id}`}>VIEW</a></button>
-            {status ? (<button className={"recipes-button"}><a href={`/editor?id=${r.id}`}>EDIT</a></button>) : <></>}
+            <button className={"recipes-button"}><a href={`/recipes/${r.id}`}><MenuBookIcon /></a></button>
+            {status ? (<button className={"recipes-button"}><a href={`/editor?id=${r.id}`}><EditIcon /></a></button>) : <></>}
         </div>
     </div>
         )

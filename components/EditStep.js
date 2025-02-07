@@ -8,7 +8,6 @@ import KeyboardDoubleArrowDownOutlinedIcon from '@mui/icons-material/KeyboardDou
 export default function EditStep({v, recipe, stepIndex, setRecipe}) {
     // >>> HANDLERS <<< //
     const handleInputChange = (e, newValue) => {
-        console.log(e.target.value)
         let newV = newValue || e.target.value
         setRecipe((prevRecipe) => ({
             ...prevRecipe,

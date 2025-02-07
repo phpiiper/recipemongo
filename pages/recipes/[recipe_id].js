@@ -6,6 +6,7 @@ import Ingredient from "@/components/ingredient"
 import Step from "@/components/step"
 import {useState} from "react";
 import { useSession } from "next-auth/react"
+import EditIcon from '@mui/icons-material/Edit';
 const fetcher = (url) => fetch(url).then(res => res.json())
 
 export default function RecipePage() {
@@ -53,7 +54,7 @@ export default function RecipePage() {
             <div className={"top"}>
                 <div className={"meta"}>
                     {1 === 2 ? <span>FAVE</span> : <></> }
-                    {status === "authenticated" ? <a href={"../editor?id=" + recipe_id}>[EDIT RECIPE]</a> : <></> }
+                    {status === "authenticated" ? <a href={"../editor?id=" + recipe_id}><EditIcon /></a> : <></> }
                     <span className={"recipe-name"}>{data.name}</span>
                     <span className={"recipes-category"}>{data.cat}</span>
                     <span className={"recipe-time"}>{time}</span>

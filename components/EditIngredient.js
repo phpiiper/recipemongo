@@ -169,6 +169,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 inputProps={{
                     'aria-label': 'amount'
                 }}
+                label="Amount"
             />
             <TextField
                 id="size"
@@ -179,6 +180,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 inputProps={{
                     'aria-label': 'size'
                 }}
+                label="Measurement"
             />
             <div style={{display: "flex", gap: "0.5rem"}}>
                 <button onClick={(e) => paste(e, "ingredient")}><ContentPasteGoOutlinedIcon /></button>
@@ -191,6 +193,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                     inputProps={{
                         'aria-label': 'ingredient'
                     }}
+                    label="Ingredient Name"
                 />
             </div>
             <div style={{display: "flex", gap: "0.5rem"}}>
@@ -204,6 +207,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                     inputProps={{
                         'aria-label': 'comment'
                     }}
+                    label="Comments"
                 />
             </div>
             <div className={"last"} style={{display: "flex", gap: "0.5rem", justifyContent: "right"}}>

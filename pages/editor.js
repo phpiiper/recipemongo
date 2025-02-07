@@ -11,6 +11,13 @@ import ContentPasteGoOutlinedIcon from '@mui/icons-material/ContentPasteGoOutlin
 import KeyboardDoubleArrowUpOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowUpOutlined';
 import KeyboardDoubleArrowDownOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowDownOutlined';
 import RemoveIcon from '@mui/icons-material/Remove';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import AddToQueueIcon from '@mui/icons-material/AddToQueue';
+import CodeIcon from '@mui/icons-material/Code';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -44,8 +51,11 @@ export default function Editor({ isConnected }) {
     const [categories, setCategories] = useState([]);
     const [allRecipes, setAllRecipes] = useState([]);
     const [open, setOpen] = React.useState(false);
+    const [openConfirmation, setOpenConfirmation] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const handleOpenConf = () => setOpenConfirmation(true);
+    const handleCloseConf = () => setOpenConfirmation(false);
 
     useEffect(() => {
         if (status === "authenticated") {
@@ -182,18 +192,48 @@ export default function Editor({ isConnected }) {
     return (
         <div id={"editor-page"}>
             <div id={"editor-page-header"}>
+                <button onClick={() => {console.log(recipe)}}>
+                    <CodeIcon />
+                </button>
+                <button onClick={handleOpen}><HelpOutlineIcon /></button>
                 <h1>Recipes V4 Editor</h1>
                 <button>
-                    <a href={"/"}>[GO BACK]</a>
+                    <a href={id ? `recipes/${id}` : "/"}> <ExitToAppIcon /> </a>
                 </button>
-                <button onClick={() => console.log(recipe)}>[LOG RECIPE]</button>
-                <button onClick={handleOpen}>[Help Guide]</button>
-                <button onClick={handlePush}>[Add to Database]</button>
+                <button onClick={handleOpenConf}>
+                   <AddToQueueIcon />
+                </button>
+                <Dialog
+                    open={openConfirmation}
+                    onClose={handleCloseConf}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogContent>
+                        Confirming you want to push this recipe as is to the database.
+                    </DialogContent>
+                    <DialogActions>
+                        <button onClick={handleCloseConf}>No</button>
+                        <button onClick={() => {handleCloseConf();  handlePush()}} autoFocus>
+                            Yes
+                        </button>
+                    </DialogActions>
+                </Dialog>
                 <Modal open={open} onClose={handleClose}>
                     <div id={"recipe-editor-helper"}>
                         <h1>Recipe Help Guide</h1>
                         <div className={"container"}>
                             <h2>SYMBOLS</h2>
+                            <h3>General</h3>
+                            <div className={"symbol-help"}>
+                                <AddToQueueIcon />
+                                <span>Push This to Database</span>
+                            </div>
+                            <div className={"symbol-help"}>
+                            <ExitToAppIcon />
+                            <span>Leave Editor (go back to recipe if not new)</span>
+                            </div>
+                            <h3>Editing</h3>
                             <div className={"symbol-help"}>
                                 <ContentPasteGoOutlinedIcon />
                                 <span>Paste Clipboard to Input (to the right of it for Ingredients)</span>
@@ -210,6 +250,28 @@ export default function Editor({ isConnected }) {
                                 <KeyboardDoubleArrowDownOutlinedIcon />
                                 <span>Move This DOWN</span>
                             </div>
+                            <h3>General</h3>
+                            <div className={"symbol-help"}>
+                                <CodeIcon />
+                                <span>DEBUG: View Recipe in console</span>
+                            </div>
+                        </div>
+                        <div className={"container"}>
+                            <h2>Ingredients</h2>
+                            <i>Properties</i>
+                            <ul>
+                                <li>[Required] [Text] Name - The name of the recipe (Lemon)</li>
+                                <li>[Optional] [Text] Measurement - The measurement method of the ingredient (Large)</li>
+                                <li>[Optional] [Num] [-] Amount - The numeric amount of an ingredient (2)</li>
+                                <li>[Optional] [Text] Comments - The extra comments for an ingredient (zested)</li>
+                            </ul>
+                        </div>
+                        <div className={"container"}>
+                            <h2>Notes</h2>
+                            <ul>
+                                <li>Scroll down the editor to view the Ingredients!</li>
+                                <li>Use the extra space to the right to scroll down without scrolling down the Ingredient container!</li>
+                            </ul>
                         </div>
                     </div>
                 </Modal>
@@ -221,7 +283,7 @@ export default function Editor({ isConnected }) {
                 <h2>STEPS</h2>
                 <div className={"edit-steps"}>
                     {recipe.steps.map((value, index) => (
-                        <EditStep key={"step" + index} stepIndex={index} v={value} setRecipe={setRecipe} />
+                        <EditStep key={"step" + index} stepIndex={index} v={value} setRecipe={setRecipe} recipe={recipe}/>
                     ))}
                 </div>
                 <div id={"edit-bot-btns"}>
@@ -237,7 +299,7 @@ export default function Editor({ isConnected }) {
             <div id={"editor-page-ingredients"}>
                 <h2>Ingredients</h2>
                 {recipe.ingredients.map((value, index) => (
-                    <EditIngredient key={"ingredient" + index} Index={index} ingredient={value} setRecipe={setRecipe} />
+                    <EditIngredient key={"ingredient" + index} Index={index} ingredient={value} setRecipe={setRecipe} recipe={recipe}/>
                 ))}
                 <div id={"edit-bot-btns"}>
                     <button onClick={addIngrFunc} className={"add"}>

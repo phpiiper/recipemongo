@@ -30,14 +30,12 @@ export default function EditorPageMeta({recipe, categories, setRecipe}) {
 
     return (
             <div id={"editor-page-meta"}>
-            <OutlinedInput
+            <TextField
                 id="name"
                 placeholder={"Recipe Name"}
-                inputProps={{
-                    'aria-label': 'name'
-                }}
                 onChange={(e, newValue) => handleInputChange(e, newValue)}
                 value={recipe.name}
+                label="Recipe Name"
             />
 
                 <OutlinedInput
