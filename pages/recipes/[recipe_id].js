@@ -15,7 +15,11 @@ export default function RecipePage() {
     const r = useRouter();
     const { recipe_id } = r.query;
     let { data, error } = useSWR(recipe_id ? `/api/getrecipe?id=${recipe_id}` : null, recipe_id ? fetcher : null)
-    if (error) return <div>Failed to load: {JSON.stringify(error) +"|||"+recipe_id}</div>
+    if (error) return (<div style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: "2rem", padding: "2rem"}}>
+        <h2>Unknown Recipe (or invalid access)</h2>
+        <button><a href={"/"}>GO BACK</a></button>
+
+    </div>)
     if (!data) return <div />
     if (JSON.stringify(data) === "{}" || data.error){
         return(<div>"Not available."</div>)
@@ -47,6 +51,12 @@ export default function RecipePage() {
            html,body {
              height: 100% !important;
              overflow: hidden !important;
+           }
+           @media (max-width: 500px){
+             html,body {
+               height: revert !important;
+               overflow: revert !important;
+             }
            }
          `}</style>
         </style>

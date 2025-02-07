@@ -5,9 +5,19 @@ import ContentPasteGoOutlinedIcon from '@mui/icons-material/ContentPasteGoOutlin
 import KeyboardDoubleArrowUpOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowUpOutlined';
 import KeyboardDoubleArrowDownOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowDownOutlined';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Alert from '@/components/Alert';
+import Snackbar from '@mui/material/Snackbar';
 
 export default function EditIngredient({ ingredient = {}, recipe, Index, setRecipe }) {
-
+    // >>>> SNACK BAR <<< //
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    const [snackbarText, setSnackbarText] = React.useState("Alert!");
+    const handleClickSnackBar = () => { setOpenSnackBar(true);};
+    const handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') { return; }
+        setOpenSnackBar(false);
+    };
+    // >>> END SNACKBAR <<< //
     // Ensure ingredient values are never undefined or null
     const safeIngredient = {
         ingredient: ingredient.ingredient || "",
@@ -31,6 +41,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 ...prevRecipe,
                 "ingredients": prevRecipe.ingredients.map((value, index) => Index === index ? newIngr : value),
             }));
+            return true
         } else if (Array.isArray(Index)) {
             let ev = e.target.value;
             // NESTED
@@ -43,16 +54,20 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
             }
             ingrTrain.at(-1).ingredients[Index.at(-1)][e.target.id] = ev;
             setRecipe(newRec);
+            return true
         } else {
             console.log("err", Index);
         }
+        return false
     };
 
-    const del = () => {
+    const del = (func) => {
         let newRecipe = JSON.parse(JSON.stringify(recipe));
         if (typeof Index === "number") {
+            if (func) {  func();  }
             newRecipe.ingredients = newRecipe.ingredients.filter((value, index) => Index !== index);
             setRecipe(newRecipe);
+            return true
         } else {
             let ingrTrain = [];
             let rec = newRecipe;
@@ -61,7 +76,9 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 ingrTrain.push(rec);
             }
             ingrTrain.at(-1).ingredients = ingrTrain.at(-1).ingredients.filter((value, index) => index !== Index.at(-1));
+            if (func) {  func();  }
             setRecipe(newRecipe);
+            return true
         }
     };
 
@@ -74,6 +91,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 newRecipe.ingredients[Index] = newRecipe.ingredients[newInd];
                 newRecipe.ingredients[newInd] = temp;
                 setRecipe(newRecipe);
+                return true
             }
         } else {
             let ingrTrain = [];
@@ -90,21 +108,26 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 last.ingredients[curInd] = last.ingredients[newInd];
                 last.ingredients[newInd] = temp;
                 setRecipe(newRecipe);
+                return true
             }
         }
+        return false
     };
 
-    const paste = async (e, key) => {
+    const paste = async (e, key, func) => {
         if (typeof Index === "number") {
             const text = await navigator.clipboard.readText();
             if (text) {
                 let newRecipe = JSON.parse(JSON.stringify(recipe));
                 newRecipe.ingredients[Index][key] = text;
                 setRecipe(newRecipe);
+                if (func) {  func();  }
+                return true
             }
         } else {
             console.log("AHH");
         }
+        return false
     };
 
     const addNew = (type) => {
@@ -125,14 +148,17 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                     rec.ingredients = [];
                 }
                 rec.ingredients.push(newType);
+                return true
             } else {
                 // Traverse to the next level
                 const nextIndex = indexArray[0];
                 if (rec.ingredients && rec.ingredients[nextIndex]) {
                     // Recursively move to the next ingredient in the array
                     addRecursively(rec.ingredients[nextIndex], indexArray.slice(1));
+                    return true
                 }
             }
+            return false
         };
 
         // Start the recursion from the root of the recipe
@@ -142,11 +168,26 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
         setRecipe(newRecipe);
     };
 
+
+
+
+
+
+
+
+
     if (ingredient.type) {
         return (
             <div className={"edit-ingredient-group-div"}>
+                <Snackbar
+                    anchorOrigin={{vertical: "top", horizontal: "center"}}
+                    open={openSnackBar}
+                    autoHideDuration={1000}
+                    onClose={handleSnackBarClose}
+                    message={snackbarText}
+                />
                 <div className={"top"}>
-                    <button onClick={del}><RemoveIcon /></button>
+                    <button onClick={() => {del(() => {handleClickSnackBar(); setSnackbarText("Deleted Group")})}}><RemoveIcon /></button>
                     <h1>{ingredient.type.toUpperCase()}</h1>
                     <button className={"border-btn"} onClick={() => { addNew("ingr"); }}>Add Ingredient</button>
                     <button className={"border-btn"} onClick={() => { addNew("group"); }}>Add Group</button>
@@ -160,6 +201,19 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
 
     return (
         <div className={"edit-ingredient-div"}>
+            <Snackbar
+                anchorOrigin={{vertical: "top", horizontal: "center"}}
+                open={openSnackBar}
+                autoHideDuration={1000}
+                onClose={handleSnackBarClose}
+                message={snackbarText}
+            />
+            <button
+                onClick={() =>
+                {
+                    del(() => { handleClickSnackBar(); setSnackbarText("Deleted!")})
+                }}
+            >  <RemoveIcon />  </button>
             <TextField
                 id="amount"
                 value={safeIngredient.amount}
@@ -183,7 +237,9 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 label="Measurement"
             />
             <div style={{display: "flex", gap: "0.5rem"}}>
-                <button onClick={(e) => paste(e, "ingredient")}><ContentPasteGoOutlinedIcon /></button>
+                <button onClick={(e) => paste(e, "ingredient", function(){
+                    handleClickSnackBar(); setSnackbarText("Pasted Ingredient Name!")
+                })}><ContentPasteGoOutlinedIcon /></button>
                 <TextField
                     id="ingredient"
                     value={safeIngredient.ingredient}
@@ -197,7 +253,9 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 />
             </div>
             <div style={{display: "flex", gap: "0.5rem"}}>
-                <button onClick={(e) => paste(e, "comment")}><ContentPasteGoOutlinedIcon /></button>
+                <button onClick={(e) => paste(e, "comment",function(){
+                    handleClickSnackBar(); setSnackbarText("Pasted Comment!")
+                })}><ContentPasteGoOutlinedIcon /></button>
                 <TextField
                     id="comment"
                     value={safeIngredient.comment}
@@ -211,10 +269,23 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 />
             </div>
             <div className={"last"} style={{display: "flex", gap: "0.5rem", justifyContent: "right"}}>
-                <button onClick={() => move("up")}><KeyboardDoubleArrowUpOutlinedIcon /></button>
-                <button onClick={() => move("down")}><KeyboardDoubleArrowDownOutlinedIcon /></button>
-                <button style={{marginLeft:"2rem"}} onClick={del}><RemoveIcon /></button>
-            </div>
+                <button
+                    onClick={() =>
+                    {
+                        let res = move("up")
+                        if (res){ handleClickSnackBar();
+                        setSnackbarText("Moved up!")}
+                    }}
+                > <KeyboardDoubleArrowUpOutlinedIcon /> </button>
+                <button
+                    onClick={() =>
+                    {
+                        let res = move("down")
+                        if (res){ handleClickSnackBar();
+                            setSnackbarText("Moved down!")}
+                    }}
+                > <KeyboardDoubleArrowDownOutlinedIcon />  </button>
+                </div>
         </div>
     );
 }

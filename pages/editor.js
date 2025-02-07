@@ -18,6 +18,9 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import CodeIcon from '@mui/icons-material/Code';
+import Alert from "@/components/Alert";
+import Confirm from "@/components/Confirm";
+import Snackbar from "@mui/material/Snackbar";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -56,6 +59,15 @@ export default function Editor({ isConnected }) {
     const handleClose = () => setOpen(false);
     const handleOpenConf = () => setOpenConfirmation(true);
     const handleCloseConf = () => setOpenConfirmation(false);
+    // >>>> SNACK BAR <<< //
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    const [snackbarText, setSnackbarText] = React.useState("Alert!");
+    const handleClickSnackBar = () => { setOpenSnackBar(true);};
+    const handleSnackBarClose = (event, reason) => {
+        if (reason === 'clickaway') { return; }
+        setOpenSnackBar(false);
+    };
+    // >>> END SNACKBAR <<< //
 
     useEffect(() => {
         if (status === "authenticated") {
@@ -191,17 +203,22 @@ export default function Editor({ isConnected }) {
 
     return (
         <div id={"editor-page"}>
+            <Snackbar
+                anchorOrigin={{vertical: "top", horizontal: "center"}}
+                open={openSnackBar}
+                autoHideDuration={1000}
+                onClose={handleSnackBarClose}
+                message={snackbarText}
+            />
             <div id={"editor-page-header"}>
-                <button onClick={() => {console.log(recipe)}}>
-                    <CodeIcon />
+                <button className={"border"} onClick={handleOpen}>
+                    <HelpOutlineIcon />
+                    <span>HELP</span>
                 </button>
-                <button onClick={handleOpen}><HelpOutlineIcon /></button>
                 <h1>Recipes V4 Editor</h1>
-                <button>
-                    <a href={id ? `recipes/${id}` : "/"}> <ExitToAppIcon /> </a>
-                </button>
-                <button onClick={handleOpenConf}>
+                <button className={"border"} onClick={handleOpenConf}>
                    <AddToQueueIcon />
+                    <span>ADD TO DB</span>
                 </button>
                 <Dialog
                     open={openConfirmation}
@@ -275,10 +292,29 @@ export default function Editor({ isConnected }) {
                         </div>
                     </div>
                 </Modal>
+                <button className={"border"}>
+                    <a href={id ? `recipes/${id}` : "/"}> <ExitToAppIcon />  </a>
+                    <span>GO BACK</span>
+                </button>
             </div>
 
             <EditorPageMeta recipe={recipe} categories={categories} setRecipe={setRecipe} />
 
+            {/* INGREDIENTS */}
+            <div id={"editor-page-ingredients"}>
+                <h2>Ingredients</h2>
+                {recipe.ingredients.map((value, index) => (
+                    <EditIngredient key={"ingredient" + index} Index={index} ingredient={value} setRecipe={setRecipe} recipe={recipe}/>
+                ))}
+                <div id={"edit-bot-btns"}>
+                    <button className={"add"} onClick={() => {addIngrFunc(); handleClickSnackBar(); setSnackbarText("Added Ingredient to Ingredients!");}}
+                    > + Add Ingredient </button>
+                    <button className={"group"} onClick={() => {addGroupFunc(); handleClickSnackBar(); setSnackbarText("Added Group to Ingredients!");}}
+                    > + Add Group </button>
+                </div>
+            </div>
+
+            {/* STEPS */}
             <div id={"editor-page-steps"}>
                 <h2>STEPS</h2>
                 <div className={"edit-steps"}>
@@ -287,27 +323,10 @@ export default function Editor({ isConnected }) {
                     ))}
                 </div>
                 <div id={"edit-bot-btns"}>
-                    <button onClick={addStepFunc} className={"add"}>
-                        + Add Step
-                    </button>
-                    <button onClick={stepPaste} className={"copy"}>
-                        + Paste From Clipboard
-                    </button>
-                </div>
-            </div>
-
-            <div id={"editor-page-ingredients"}>
-                <h2>Ingredients</h2>
-                {recipe.ingredients.map((value, index) => (
-                    <EditIngredient key={"ingredient" + index} Index={index} ingredient={value} setRecipe={setRecipe} recipe={recipe}/>
-                ))}
-                <div id={"edit-bot-btns"}>
-                    <button onClick={addIngrFunc} className={"add"}>
-                        + Add Ingredient
-                    </button>
-                    <button onClick={addGroupFunc} className={"group"}>
-                        + Add Group
-                    </button>
+                    <button className={"add"} onClick={() => {addStepFunc(); handleClickSnackBar(); setSnackbarText("Added step!");}}
+                    >  + Add Step </button>
+                    <button className={"copy"} onClick={() => {stepPaste(); handleClickSnackBar(); setSnackbarText("Pasted step from clipboard!");}}
+                    > + Paste From Clipboard </button>
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import useSWR from "swr";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
-import Input from "@mui/material/Input";
+import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState, useEffect, useCallback } from "react";
 import { debounce } from "lodash"; // Import lodash for debouncing
@@ -83,33 +83,25 @@ export default function Home({ isConnected }) {
                 )}
                 {/* Search by Name */}
                 <FormControl variant="outlined" style={{ marginRight: "10px" }}>
-                  <Input
+                  <TextField
                       id="search-name"
                       className={"search-forms"}
-                      startAdornment={
-                        <InputAdornment position="start">
-                          <SearchIcon />
-                        </InputAdornment>
-                      }
                       placeholder="Search by name..."
                       value={searchName} // Controlled input
                       onChange={(event) => handleInputChange("name", event.target.value)}
+                      label="Search Recipe"
                   />
                 </FormControl>
 
                 {/* Search by Ingredients */}
                 <FormControl variant="outlined">
-                  <Input
+                  <TextField
                       id="search-ingredients"
                       className={"search-forms"}
-                      startAdornment={
-                        <InputAdornment position="start">
-                          <SearchIcon />
-                        </InputAdornment>
-                      }
                       placeholder="Search by ingredients (comma-separated)..."
                       value={searchIngredients} // Controlled input
                       onChange={(event) => handleInputChange("ingredients", event.target.value)}
+                      label="Recipe Name"
                   />
                 </FormControl>
               </div>

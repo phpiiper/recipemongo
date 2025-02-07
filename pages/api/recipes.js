@@ -14,11 +14,12 @@ export default async (req, res) => {
 
         // Check for valid session
         if (session && session.user) {
-            filters.access = {
-                $in: [null, session.user.name]  // This will check if "access" is null or matches the user.name
-            };
+            filters.$or = [
+                { access: { $ne: "private" } },
+                { author: session.user.name }
+            ];
         } else {
-            filters.access = { $exists: false };
+            filters.access = { $ne: "private" };
         }
 
         console.log("Received Query Params:", req.query); // Debugging

@@ -26,6 +26,7 @@
 html {
   width: 100%; height: 100%;
   font-size: var(--fs-root);
+  font-family: var(--ff-text);
 }
 body {
   padding: 0; margin: 0;
@@ -286,6 +287,9 @@ input#edit-time {width: 4rem;}
   bottom: -0.5rem;
   background-color: white;
 }
+#edit-bot-btns .alert-div {
+  width: 100%;
+}
 #edit-bot-btns button {
   border: 1px solid black;
   padding: 0.5rem;
@@ -405,7 +409,11 @@ input#edit-time {width: 4rem;}
 
 /* EDITOR */
 #editor-page-header {
-  flex-direction: column;
+  gap: 1rem; flex-wrap: wrap;
+  justify-content: center;
+}
+#editor-page-header h1 {
+  width: 100%;
 }
 #editor-page-meta {
   flex-direction: column;
@@ -416,6 +424,10 @@ input#edit-time {width: 4rem;}
 .edit-ingredient-div {
   flex-direction: column;
 }
+  .edit-ingredient-div .MuiTextField-root {
+    width: 100% !important;
+    max-width: unset !important;
+  }
 .edit-step-div {
   flex-direction: column-reverse;
 }
@@ -423,6 +435,17 @@ input#edit-time {width: 4rem;}
   width: 100%;
   border: none;
 }
+.edit-ingredient-div > button {
+  display: revert;
+}
+
+/* HOMEPAGE */
+#home-bar {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+
 } /* END MEDIA QUERY */
 
 @media (max-width: 1200px){
@@ -437,7 +460,17 @@ input#edit-time {width: 4rem;}
   width: 100%;
 }
 
-button, span {transition: 0.2s;}
+button, span {transition: 0.2s; display: flex; align-items: center; gap: 0.5rem;}
+button.border {
+  border: 2px solid black; padding: 0.25rem 0.5rem; border-radius: 4px;
+  min-height: 50px;
+}
+button.border svg {
+  font-size: 1.5rem;
+}
+button.border > span {
+  font-size: 0.75rem;
+}
 button.recipes-button:hover {
   color: var(--fc-highlight);
 }
@@ -448,4 +481,10 @@ button.recipes-button:hover {
 .dialog-btn {
   margin: 0.5rem 1rem;
   border: 2px solid black; padding: 0.25rem 0.5rem;
+}
+
+.MuiSnackbar-root {z-index: 99;}
+.alert-div {padding: 0; margin: 0;}
+.alert-div button {
+  width: 100%; height: 100%;
 }
