@@ -445,3 +445,7 @@ button.recipes-button:hover {
   color: var(--fc-highlight);
   cursor: pointer;
 }
+.dialog-btn {
+  margin: 0.5rem 1rem;
+  border: 2px solid black; padding: 0.25rem 0.5rem;
+}

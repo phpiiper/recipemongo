@@ -1,17 +1,29 @@
 import clientPromise from "../../lib/mongoconnect";
+import { getServerSession } from "next-auth/next";
+import NextAuth from "@/pages/api/auth/[...nextauth]";
 
 export default async (req, res) => {
     try {
         const client = await clientPromise;
+        const session = await getServerSession(req, res, NextAuth);
         const db = client.db("recipes");
 
         // Extract query parameters
         const { name, category, ingredients } = req.query;
         let filters = {};
 
+        // Check for valid session
+        if (session && session.user) {
+            filters.access = {
+                $in: [null, session.user.name]  // This will check if "access" is null or matches the user.name
+            };
+        } else {
+            filters.access = { $exists: false };
+        }
+
         console.log("Received Query Params:", req.query); // Debugging
 
-        // Handle name & category search with `$regex` instead of `$text`
+        // Handle name & category search with `$regex`
         if (name?.trim()) {
             filters.name = { $regex: new RegExp(name.trim(), "i") }; // Case-insensitive regex search
         }

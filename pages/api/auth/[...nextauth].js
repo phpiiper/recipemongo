@@ -55,7 +55,7 @@ export default NextAuth({
     ],
     callbacks: {
         // SignIn callback to add any additional logic before the session
-        async signIn({ user, account, profile, email, credentials }) {
+        async signIn({ user, account, credentials }) {
             // Here, you can log user data or perform extra checks
             return true;
         },
@@ -68,7 +68,7 @@ export default NextAuth({
         },
 
         // JWT callback to attach user data to JWT
-        async jwt({ token, user }) {
+        async jwt({ token, user, credentials }) {
             if (user) {
                 token.id = user.id;
                 token.name = user.name;
@@ -77,7 +77,7 @@ export default NextAuth({
         },
 
         // Session callback to include user data in the session object
-        async session({ session, token }) {
+        async session({ session, token, credentials }) {
             if (token) {
                 session.user.id = token.id;
                 session.user.name = token.name;

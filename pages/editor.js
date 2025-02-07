@@ -213,8 +213,8 @@ export default function Editor({ isConnected }) {
                         Confirming you want to push this recipe as is to the database.
                     </DialogContent>
                     <DialogActions>
-                        <button onClick={handleCloseConf}>No</button>
-                        <button onClick={() => {handleCloseConf();  handlePush()}} autoFocus>
+                        <button className={"dialog-btn"} onClick={handleCloseConf}>No</button>
+                        <button className={"dialog-btn"} onClick={() => {handleCloseConf();  handlePush()}} autoFocus>
                             Yes
                         </button>
                     </DialogActions>
