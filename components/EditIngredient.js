@@ -115,19 +115,25 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
     };
 
     const paste = async (e, key, func) => {
+        const text = await navigator.clipboard.readText();
+        if (!text) {return false}
+        let newRecipe = JSON.parse(JSON.stringify(recipe));
         if (typeof Index === "number") {
-            const text = await navigator.clipboard.readText();
-            if (text) {
-                let newRecipe = JSON.parse(JSON.stringify(recipe));
-                newRecipe.ingredients[Index][key] = text;
-                setRecipe(newRecipe);
-                if (func) {  func();  }
-                return true
-            }
+            newRecipe.ingredients[Index][key] = text;
+            if (func) {  func();  }
+            setRecipe(newRecipe);
         } else {
-            console.log("AHH");
+            let ingrTrain = [];
+            let rec = newRecipe;
+            for (let i = 0; i < Index.length - 1; i++) {
+                rec = rec.ingredients ? rec.ingredients[Index[i]] : rec;
+                ingrTrain.push(rec);
+            }
+            ingrTrain.at(-1).ingredients[Index.at(-1)][key] = text;
+            if (func) {  func();  }
+            setRecipe(newRecipe);
+            return true
         }
-        return false
     };
 
     const addNew = (type) => {

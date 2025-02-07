@@ -3,11 +3,13 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 
-export default function EditorPageMeta({recipe, categories, setRecipe}) {
-
-
+export default function EditorPageMeta({recipe, categories, setRecipe, status, session}) {
     // >>> HANDLERS <<< //
     const handleInputChange = (e, newValue) => {
         const { id } = e.target;
@@ -30,6 +32,20 @@ export default function EditorPageMeta({recipe, categories, setRecipe}) {
 
     return (
             <div id={"editor-page-meta"}>
+                {status==="authenticated" && session.user && session.user.name === recipe.author ? (<FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel>Access</InputLabel>
+                        <Select
+                            id="access"
+                            value={recipe.access}
+                            label="Access"
+                            onChange={(e) => handleInputChange({ target: { id: "access", value: e.target.value } })}
+                        >
+                            <MenuItem value={"private"}>Private</MenuItem>
+                            <MenuItem value={"public"}>Public</MenuItem>
+                        </Select>
+
+                    </FormControl>)
+                : <></>}
             <TextField
                 id="name"
                 placeholder={"Recipe Name"}

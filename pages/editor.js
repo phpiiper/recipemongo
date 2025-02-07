@@ -18,8 +18,6 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import CodeIcon from '@mui/icons-material/Code';
-import Alert from "@/components/Alert";
-import Confirm from "@/components/Confirm";
 import Snackbar from "@mui/material/Snackbar";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -39,7 +37,7 @@ export const getServerSideProps = async () => {
 };
 
 export default function Editor({ isConnected }) {
-    const { status } = useSession();
+    const { data, status } = useSession();
     const r = useRouter();
     const { id } = r.query;
 
@@ -298,7 +296,7 @@ export default function Editor({ isConnected }) {
                 </button>
             </div>
 
-            <EditorPageMeta recipe={recipe} categories={categories} setRecipe={setRecipe} />
+            <EditorPageMeta recipe={recipe} categories={categories} setRecipe={setRecipe} status={status} session={data ? data : false}/>
 
             {/* INGREDIENTS */}
             <div id={"editor-page-ingredients"}>
