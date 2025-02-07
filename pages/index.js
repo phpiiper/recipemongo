@@ -30,6 +30,7 @@ export const getServerSideProps = async () => {
 
 export default function Home({ isConnected }) {
   const { status } = useSession();
+  console.log(status)
 
   // Controlled inputs
   const [searchName, setSearchName] = useState("");
@@ -38,56 +39,55 @@ export default function Home({ isConnected }) {
   // API query parameters (updates after debounce)
   const [debouncedSearch, setDebouncedSearch] = useState({ name: "", ingredients: "" });
 
-  // Function to update state immediately when typing
-  const handleInputChange = (type, value) => {
-    if (type === "name") setSearchName(value);
-    else if (type === "ingredients") setSearchIngredients(value);
-    debouncedUpdateSearch(value, type); // Calls debounced function
-  };
-
   // Debounce API request (waits for user to stop typing before updating API call)
   const debouncedUpdateSearch = useCallback(
       debounce((value, type) => {
         setDebouncedSearch((prev) => ({ ...prev, [type]: value.trim() }));
-      }, 500), // Adjust debounce delay (500ms recommended)
+      }, 500),
       []
   );
+
+  // Function to update state immediately when typing
+  const handleInputChange = (type, value) => {
+    if (type === "name") setSearchName(value);
+    else if (type === "ingredients") setSearchIngredients(value);
+    debouncedUpdateSearch(value, type);
+  };
 
   // Construct API URL dynamically (only add parameters if they have values)
   const queryParams = new URLSearchParams();
   if (debouncedSearch.name) queryParams.append("name", debouncedSearch.name);
   if (debouncedSearch.ingredients) queryParams.append("ingredients", debouncedSearch.ingredients);
+  console.log(queryParams.toString())
   const apiUrl = `/api/recipes?${queryParams.toString()}`;
 
   // Use SWR for fetching data
   const { data, error } = useSWR(apiUrl, fetcher, { revalidateOnFocus: false });
 
   if (error) return <div>Failed to load: {JSON.stringify(error)}</div>;
-  if (!data) return <div />;
-
-  const recipes = data || [];
+  if (status === "loading") return <div>Loading...</div>;
+  if (!isConnected) return <h1>NOT CONNECTED</h1>;
 
   return (
-      <>
-        {isConnected ? (
-            <div id="content">
-              <div id="home-bar">
-                {status === "unauthenticated" && <button onClick={() => signIn()}>Sign in</button>}
-                {status === "authenticated" && <button onClick={() => signOut()}>Sign Out</button>}
-                <h1 style={{ textAlign: "center" }}>Recipes V4</h1>
-                {status === "authenticated" && (
-                    <span className={"link"} style={{display: "flex", alignItems: "center", gap: "0.25rem"}}>
-                      <EditIcon fontSize={"24pxx"}/>
-                      <a href="editor">Create Recipe</a>
-                    </span>
-                )}
-                {/* Search by Name */}
-                <FormControl variant="outlined" style={{ marginRight: "10px" }}>
+      <div id="content">
+        <div id="home-bar">
+          {status === "unauthenticated" ? (<button onClick={() => signIn()}>Sign in</button>) : <></>}
+          {status === "authenticated" ? (<button onClick={() => signOut()}>Sign Out</button>) : <></>}
+          <h1 style={{ textAlign: "center" }}>Recipes V4</h1>
+
+          {status === "authenticated" ? (
+              <span className="link" style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+            <EditIcon fontSize="24px" />
+            <a href="editor">Create Recipe</a>
+          </span>
+          ) : <></>}
+
+          <FormControl variant="outlined" style={{ marginRight: "10px" }}>
                   <TextField
                       id="search-name"
-                      className={"search-forms"}
+                      className="search-forms"
                       placeholder="Search by name..."
-                      value={searchName} // Controlled input
+                      value={searchName}
                       onChange={(event) => handleInputChange("name", event.target.value)}
                       label="Search Recipe"
                   />
@@ -97,19 +97,16 @@ export default function Home({ isConnected }) {
                 <FormControl variant="outlined">
                   <TextField
                       id="search-ingredients"
-                      className={"search-forms"}
+                      className="search-forms"
                       placeholder="Search by ingredients (comma-separated)..."
-                      value={searchIngredients} // Controlled input
+                      value={searchIngredients}
                       onChange={(event) => handleInputChange("ingredients", event.target.value)}
                       label="Recipe Name"
                   />
                 </FormControl>
-              </div>
-              <RecipeList status={status === "authenticated"} recipes={recipes} />
-            </div>
-        ) : (
-            <h1>NOT CONNECTED</h1>
-        )}
-      </>
+        </div>
+
+        <RecipeList status={status} recipes={data || []} /> :
+      </div>
   );
 }

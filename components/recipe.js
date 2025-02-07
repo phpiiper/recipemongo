@@ -16,7 +16,7 @@ return (
         <span className={"recipe-time"}>{time}</span>
         <div style={{display: "flex", gap: "1rem"}}>
             <button className={"recipes-button"}><a href={`/recipes/${r.id}`}><MenuBookIcon /></a></button>
-            {status ? (<button className={"recipes-button"}><a href={`/editor?id=${r.id}`}><EditIcon /></a></button>) : <></>}
+            {status === "authenticated" ? (<button className={"recipes-button"}><a href={`/editor?id=${r.id}`}><EditIcon /></a></button>) : <></>}
         </div>
     </div>
         )
