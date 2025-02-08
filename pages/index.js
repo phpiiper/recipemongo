@@ -2,12 +2,9 @@
 import client from "@/lib/mongoconnect";
 import * as React from "react";
 import RecipeList from "@/components/recipelist";
+import Filters from "@/components/Filters";
 import { signIn, signOut, useSession } from "next-auth/react";
 import useSWR from "swr";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import SearchIcon from "@mui/icons-material/Search";
 import { useState, useEffect, useCallback } from "react";
 import { debounce } from "lodash"; // Import lodash for debouncing
 import EditIcon from '@mui/icons-material/Edit';
@@ -30,36 +27,40 @@ export const getServerSideProps = async () => {
 
 export default function Home({ isConnected }) {
   const { status } = useSession();
-  console.log(status)
 
   // Controlled inputs
-  const [searchName, setSearchName] = useState("");
-  const [searchIngredients, setSearchIngredients] = useState("");
+  const [filterList, setFilterList] = useState({
+    name: "", ingredients: "", cat: ""
+  });
 
   // API query parameters (updates after debounce)
-  const [debouncedSearch, setDebouncedSearch] = useState({ name: "", ingredients: "" });
+  const [debouncedSearch, setDebouncedSearch] = useState({ name: "", ingredients: "", cat: "" });
 
   // Debounce API request (waits for user to stop typing before updating API call)
-  const debouncedUpdateSearch = useCallback(
-      debounce((value, type) => {
-        setDebouncedSearch((prev) => ({ ...prev, [type]: value.trim() }));
-      }, 500),
-      []
-  );
+    const debouncedUpdateSearch = useCallback(
+        debounce((value, type) => {
+            setDebouncedSearch((prev) => ({
+                ...prev,
+                [type]: value ? value.trim() : "", // Ensure it's always a string
+            }));
+        }, 500),
+        []
+    );
+
 
   // Function to update state immediately when typing
   const handleInputChange = (type, value) => {
-    if (type === "name") setSearchName(value);
-    else if (type === "ingredients") setSearchIngredients(value);
+    setFilterList((prev) => ({...prev, [type]: value}));
     debouncedUpdateSearch(value, type);
   };
 
   // Construct API URL dynamically (only add parameters if they have values)
-  const queryParams = new URLSearchParams();
-  if (debouncedSearch.name) queryParams.append("name", debouncedSearch.name);
-  if (debouncedSearch.ingredients) queryParams.append("ingredients", debouncedSearch.ingredients);
-  console.log(queryParams.toString())
-  const apiUrl = `/api/recipes?${queryParams.toString()}`;
+    const queryParams = new URLSearchParams(
+        Object.entries(debouncedSearch)
+            .filter(([_, value]) => value) // Remove empty values
+    );
+
+    const apiUrl = `/api/recipes?${queryParams.toString()}`;
 
   // Use SWR for fetching data
   const { data, error } = useSWR(apiUrl, fetcher, { revalidateOnFocus: false });
@@ -73,6 +74,7 @@ export default function Home({ isConnected }) {
         <div id="home-bar">
           {status === "unauthenticated" ? (<button onClick={() => signIn()}>Sign in</button>) : <></>}
           {status === "authenticated" ? (<button onClick={() => signOut()}>Sign Out</button>) : <></>}
+            {status === "authenticated" ? (<button><a href={"/preferences"}>Preferences</a></button>) : <></>}
           <h1 style={{ textAlign: "center" }}>Recipes V4</h1>
 
           {status === "authenticated" ? (
@@ -82,28 +84,16 @@ export default function Home({ isConnected }) {
           </span>
           ) : <></>}
 
-          <FormControl variant="outlined" style={{ marginRight: "10px" }}>
-                  <TextField
-                      id="search-name"
-                      className="search-forms"
-                      placeholder="Search by name..."
-                      value={searchName}
-                      onChange={(event) => handleInputChange("name", event.target.value)}
-                      label="Search Recipe"
-                  />
-                </FormControl>
+        <Filters
+          Filters={filterList}
+          onChangeFunction={handleInputChange}
+          List={{
+            categories: data
+                ? [...new Set(data.map((x) => x.cat).filter(Boolean).map(String))]
+                : []
+          }}
 
-                {/* Search by Ingredients */}
-                <FormControl variant="outlined">
-                  <TextField
-                      id="search-ingredients"
-                      className="search-forms"
-                      placeholder="Search by ingredients (comma-separated)..."
-                      value={searchIngredients}
-                      onChange={(event) => handleInputChange("ingredients", event.target.value)}
-                      label="Recipe Name"
-                  />
-                </FormControl>
+        />
         </div>
 
         <RecipeList status={status} recipes={data || []} /> :

@@ -9,7 +9,7 @@ export default async (req, res) => {
         const db = client.db("recipes");
 
         // Extract query parameters
-        const { name, category, ingredients } = req.query;
+        const { name, cat, ingredients } = req.query;
         let filters = {};
 
         // Check for valid session
@@ -29,8 +29,8 @@ export default async (req, res) => {
             filters.name = { $regex: new RegExp(name.trim(), "i") }; // Case-insensitive regex search
         }
 
-        if (category?.trim()) {
-            filters.cat = { $regex: new RegExp(category.trim(), "i") }; // Case-insensitive category search
+        if (cat?.trim()) {
+            filters.cat = { $regex: new RegExp(cat.trim(), "i") }; // Case-insensitive category search
         }
 
         // Handle ingredient search (ignore if empty)
