@@ -111,6 +111,10 @@ td, th {
   color: var(--fc-highlight) !important;
 }
 
+.icon-btn.icons-hidden:hover,.icon-btn.icons-hidden:active  {
+  cursor: pointer;
+  color: var(--fc-highlight) !important;
+}
 .icon-div {
   display: flex; gap: 0.5rem;
   transition: unset;

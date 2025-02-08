@@ -43,7 +43,7 @@ export const UserPreferencesProvider = ({ children }) => {
             root.style.setProperty('--fs-root', fontSize);
             root.style.setProperty('--ff-header', fontFamily);
             root.style.setProperty('--ff-text', fontFamily);
-            root.style.setProperty('--icon-btn-visibility', iconBtnVisibility ? 'visible' : 'hidden');
+            root.style.setProperty('--icon-btn-visibility', iconBtnVisibility ? 'true' : 'false');
         }
     }, [fontFamily, fontSize, iconBtnVisibility, loading]);
 

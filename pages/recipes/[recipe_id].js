@@ -9,22 +9,11 @@ import { useSession } from "next-auth/react"
 import EditIcon from '@mui/icons-material/Edit';
 import {useUserPreferences} from "@/contexts/UserPreferencesContext";
 import Icon from "@/components/Icon";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
 import HomeIcon from "@mui/icons-material/Home";
 const fetcher = (url) => fetch(url).then(res => res.json())
 
 export default function RecipePage() {
     const { status } = useSession();
-    // >>>> USER PREFERENCES <<<< //
-    const { fontFamily, setFontFamily, fontSize, setFontSize } = useUserPreferences();
-    const [localFontFamily, setLocalFontFamily] = useState(fontFamily);
-    const [localFontSize, setLocalFontSize] = useState(fontSize);
-
-    const savePreferencesContext = () => {
-        setFontFamily(localFontFamily);  // Update context with the new font family
-        setFontSize(localFontSize);      // Update context with the new font size
-    };
-    // >>>> USER PREFERENCES END <<<< //
     const [sizing, setSizing] = useState(1);
     const r = useRouter();
     const { recipe_id } = r.query;

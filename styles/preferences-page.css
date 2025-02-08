@@ -32,6 +32,7 @@
 }
 .pref-cat-container {
     display: flex; gap: 1rem; align-items: center;
+    overflow-x: auto;
 }
 .pref-cat-container > span {
     min-width: 8rem;
@@ -39,4 +40,21 @@
 .pref-cat-color-block {
     border: 2px solid black;
     width: 2rem; height: 2rem;
+}
+
+@media (max-width: 600px){
+    .pref-cat-container {
+        flex-wrap: wrap;
+    }
+    .pref-cat-container > span {
+        min-width: unset;
+        width: calc(100% - 4rem);
+    }
+    .pref-cat-container > .MuiTextField-root {
+        width: 100%;
+    }
+    #preferences-page-header {
+        display: flex !important;
+        flex-direction: column !important;
+    }
 }

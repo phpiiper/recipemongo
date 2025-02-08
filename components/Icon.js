@@ -1,5 +1,5 @@
 import * as React from 'react';
-export default function Icon({children, clickEvent, href, btnClass="", btnText="Click Me"}) {
+export default function Icon({children, clickEvent=()=>{}, href, btnClass="", btnText="Click Me"}) {
     let classes = "icon-btn " + btnClass;
     let newClass = getComputedStyle(document.documentElement).getPropertyValue('--icon-btn-visibility');
     if (typeof newClass === "string") {
