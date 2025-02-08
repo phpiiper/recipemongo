@@ -18,22 +18,16 @@ export const UserPreferencesProvider = ({ children }) => {
                 const response = await fetch('/api/user-apis/preferences');
                 if (response.ok) {
                     const data = await response.json();
-                    // Update the state if preferences are available
-                    if (data && data.fontFamily) {
-                        setFontFamily(data.fontFamily); // Update font family from the API
-                    }
-                    if (data && data.fontSize) {
-                        setFontSize(data.fontSize); // Update font size from the API
-                    }
-                    if (data && 'iconTextHelp' in data) {
-                        setIconBtnVisibility(data.iconTextHelp);
-                    }
+                    // Safely update the state if preferences are available
+                    if (data?.fontFamily) setFontFamily(data.fontFamily);
+                    if (data?.fontSize) setFontSize(data.fontSize);
+                    if ('iconTextHelp' in data) setIconBtnVisibility(data.iconTextHelp);
                 } else {
                     console.warn('Failed to fetch preferences, using defaults');
                 }
             } catch (error) {
                 console.error('Error fetching preferences:', error);
-                // If fetch fails, keep the default values
+                // Default values are retained if fetching fails
             } finally {
                 setLoading(false); // Stop loading when the fetch is done
             }
@@ -45,11 +39,11 @@ export const UserPreferencesProvider = ({ children }) => {
     // Apply the styles to the body once the preferences are loaded
     useEffect(() => {
         if (!loading) {
-            let root = document.querySelector(':root');
+            const root = document.querySelector(':root');
             root.style.setProperty('--fs-root', fontSize);
             root.style.setProperty('--ff-header', fontFamily);
             root.style.setProperty('--ff-text', fontFamily);
-            root.style.setProperty('--icon-btn-visibility', iconBtnVisibility);
+            root.style.setProperty('--icon-btn-visibility', iconBtnVisibility ? 'visible' : 'hidden');
         }
     }, [fontFamily, fontSize, iconBtnVisibility, loading]);
 
