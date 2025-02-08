@@ -547,7 +547,15 @@ button.recipes-button:hover {
 .pref-cat-container {
   display: flex; gap: 1rem; align-items: center;
 }
+.pref-cat-container > span {
+  min-width: 8rem;
+}
 .pref-cat-color-block {
   border: 2px solid black;
   width: 2rem; height: 2rem;
+}
+#preferences-page-body > button {
+  border: 2px solid black;
+  padding: 0.5rem 1rem;
+  width: fit-content;
 }

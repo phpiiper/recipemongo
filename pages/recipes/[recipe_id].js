@@ -7,10 +7,21 @@ import Step from "@/components/step"
 import {useState} from "react";
 import { useSession } from "next-auth/react"
 import EditIcon from '@mui/icons-material/Edit';
+import {useUserPreferences} from "@/contexts/UserPreferencesContext";
 const fetcher = (url) => fetch(url).then(res => res.json())
 
 export default function RecipePage() {
     const { status } = useSession();
+    // >>>> USER PREFERENCES <<<< //
+    const { fontFamily, setFontFamily, fontSize, setFontSize } = useUserPreferences();
+    const [localFontFamily, setLocalFontFamily] = useState(fontFamily);
+    const [localFontSize, setLocalFontSize] = useState(fontSize);
+
+    const savePreferencesContext = () => {
+        setFontFamily(localFontFamily);  // Update context with the new font family
+        setFontSize(localFontSize);      // Update context with the new font size
+    };
+    // >>>> USER PREFERENCES END <<<< //
     const [sizing, setSizing] = useState(1);
     const r = useRouter();
     const { recipe_id } = r.query;
@@ -18,7 +29,6 @@ export default function RecipePage() {
     if (error) return (<div style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: "2rem", padding: "2rem"}}>
         <h2>Unknown Recipe (or invalid access)</h2>
         <button><a href={"/"}>GO BACK</a></button>
-
     </div>)
     if (!data) return <div />
     if (JSON.stringify(data) === "{}" || data.error){

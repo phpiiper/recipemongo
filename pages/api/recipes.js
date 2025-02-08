@@ -9,7 +9,7 @@ export default async (req, res) => {
         const db = client.db("recipes");
 
         // Extract query parameters
-        const { name, cat, ingredients } = req.query;
+        const { name, cat, ingredients, getCategories } = req.query;
         let filters = {};
 
         // Check for valid session
@@ -52,6 +52,13 @@ export default async (req, res) => {
         const query = Object.keys(filters).length > 0 ? filters : {};
 
         console.log("Final MongoDB Query:", JSON.stringify(query, null, 2)); // Debugging
+
+        // Check if we need to fetch categories instead of recipes
+        if (getCategories === "yes") {
+            const categories = await db.collection("recipelist")
+                .distinct("cat", query);
+            return res.json({ categories });
+        }
 
         // Fetch matching recipes (handle empty filters gracefully)
         const recipes = await db.collection("recipelist").find(query).toArray();

@@ -31,11 +31,11 @@ export default NextAuth({
                 const dbClient = await connectToDatabase();
                 const usersCollection = dbClient.db("recipes").collection('users');
 
-                // Find user by username
+                // Find preferences by username
                 const user = await usersCollection.findOne({ user: credentials.user });
 
                 if (!user) {
-                    throw new Error('No user found with the username');
+                    throw new Error('No preferences found with the username');
                 }
 
                 // Compare password with bcrypt
@@ -44,11 +44,11 @@ export default NextAuth({
                     throw new Error('Password doesn’t match');
                 }
 
-                // Return the user data
-                return { id: user._id, name: user.user };
+                // Return the preferences data
+                return { id: user._id, name: user.user};
             },
             credentials: {
-                user: { label: "Username", type: "text", placeholder: "jsmith" },
+                user: { label: "Username", type: "username"  },
                 password: { label: "Password", type: "password" },
             },
         }),
@@ -56,7 +56,7 @@ export default NextAuth({
     callbacks: {
         // SignIn callback to add any additional logic before the session
         async signIn({ user, account, credentials }) {
-            // Here, you can log user data or perform extra checks
+            // Here, you can log preferences data or perform extra checks
             return true;
         },
 
@@ -67,7 +67,7 @@ export default NextAuth({
             return baseUrl;
         },
 
-        // JWT callback to attach user data to JWT
+        // JWT callback to attach preferences data to JWT
         async jwt({ token, user, credentials }) {
             if (user) {
                 token.id = user.id;
@@ -76,7 +76,7 @@ export default NextAuth({
             return token;
         },
 
-        // Session callback to include user data in the session object
+        // Session callback to include preferences data in the session object
         async session({ session, token, credentials }) {
             if (token) {
                 session.user.id = token.id;
