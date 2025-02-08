@@ -116,13 +116,13 @@ export default function Preferences({ isConnected }) {
             if (response.ok) {
                 const result = await response.json();
                 console.log("Preferences saved:", result.message);
+                if (typeof func === "function") {func();}
+                setOpenSnackBar(true); setSnackbarText("Successfully Updated! Refreshing!")
+                location.reload();
             } else {
                 const errorData = await response.json();
                 console.error("Error saving preferences:", errorData.message);
             }
-            if (typeof func === "function") {func();}
-            setOpenSnackBar(true); setSnackbarText("Successfully Updated! Refreshing!")
-            location.reload();
         } catch (error) {
             console.error("Error:", error);
         }
