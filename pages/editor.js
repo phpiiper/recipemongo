@@ -289,7 +289,7 @@ export default function Editor({ isConnected }) {
 
             <div className={"container flex"}>
                 <Icon
-                    className={"const " + (viewGroup === "Ingredients" ? "selected" : "")}
+                    btnClass={"const " + (viewGroup === "Ingredients" ? "selected" : "")}
                     children={<VisibilityIcon />}
                     btnText={"Ingredients"}
                     clickEvent={() => {
@@ -297,7 +297,7 @@ export default function Editor({ isConnected }) {
                     }}
                 />
                 <Icon
-                    className={"const " + (viewGroup === "Steps" ? "selected" : "")}
+                    btnClass={"const " + (viewGroup === "Steps" ? "selected" : "")}
                     children={<VisibilityIcon />}
                     btnText={"Steps"}
                     clickEvent={() => {
@@ -308,7 +308,7 @@ export default function Editor({ isConnected }) {
 
             {/* INGREDIENTS */}
             <div id={"editor-page-ingredients"} style={{display: viewGroup !== "Ingredients" ? "none" : ""}}>
-                <h2>Ingredients</h2>
+                <h2>INGREDIENTS</h2>
                 {recipe.ingredients.map((value, index) => (
                     <EditIngredient key={"ingredient" + index} Index={index} ingredient={value} setRecipe={setRecipe} recipe={recipe}/>
                 ))}

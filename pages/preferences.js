@@ -118,7 +118,7 @@ export default function Preferences({ isConnected }) {
                 console.log("Preferences saved:", result.message);
                 if (typeof func === "function") {func();}
                 setOpenSnackBar(true); setSnackbarText("Successfully Updated! Refreshing!")
-                location.reload();
+                // location.reload();
             } else {
                 const errorData = await response.json();
                 console.error("Error saving preferences:", errorData.message);
@@ -192,6 +192,10 @@ export default function Preferences({ isConnected }) {
                     btnText={"Save Preferences"}
                     children={<SaveAsIcon />}
                     btnClasses={"const"}
+                />
+                <Icon
+                    btnClass={"const"}
+                    clickEvent={() => {console.log(userPrefs)}}
                 />
                 <h2>VIEWING SETTINGS</h2>
                 <div className={"container row"}>

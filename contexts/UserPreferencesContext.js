@@ -26,7 +26,7 @@ export const UserPreferencesProvider = ({ children }) => {
                     console.warn('Failed to fetch preferences, using defaults');
                 }
             } catch (error) {
-                console.error('Error fetching preferences:', error);
+                // console.error('Error fetching preferences:', error);
                 // Default values are retained if fetching fails
             } finally {
                 setLoading(false); // Stop loading when the fetch is done

@@ -81,15 +81,9 @@ td, th {
   min-height: 2.5rem;
   width: fit-content;
 }
-.icon-btn.const {
-  border: 2px solid black !important;
-}
 .icon-btn > span , .icon-btn > a > span {
   line-height: 1;
   align-items: center; gap: 0.5rem;
-}
-.icon-btn.const > span , .icon-btn.const > a > span {
-  display: flex !important;
 }
 .icon-btn > a {
   display: flex; gap: 0.5rem;
@@ -105,7 +99,13 @@ td, th {
 .icon-btn.icons-visible {
   border: 2px solid black;
 }
-.icon-btn.icons-visible:hover,.icon-btn.icons-visible:active  {
+.icon-btn.const {
+  border: 2px solid black !important;
+}
+.icon-btn.const > span , .icon-btn.const > a > span {
+  display: flex !important;
+}
+.icon-btn.icons-visible:hover,.icon-btn.icons-visible:active,.icon-btn.const:hover,.icon-btn.const:active  {
   cursor: pointer;
   border-color: var(--fc-highlight) !important;
   color: var(--fc-highlight) !important;

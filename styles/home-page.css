@@ -108,3 +108,9 @@
 #recipe-page >.top>.meta > button {
     position: absolute; right: 0;
 }
+
+@media (max-width: 600px){
+    #home-bar-button-list {
+        flex-wrap: wrap;
+    }
+}

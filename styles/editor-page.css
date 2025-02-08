@@ -174,7 +174,8 @@ input#edit-time {width: 4rem;}
     display: flex; gap: 1rem;
 }
 .icon-btn.selected {
-    background-color: var(--fc-highlight);
+    border-color: var(--fc-highlight) !important;
+    color: var(--fc-highlight) !important;
 }
 
 
