@@ -49,7 +49,7 @@ export const UserPreferencesProvider = ({ children }) => {
 
     return (
         <UserPreferencesContext.Provider value={{ fontFamily, setFontFamily, fontSize, setFontSize, iconBtnVisibility, setIconBtnVisibility }}>
-            {loading ? <div>Loading preferences...</div> : children}
+            {loading ? <div></div> : children}
         </UserPreferencesContext.Provider>
     );
 };
