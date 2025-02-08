@@ -5,6 +5,8 @@ import TextField from "@mui/material/TextField";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import Autocomplete from "@mui/material/Autocomplete";
+import Icon from "@/components/Icon"
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 export default function Filters({Filters, onChangeFunction, List}) {
     const [open, setOpen] = React.useState(false);
     const toggleDrawer = (newOpen) => () => {
@@ -13,7 +15,7 @@ export default function Filters({Filters, onChangeFunction, List}) {
 
     return (
         <div>
-            <button onClick={toggleDrawer(true)}>Filters</button>
+            <Icon children={<FilterAltIcon />} clickEvent={toggleDrawer(true)} btnText={"Filters"} />
             <Drawer anchor={'top'} open={open} onClose={toggleDrawer(false)} id={"homepage-filter"}>
                 <h1>FILTERS</h1>
         <div className={"flex"}>

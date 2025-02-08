@@ -15,7 +15,9 @@ import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import Snackbar from "@mui/material/Snackbar";
 import ContentPasteGoOutlinedIcon from "@mui/icons-material/ContentPasteGoOutlined"; // Import context
 import Confirm from "@/components/Confirm"
-
+import Icon from "@/components/Icon";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SaveAsIcon from '@mui/icons-material/SaveAs';
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export const getServerSideProps = async () => {
@@ -172,7 +174,7 @@ export default function Preferences({ isConnected }) {
                 message={snackbarText}
             />
             <div id={"preferences-page-header"} className={"container row"}>
-                <a href={"/"}><HomeIcon /></a>
+                <Icon children={<HomeIcon />} href={"/"} btnText={"HOME"} />
                 <h1>PREFERENCES</h1>
                 <span>({data.user.name})</span>
             </div>
@@ -182,10 +184,9 @@ export default function Preferences({ isConnected }) {
                 <Confirm
                     dialogFunction={savePreferences}
                     dialogText={"Update to these preferences?"}
-                >
-                    <ContentPasteGoOutlinedIcon />
-                    <span>Save Preferences</span>
-                </Confirm>
+                    btnText={"Save Preferences"}
+                    children={<SaveAsIcon />}
+                />
                 <h2>FONT SETTINGS</h2>
                 <div className={"container row"}>
                     <FontDownloadIcon />
@@ -249,6 +250,23 @@ export default function Preferences({ isConnected }) {
                         </div>
                     </div>
                 ))}
+                {
+                    /*
+
+                    FUTURE IMPLEMENTATIONS
+                    >>> Check:
+                        - size recipes on homepage based on font-size
+                        - predetermined small, normal, larger
+                    >>> Favorites:
+                        - view favorites
+                        - filter for favorites
+                        - delete favorites
+                    >>> Group Recipes:
+                        - /create-group
+                        - add to group | push to user.groups = [id,id,id]
+                        - ??? (be careful of private recipes I guess)
+                     */
+                }
             </div>
         </div>
     );

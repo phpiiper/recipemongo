@@ -251,7 +251,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                     value={safeIngredient.ingredient}
                     onChange={handleInputChange}
                     placeholder={"Ingredient Name"}
-                    style={{ width: "15rem" }}
+                    style={{ width: "10rem" }}
                     inputProps={{
                         'aria-label': 'ingredient'
                     }}
@@ -267,7 +267,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                     value={safeIngredient.comment}
                     onChange={handleInputChange}
                     placeholder={"Comments"}
-                    style={{ width: "13rem" }}
+                    style={{ width: "10rem" }}
                     inputProps={{
                         'aria-label': 'comment'
                     }}
