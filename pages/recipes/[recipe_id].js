@@ -8,7 +8,9 @@ import {useState} from "react";
 import { useSession } from "next-auth/react"
 import EditIcon from '@mui/icons-material/Edit';
 import {useUserPreferences} from "@/contexts/UserPreferencesContext";
-import "@/styles/recipe-page.css";
+import Icon from "@/components/Icon";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import HomeIcon from "@mui/icons-material/Home";
 const fetcher = (url) => fetch(url).then(res => res.json())
 
 export default function RecipePage() {
@@ -57,31 +59,18 @@ export default function RecipePage() {
         <Head>
             <title>{"RecipesV4" + " | " + data.name}</title>
         </Head>
-        <style>
-            <style jsx global>{`
-           html,body {
-             height: 100% !important;
-             overflow: hidden !important;
-           }
-           @media (max-width: 500px){
-             html,body {
-               height: revert !important;
-               overflow: revert !important;
-             }
-           }
-         `}</style>
-        </style>
         <div id={"recipe-page"}>
             <div className={"top"}>
+                <div className={"icon-btn-group row"}>
+                    <Icon children={<HomeIcon />} href={"/"} btnText={"HOME"} />
+                    {status === "authenticated" ?
+                        <Icon children={<EditIcon />} href={`../editor?id=${recipe_id}`} btnText={"Edit Recipe"} /> : <></>
+                    }
+                </div>
                 <div className={"meta"}>
-                    {1 === 2 ? <span>FAVE</span> : <></> }
-                    {status === "authenticated" ? <a href={"../editor?id=" + recipe_id}><EditIcon /></a> : <></> }
                     <span className={"recipe-name"}>{data.name}</span>
                     <span className={"recipes-category"}>{data.cat}</span>
                     <span className={"recipe-time"}>{time}</span>
-                    <button className={"back-btn"}>
-                        <a href={"/"}>BACK</a>
-                    </button>
                 </div>
                 <div className={"sizing"}>
                     <span className={"sizing-text"}>SIZING</span>

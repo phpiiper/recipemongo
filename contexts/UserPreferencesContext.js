@@ -8,7 +8,8 @@ export const useUserPreferences = () => {
 
 export const UserPreferencesProvider = ({ children }) => {
     const [fontFamily, setFontFamily] = useState('Calibri'); // Default font family
-    const [fontSize, setFontSize] = useState('18px'); // Default font size
+    const [fontSize, setFontSize] = useState('22px'); // Default font size
+    const [iconBtnVisibility, setIconBtnVisibility] = useState(true);
     const [loading, setLoading] = useState(true); // To track loading state
 
     useEffect(() => {
@@ -23,6 +24,9 @@ export const UserPreferencesProvider = ({ children }) => {
                     }
                     if (data && data.fontSize) {
                         setFontSize(data.fontSize); // Update font size from the API
+                    }
+                    if (data && 'iconTextHelp' in data) {
+                        setIconBtnVisibility(data.iconTextHelp);
                     }
                 } else {
                     console.warn('Failed to fetch preferences, using defaults');
@@ -45,11 +49,12 @@ export const UserPreferencesProvider = ({ children }) => {
             root.style.setProperty('--fs-root', fontSize);
             root.style.setProperty('--ff-header', fontFamily);
             root.style.setProperty('--ff-text', fontFamily);
+            root.style.setProperty('--icon-btn-visibility', iconBtnVisibility);
         }
-    }, [fontFamily, fontSize, loading]);
+    }, [fontFamily, fontSize, iconBtnVisibility, loading]);
 
     return (
-        <UserPreferencesContext.Provider value={{ fontFamily, setFontFamily, fontSize, setFontSize }}>
+        <UserPreferencesContext.Provider value={{ fontFamily, setFontFamily, fontSize, setFontSize, iconBtnVisibility, setIconBtnVisibility }}>
             {loading ? <div>Loading preferences...</div> : children}
         </UserPreferencesContext.Provider>
     );

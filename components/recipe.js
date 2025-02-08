@@ -1,6 +1,7 @@
 import * as React from 'react';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import EditIcon from '@mui/icons-material/Edit';
+import Icon from "@/components/Icon";
 
 export default function Recipe({ recipe, status, userPrefs }) {
     let r = recipe;
@@ -15,14 +16,17 @@ export default function Recipe({ recipe, status, userPrefs }) {
     const categoryColor = userPrefs && userPrefs.categories[r.cat] ? userPrefs.categories[r.cat]+80 : '';
 
     return (
-        <div className={"recipe-div"} style={{ backgroundColor: categoryColor }}>
-            <span className={"recipe-category"}>{r.cat}</span>
-            <span className={"recipe-name"}><a href={`/recipes/${r.id}`}>{r.name}</a></span>
-            <span className={"recipe-time"}>{time}</span>
+        <div className={'recipe-div'} style={{ backgroundColor: categoryColor }}>
+            <span className={'recipe-category'}>{r.cat}</span>
+            <span className={'recipe-name'}><a href={`/recipes/${r.id}`}>{r.name}</a></span>
+            <span className={'recipe-time'}>{time}</span>
             <div style={{ display: "flex", gap: "1rem" }}>
-                <button className={"recipes-button"}><a href={`/recipes/${r.id}`}><MenuBookIcon /></a></button>
-                {status === "authenticated" ? (<button className={"recipes-button"}><a href={`/editor?id=${r.id}`}><EditIcon /></a></button>) : <></>}
+                <Icon children={<MenuBookIcon />} href={`/recipes/${r.id}`} btnText={"View Recipe"} />
+                {status === "authenticated" ? (
+                    <Icon children={<EditIcon />} href={`/editor?id=${r.id}`} btnText={"Edit Recipe"} />
+                ) : <></>}
             </div>
         </div>
+
     );
 }

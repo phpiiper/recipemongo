@@ -1,22 +1,22 @@
 import * as React from "react";
 import { useSession } from "next-auth/react";
 import client from "@/lib/mongoconnect";
-import "@/styles/preferences-page.css";
 // Library Components
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from '@mui/material/TextField';
+import Switch from '@mui/material/Switch';
 // SYMBOLS
 import HomeIcon from '@mui/icons-material/Home';
 import FontDownloadIcon from '@mui/icons-material/FontDownload';
 import FormatSizeIcon from '@mui/icons-material/FormatSize';
 import { useEffect, useState, useCallback } from 'react';
 import { debounce } from 'lodash';
-import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import Snackbar from "@mui/material/Snackbar";
-import ContentPasteGoOutlinedIcon from "@mui/icons-material/ContentPasteGoOutlined"; // Import context
 import Confirm from "@/components/Confirm"
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
+import Icon from "@/components/Icon";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import Head from "next/head";
 
 export const getServerSideProps = async () => {
     try {
@@ -30,20 +30,11 @@ export const getServerSideProps = async () => {
 
 export default function Preferences({ isConnected }) {
     const { data, status } = useSession();
-    // >>>> USER PREFERENCES <<<< //
-    const { fontFamily, setFontFamily, fontSize, setFontSize } = useUserPreferences();
-    const [localFontFamily, setLocalFontFamily] = useState(fontFamily);
-    const [localFontSize, setLocalFontSize] = useState(fontSize);
-
-    const savePreferencesContext = () => {
-        setFontFamily(localFontFamily);  // Update context with the new font family
-        setFontSize(localFontSize);      // Update context with the new font size
-    };
-    // >>>> USER PREFERENCES END <<<< //
     const [userPrefs, setUserPrefs] = useState({
         fontFamily: "Calibri",
         fontSize: "18px",
         categories: {},
+        iconTextHelp: true
     });
     const [categoryOptions, setCategoryOptions] = useState([]); // State for category options
 
@@ -81,10 +72,11 @@ export default function Preferences({ isConnected }) {
     }, [status]);
 
     const fontFamiliesOptions = [
-        "Calibri", "Times New Roman", "Gowun Dodum", "Ysabeau"
+        "Calibri", "Times New Roman", "Gowun Dodum", "Ysabeau", "Text Me One"
     ];
     const fontSizeOptions = [
-        "14px", "16px", "18px", "20px", "22px", "24px"
+        "14px", "16px", "18px", "20px", "22px", "24px", "26px",
+        "28px"
     ];
 
     // Debounced function for updating category color
@@ -104,7 +96,6 @@ export default function Preferences({ isConnected }) {
     // >>>> SNACK BAR <<< //
     const [openSnackBar, setOpenSnackBar] = React.useState(false);
     const [snackbarText, setSnackbarText] = React.useState("Alert!");
-    const handleClickSnackBar = () => { setOpenSnackBar(true);};
     const handleSnackBarClose = (event, reason) => {
         if (reason === 'clickaway') { return; }
         setOpenSnackBar(false);
@@ -130,6 +121,7 @@ export default function Preferences({ isConnected }) {
                 console.error("Error saving preferences:", errorData.message);
             }
             if (typeof func === "function") {func();}
+            setOpenSnackBar(true); setSnackbarText("Successfully Updated! Refreshing!")
             location.reload();
         } catch (error) {
             console.error("Error:", error);
@@ -137,32 +129,47 @@ export default function Preferences({ isConnected }) {
     };
 
     if (isConnected && status === "loading") {
-        return (
+        return (<>
+            <Head>
+                <title>{"RecipesV4 | Preferences"}</title>
+            </Head>
             <div id={"preferences-page"}>
                 <h1>Loading...</h1>
             </div>
+            </>
         );
     }
 
     if (!isConnected) {
-        return (
+        return (<>
+            <Head>
+                <title>{"RecipesV4 | Preferences"}</title>
+            </Head>
             <div id={"preferences-page"}>
                 <h1>NOT CONNECTED</h1>
                 <a href="/">[GO BACK]</a>
             </div>
+            </>
         );
     }
 
     if (status === "unauthenticated") {
-        return (
+        return (<>
+            <Head>
+                <title>{"RecipesV4 | Preferences"}</title>
+            </Head>
             <div id={"preferences-page"}>
                 <h1>NOT ALLOWED</h1>
                 <a href="/">[GO BACK]</a>
             </div>
+            </>
         );
     }
 
-    return (
+    return (<>
+        <Head>
+            <title>{"RecipesV4 | Preferences"}</title>
+        </Head>
         <div id={"preferences-page"}>
             <Snackbar
                 anchorOrigin={{vertical: "top", horizontal: "center"}}
@@ -172,20 +179,30 @@ export default function Preferences({ isConnected }) {
                 message={snackbarText}
             />
             <div id={"preferences-page-header"} className={"container row"}>
-                <a href={"/"}><HomeIcon /></a>
+                <Icon children={<HomeIcon />} href={"/"} btnText={"HOME"} />
                 <h1>PREFERENCES</h1>
                 <span>({data.user.name})</span>
             </div>
             <div id={"preferences-page-body"} className={"container"}>
-                <h1>SETTINGS</h1>
-                <p>Change your account preferences.</p>
+                <h1>PREFERENCES</h1>
+                <p>Change your preferences here. Will take affect once you save it. Affects all devices you sign into.</p>
                 <Confirm
                     dialogFunction={savePreferences}
                     dialogText={"Update to these preferences?"}
-                >
-                    <ContentPasteGoOutlinedIcon />
-                    <span>Save Preferences</span>
-                </Confirm>
+                    btnText={"Save Preferences"}
+                    children={<SaveAsIcon />}
+                    btnClasses={"const"}
+                />
+                <h2>VIEWING SETTINGS</h2>
+                <div className={"container row"}>
+                    <VisibilityIcon />
+                    <Switch
+                    inputProps={{'aria-label': "Switch for viewing"}}
+                    onChange={(event, newValue) => setUserPrefs(prev => ({ ...prev, iconTextHelp: newValue })) }
+                    checked={userPrefs.iconTextHelp}
+                    />
+                    Show helper text for applicable icon buttons
+                </div>
                 <h2>FONT SETTINGS</h2>
                 <div className={"container row"}>
                     <FontDownloadIcon />
@@ -196,13 +213,27 @@ export default function Preferences({ isConnected }) {
                         options={fontFamiliesOptions}
                         value={userPrefs.fontFamily}
                         onChange={(event, newValue) => setUserPrefs(prev => ({ ...prev, fontFamily: newValue })) }
-                        getOptionLabel={(option) => option}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
                                 label="Font Family"
                             />
                         )}
+                        getOptionLabel={(option) => option}
+                        renderOption={(props, option) => {
+                            const { key, ...optionProps } = props;
+                            return (
+                            <li
+                                {...optionProps}
+                                key={"ff"+key}
+                            >
+                                <span
+                                    style={{fontFamily: option}}
+                                >
+                                    {option}
+                                </span>
+                            </li>
+                            )}}
                     />
                 </div>
                 <div className={"container row"}>
@@ -224,6 +255,8 @@ export default function Preferences({ isConnected }) {
                     />
                 </div>
                 <h2>CATEGORY SETTINGS</h2>
+                <p>Set the colors of recipes by category (visible through the homepage).</p>
+                <p>The left side shows the value it will be. Pick the value with the Color Picker (or manually type it in the Text Field)</p>
                 {categoryOptions.map((value, index) => (
                     <div className={"container row"} key={"cat"+index}>
                         <div className={"pref-cat-container"}>
@@ -249,7 +282,32 @@ export default function Preferences({ isConnected }) {
                         </div>
                     </div>
                 ))}
+                {
+                    /*
+
+                    FUTURE IMPLEMENTATIONS
+                    >>> Check:
+                        - size recipes on homepage based on font-size
+                        - predetermined small, normal, larger
+                    >>> Favorites:
+                        - view favorites
+                        - filter for favorites
+                        - delete favorites
+                    >>> Group Recipes:
+                        - /create-group
+                        - add to group | push to user.groups = [id,id,id]
+                        - ??? (be careful of private recipes I guess)
+                     */
+                }
             </div>
+            <Icon
+                btnText={"Back to Top"}
+                clickEvent={(event) => {
+                    console.log(event)
+                    window.scrollTo({top: 0, behavior: "smooth"})
+                }}
+            />
         </div>
+        </>
     );
 }

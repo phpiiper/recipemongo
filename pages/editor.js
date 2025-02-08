@@ -7,21 +7,21 @@ import client from "@/lib/mongoconnect";
 import EditorPageMeta from "@/components/editorpagemeta";
 import EditStep from "@/components/EditStep";
 import EditIngredient from "@/components/EditIngredient";
+import Icon from "@/components/Icon";
 import ContentPasteGoOutlinedIcon from '@mui/icons-material/ContentPasteGoOutlined';
 import KeyboardDoubleArrowUpOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowUpOutlined';
 import KeyboardDoubleArrowDownOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowDownOutlined';
-import RemoveIcon from '@mui/icons-material/Remove';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import Snackbar from "@mui/material/Snackbar";
+// ICONS
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import CodeIcon from '@mui/icons-material/Code';
-import Snackbar from "@mui/material/Snackbar";
-import "@/styles/editor-page.css";
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
+import RemoveIcon from '@mui/icons-material/Remove';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export const getServerSideProps = async () => {
     try {
@@ -54,6 +54,7 @@ export default function Editor({ isConnected }) {
     const [allRecipes, setAllRecipes] = useState([]);
     const [open, setOpen] = React.useState(false);
     const [openConfirmation, setOpenConfirmation] = React.useState(false);
+    const [viewGroup, setViewGroup] = useState("Ingredients");
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const handleOpenConf = () => setOpenConfirmation(true);
@@ -126,22 +127,6 @@ export default function Editor({ isConnected }) {
         );
     }
 
-    const handleInputChange = (e, newValue) => {
-        const { id } = e.target;
-        setRecipe((prevRecipe) => ({
-            ...prevRecipe,
-            [id.split("-")[0]]: newValue || e.target.value, // Ensure you update the value properly
-        }));
-    };
-
-    const handleTimeChange = (e) => {
-        const value = parseInt(e.target.value, 10); // Ensure it's a number
-        setRecipe((prevRecipe) => ({
-            ...prevRecipe,
-            time: value,
-        }));
-    };
-
     // Handle database save logic (add or update recipe)
     const handlePush = () => {
         if (allRecipes.find((x) => x.id === recipe.id)) {
@@ -210,31 +195,11 @@ export default function Editor({ isConnected }) {
                 message={snackbarText}
             />
             <div id={"editor-page-header"}>
-                <button className={"border"} onClick={handleOpen}>
-                    <HelpOutlineIcon />
-                    <span>HELP</span>
-                </button>
-                <h1>Recipes V4 Editor</h1>
-                <button className={"border"} onClick={handleOpenConf}>
-                   <AddToQueueIcon />
-                    <span>ADD TO DB</span>
-                </button>
-                <Dialog
-                    open={openConfirmation}
-                    onClose={handleCloseConf}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogContent>
-                        Confirming you want to push this recipe as is to the database.
-                    </DialogContent>
-                    <DialogActions>
-                        <button className={"dialog-btn"} onClick={handleCloseConf}>No</button>
-                        <button className={"dialog-btn"} onClick={() => {handleCloseConf();  handlePush()}} autoFocus>
-                            Yes
-                        </button>
-                    </DialogActions>
-                </Dialog>
+                <Icon
+                    children={<HelpOutlineIcon />}
+                    btnText={"Help"}
+                    clickEvent={handleOpen}
+                />
                 <Modal open={open} onClose={handleClose}>
                     <div id={"recipe-editor-helper"}>
                         <h1>Recipe Help Guide</h1>
@@ -246,8 +211,8 @@ export default function Editor({ isConnected }) {
                                 <span>Push This to Database</span>
                             </div>
                             <div className={"symbol-help"}>
-                            <ExitToAppIcon />
-                            <span>Leave Editor (go back to recipe if not new)</span>
+                                <ExitToAppIcon />
+                                <span>Leave Editor (go back to recipe if not new)</span>
                             </div>
                             <h3>Editing</h3>
                             <div className={"symbol-help"}>
@@ -291,16 +256,58 @@ export default function Editor({ isConnected }) {
                         </div>
                     </div>
                 </Modal>
-                <button className={"border"}>
-                    <a href={id ? `recipes/${id}` : "/"}> <ExitToAppIcon />  </a>
-                    <span>GO BACK</span>
-                </button>
+                <Icon
+                    children={<ExitToAppIcon />}
+                    btnText={"HOME"}
+                    href={id ? `recipes/${id}` : "/"}
+                />
+                <Icon
+                    children={<AddToQueueIcon />}
+                    btnText={"Add to DB"}
+                    clickEvent={handleOpenConf}
+                />
+                <Dialog
+                    open={openConfirmation}
+                    onClose={handleCloseConf}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogContent>
+                        Confirming you want to push this recipe as is to the database.
+                    </DialogContent>
+                    <DialogActions>
+                        <button className={"dialog-btn"} onClick={handleCloseConf}>No</button>
+                        <button className={"dialog-btn"} onClick={() => {handleCloseConf();  handlePush()}} autoFocus>
+                            Yes
+                        </button>
+                    </DialogActions>
+                </Dialog>
+                <h1>Recipes V4 Editor</h1>
             </div>
 
             <EditorPageMeta recipe={recipe} categories={categories} setRecipe={setRecipe} status={status} session={data ? data : false}/>
 
+            <div className={"container flex"}>
+                <Icon
+                    className={"const " + (viewGroup === "Ingredients" ? "selected" : "")}
+                    children={<VisibilityIcon />}
+                    btnText={"Ingredients"}
+                    clickEvent={() => {
+                        setViewGroup("Ingredients")
+                    }}
+                />
+                <Icon
+                    className={"const " + (viewGroup === "Steps" ? "selected" : "")}
+                    children={<VisibilityIcon />}
+                    btnText={"Steps"}
+                    clickEvent={() => {
+                        setViewGroup("Steps")
+                    }}
+                />
+            </div>
+
             {/* INGREDIENTS */}
-            <div id={"editor-page-ingredients"}>
+            <div id={"editor-page-ingredients"} style={{display: viewGroup !== "Ingredients" ? "none" : ""}}>
                 <h2>Ingredients</h2>
                 {recipe.ingredients.map((value, index) => (
                     <EditIngredient key={"ingredient" + index} Index={index} ingredient={value} setRecipe={setRecipe} recipe={recipe}/>
@@ -314,7 +321,7 @@ export default function Editor({ isConnected }) {
             </div>
 
             {/* STEPS */}
-            <div id={"editor-page-steps"}>
+            <div id={"editor-page-steps"} style={{display: viewGroup !== "Steps" ? "none" : ""}}>
                 <h2>STEPS</h2>
                 <div className={"edit-steps"}>
                     {recipe.steps.map((value, index) => (
@@ -328,6 +335,13 @@ export default function Editor({ isConnected }) {
                     > + Paste From Clipboard </button>
                 </div>
             </div>
+            <Icon
+                btnText={"Back to Top"}
+                clickEvent={(event) => {
+                    console.log(event)
+                    window.scrollTo({top: 0, behavior: "smooth"})
+                }}
+            />
         </div>
     );
 }

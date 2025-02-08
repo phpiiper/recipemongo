@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import Recipe from '@/components/recipe';
 export default function RecipeList({status,recipes, userPrefs}){
     if (JSON.stringify(recipes) === "{}" || recipes.error){

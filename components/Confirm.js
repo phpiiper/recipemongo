@@ -5,8 +5,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Icon from "@/components/Icon";
 
-export default function Confirm({children,dialogFunction,dialogText="Are you sure you want to do this?",dialogHeader="Alert"}) {
+export default function Confirm({children,dialogFunction,dialogText="Are you sure you want to do this?",dialogHeader="Alert", btnText, btnClasses}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -19,9 +20,7 @@ export default function Confirm({children,dialogFunction,dialogText="Are you sur
 
     return (
         <React.Fragment>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                {children}
-            </Button>
+            <Icon children={children} clickEvent={handleClickOpen} btnText={btnText} btnClass={btnClasses}/>
             <Dialog
                 open={open}
                 onClose={handleClose}

@@ -34,7 +34,6 @@ input#edit-time {width: 4rem;}
 #editor-page-steps, #editor-page-ingredients {
     width: 98%; padding: 0.5rem;
     border: 2px solid black;
-    max-height: 550px; /* 550px */
     overflow: auto;
     display: flex; flex-direction: column;
     gap: 0.5rem;
@@ -54,9 +53,9 @@ input#edit-time {width: 4rem;}
     width: 100%;
     display: flex; gap: 0.5rem;
     margin-top: 1rem;
-    position: sticky;
-    bottom: -0.5rem;
     background-color: white;
+    border-top: 10px solid black;
+    padding-top: 0.5rem
 }
 #edit-bot-btns .alert-div {
     width: 100%;
@@ -120,6 +119,9 @@ input#edit-time {width: 4rem;}
 .edit-step-options button:hover,.edit-step-options button:active {
     color: var(--fc-highlight);
 }
+.edit-step-div textarea, .edit-step-div .MuiInputBase-multiline {
+    height: 100% !important;
+}
 
 /*
     <EditIngredient />
@@ -136,12 +138,13 @@ input#edit-time {width: 4rem;}
     width: calc(100% - 2rem);
 }
 .edit-ingredient-div button {
-    weight: 100;
+    font-weight: 100;
 }
 
 .edit-ingredient-group-div {
     display: flex; flex-direction: column;
-    border-left: 4px solid black;
+    border: 2px solid black;
+    border-left-width: 8px;
     width: 100%;
 }
 .edit-ingredient-group-div .top {
@@ -163,4 +166,60 @@ input#edit-time {width: 4rem;}
 .edit-ingredient-group-div .bot {
     display: flex; flex-direction: column;
     gap: 0.5rem;
+}
+
+
+
+.container {
+    display: flex; gap: 1rem;
+}
+.icon-btn.selected {
+    background-color: var(--fc-highlight);
+}
+
+
+
+
+@media (max-width: 600px) {
+
+    /* EDITOR */
+    #editor-page-header {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #editor-page-header h1 {
+        width: 100%;
+    }
+
+    #editor-page-meta {
+        flex-direction: column;
+    }
+
+    #editor-page-meta .MuiInputBase-root {
+        width: 100%;
+    }
+
+    .edit-ingredient-div {
+        flex-direction: column;
+    }
+
+    .edit-ingredient-div .MuiTextField-root {
+        width: 100% !important;
+        max-width: unset !important;
+    }
+
+    .edit-step-div {
+        flex-direction: column-reverse;
+    }
+
+    .edit-step-options {
+        width: 100%;
+        border: none;
+    }
+
+    .edit-ingredient-div > button {
+        display: revert;
+    }
 }
