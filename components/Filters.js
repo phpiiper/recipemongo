@@ -67,7 +67,7 @@ export default function Filters({Filters, onChangeFunction, List}) {
             <h2>Filter: Category</h2>
             <p>Filter recipes by category</p>
             <h2>Filter: Ingredients</h2>
-            <p>Filter recipes by ingredients; separate items with commas (\')</p>
+            <p>Filter recipes by ingredients; separate items with commas (,)</p>
         </div>
             </Drawer>
         </div>
