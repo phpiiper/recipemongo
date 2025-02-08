@@ -19,6 +19,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import CodeIcon from '@mui/icons-material/Code';
 import Snackbar from "@mui/material/Snackbar";
+import "@/styles/editor-page.css";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 

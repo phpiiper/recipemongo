@@ -41,8 +41,10 @@ export const UserPreferencesProvider = ({ children }) => {
     // Apply the styles to the body once the preferences are loaded
     useEffect(() => {
         if (!loading) {
-            document.body.style.fontFamily = fontFamily;
-            document.body.style.fontSize = fontSize;
+            let root = document.querySelector(':root');
+            root.style.setProperty('--fs-root', fontSize);
+            root.style.setProperty('--ff-header', fontFamily);
+            root.style.setProperty('--ff-text', fontFamily);
         }
     }, [fontFamily, fontSize, loading]);
 

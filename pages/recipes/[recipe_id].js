@@ -8,6 +8,7 @@ import {useState} from "react";
 import { useSession } from "next-auth/react"
 import EditIcon from '@mui/icons-material/Edit';
 import {useUserPreferences} from "@/contexts/UserPreferencesContext";
+import "@/styles/recipe-page.css";
 const fetcher = (url) => fetch(url).then(res => res.json())
 
 export default function RecipePage() {

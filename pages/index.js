@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback } from "react";
 import { debounce } from "lodash"; // Import lodash for debouncing
 import EditIcon from '@mui/icons-material/Edit';
 import { useUserPreferences } from '@/contexts/UserPreferencesContext'; // Import context
+import "@/styles/home-page.css";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 

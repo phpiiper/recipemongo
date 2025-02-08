@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useSession } from "next-auth/react";
 import client from "@/lib/mongoconnect";
+import "@/styles/preferences-page.css";
 // Library Components
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from '@mui/material/TextField';
