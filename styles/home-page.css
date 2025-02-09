@@ -23,19 +23,42 @@
     <Filter />
     component/Filter
  */
-#homepage-filter .MuiPaper-root {
+#homepage-filter > .MuiPaper-root {
     padding: 1rem 2rem;
     display: flex; flex-direction: column;
     gap: 1rem;
+    overflow: visible;
 }
 #homepage-filter-header {
     display: flex; align-items: center;
     margin-bottom: 0.5rem;
 }
-#homepage-filter-header .icon-btn {
+#homepage-filter-header-icons-div {
     position: absolute;
     top: -0.25rem; right: 0;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    z-index:3;
+    flex-direction: row-reverse;
 }
+#filter-helper-modal {
+    justify-content: center;
+}
+#filter-helper {
+    background-color: white;
+    width: 85%;
+    display: flex; flex-direction: column;
+    padding: 1rem;
+    position: absolute;
+    bottom: 1rem;
+    margin-left: 7.5%;
+}
+#filter-helper .container {
+    flex-direction: column;
+}
+
+
 #homepage-filter .container {
     padding: 1rem; border: 2px solid var(--fc-main);
     display: flex; flex-direction: column;
@@ -105,12 +128,28 @@
     font-size: 0.75rem;
 }
 
-#recipe-page >.top>.meta > button {
-    position: absolute; right: 0;
-}
+
 
 @media (max-width: 600px){
+    #home-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    #homepage-filter .container.filter {
+        flex-wrap: wrap;
+    }
+    #homepage-filter .container.filter > div {
+        width: calc(100% - 3rem);
+    }
     #home-bar-button-list {
         flex-wrap: wrap;
+    }
+    #homepage-filter .filter-list {
+        flex-direction: column;
+    }
+
+    #homepage-filter-header-icons-div {
+        flex-direction: column;
     }
 }

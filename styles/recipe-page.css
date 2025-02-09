@@ -21,6 +21,9 @@
     font-size: var(--fs-h2);
     font-weight: bolder;
 }
+#recipe-page .top .meta .recipe-serving-size {
+    font-size: 1rem;
+}
 #recipe-page .top .meta .recipe-time {
     font-size: 0.8rem;
 }
@@ -151,6 +154,7 @@ html:has(#recipe-page), body:has(#recipe-page) {
     height: 100%;
     overflow: hidden;
 }
+.back-to-top {display: none;}
 @media (max-width: 600px) {
     html:has(#recipe-page), body:has(#recipe-page) {
         height: revert !important;
@@ -189,6 +193,7 @@ html:has(#recipe-page), body:has(#recipe-page) {
     }
     .recipe-list-div {gap: 0.5rem;}
     .recipe-div {width: 100%;}
+    .back-to-top {display: revert;}
 
 }
 
@@ -213,3 +218,8 @@ html:has(#recipe-page), body:has(#recipe-page) {
         padding-bottom: 4rem;
     }
 } /* END MEDIA QUERY 2 */
+
+
+#recipe-page >.top>.meta > button {
+    position: absolute; right: 0;
+}
