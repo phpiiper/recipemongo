@@ -33,8 +33,8 @@ export default async (req, res) => {
             try {
                 const client = await clientPromise;
                 const db = client.db("recipes");
-                if (session === "authenticated" && session.user) {  recipe.access = "private"; recipe.author = session.user.name;
-                 }
+                    recipe.access = "private";
+                    recipe.author = session.user.name;
                  recipe.lastUpdated = new Date().toJSON();
                 const recipes = await db.collection("recipelist").insertOne(recipe);
 

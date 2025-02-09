@@ -138,7 +138,7 @@ export default function Editor({ isConnected }) {
                 body: JSON.stringify(recipe),
             })
                 .then((response) => response.json())
-                .then((data) => console.log("PUT response", data));
+                .then((data) => {console.log("PUT response", data); setSnackbarText("Edited successfully!"); setOpenSnackBar(true); setInterval(() => {location.href = "/"}, 500); });
         } else {
             fetch('/api/recipe.handler', {
                 method: 'POST',
@@ -148,7 +148,7 @@ export default function Editor({ isConnected }) {
                 body: JSON.stringify(recipe),
             })
                 .then((response) => response.json())
-                .then((data) => console.log("POST response", data));
+                .then((data) => {console.log("POST response", data); setSnackbarText("Added successfully!"); setOpenSnackBar(true); setInterval(() => {location.href = "/"}, 500); });
         }
     };
 

@@ -10,7 +10,7 @@
 }
 #recipe-page .top {
     width: 100%;
-    border: 2px solid black;
+    border: 2px solid var(--fc-main);
     padding: 1rem;
     display: flex; flex-direction: column;
 }
@@ -42,7 +42,7 @@
 }
 #recipe-page #steps-div, #recipe-page #ingredients-div {
     width: 50%; height: 100%;
-    border: 2px solid black;
+    border: 2px solid var(--fc-main);
     padding: 0.5rem;
 }
 #recipe-page #ingredients-div, #recipe-page #steps-div {
@@ -56,7 +56,7 @@
     component/Ingredient
  */
 .ingredient-div-category {
-    border: 2px solid black;
+    border: 2px solid var(--fc-main);
     padding: 0.5rem;
     display: flex; flex-direction: column;
     gap: 0.5rem;
@@ -74,7 +74,7 @@
 .ingredient-div {
     display: flex; align-items: center;
     gap: 1rem;
-    border: 1px solid black;
+    border: 1px solid var(--fc-main);
     padding: 0.5rem;
 }
 .ingredient-div-amount {
@@ -99,13 +99,33 @@
     cursor: pointer;
 }
 
+/* STYLES */
+#recipe-page.Compact #ingredients-div {
+    gap: 0;
+}
+#recipe-page.Compact .ingredient-div {
+    padding: 4px;
+    border: none;
+}
+#recipe-page.Compact .ingredient-div-category {
+    padding: 4px;
+    border: none;
+    gap: 0;
+}
+#recipe-page.Compact .ingredient-div-category > span {
+    text-decoration: underline;
+}
+#recipe-page.Compact .ingredient-div-category-item {
+    gap: 0;
+}
+
 /*
     <Step />
     component/Step
  */
 
 .step-div {
-    border: 2px solid black;
+    border: 2px solid var(--fc-main);
     padding: 0.5rem;
 }
 .step-div p {
@@ -116,7 +136,14 @@
     border-color: var(--fc-highlight);
     cursor: pointer;
 }
-
+/* STYLES */
+#recipe-page.Compact #steps-div {
+    gap: 0;
+}
+#recipe-page.Compact .step-div {
+    padding: 4px;
+    border: none;
+}
 
 
 /* STYLING */

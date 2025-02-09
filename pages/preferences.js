@@ -17,6 +17,9 @@ import Icon from "@/components/Icon";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import Head from "next/head";
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import LayersIcon from '@mui/icons-material/Layers';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 
 export const getServerSideProps = async () => {
     try {
@@ -27,14 +30,16 @@ export const getServerSideProps = async () => {
         return {  props: { isConnected: false },  };
     }
 };
-
 export default function Preferences({ isConnected }) {
     const { data, status } = useSession();
     const [userPrefs, setUserPrefs] = useState({
         fontFamily: "Calibri",
         fontSize: "18px",
         categories: {},
-        iconTextHelp: true
+        iconTextHelp: true,
+        shortenMeasurements: false,
+        compactSize: "Standard",
+        theme: "Light"
     });
     const [categoryOptions, setCategoryOptions] = useState([]); // State for category options
 
@@ -78,7 +83,12 @@ export default function Preferences({ isConnected }) {
         "14px", "16px", "18px", "20px", "22px", "24px", "26px",
         "28px"
     ];
-
+    const compactingOptions = [
+        "Compact", "Standard",
+    ];
+    const themeOptions = [
+        "Light", "Dark",
+    ];
     // Debounced function for updating category color
     const debouncedColorChange = useCallback(
         debounce((category, color) => {
@@ -181,7 +191,7 @@ export default function Preferences({ isConnected }) {
             <div id={"preferences-page-header"} className={"container row"}>
                 <Icon children={<HomeIcon />} href={"/"} btnText={"HOME"} />
                 <h1>PREFERENCES</h1>
-                <span>({data.user.name})</span>
+                <span>{data.user.name}</span>
             </div>
             <div id={"preferences-page-body"} className={"container"}>
                 <h1>PREFERENCES</h1>
@@ -194,7 +204,7 @@ export default function Preferences({ isConnected }) {
                     btnClasses={"const"}
                 />
                 <h2>VIEWING SETTINGS</h2>
-                <div className={"container row"}>
+                <div className={"container row explanation"}>
                     <VisibilityIcon />
                     <Switch
                     inputProps={{'aria-label': "Switch for viewing"}}
@@ -202,6 +212,53 @@ export default function Preferences({ isConnected }) {
                     checked={userPrefs.iconTextHelp}
                     />
                     Show helper text for applicable icon buttons
+                </div>
+                <div className={"container row explanation"}>
+                    <ContentCutIcon />
+                    <Switch
+                        inputProps={{'aria-label': "Switch for full name ingredient sizing"}}
+                        onChange={(event, newValue) => setUserPrefs(prev => ({ ...prev, shortenMeasurements: newValue })) }
+                        checked={userPrefs.shortenMeasurements}
+                    />
+                    Shorten ingredient measurement names, when possible (Ex: 'tbs' instead of 'tablespoons')
+                </div>
+                <div className={"container row explanation"}>
+                    <LayersIcon />
+                    <Autocomplete
+                        autoHighlight
+                        id="compactSize"
+                        sx={{ width: 300 }}
+                        options={compactingOptions}
+                        value={userPrefs.compactSize}
+                        onChange={(event, newValue) => setUserPrefs(prev => ({ ...prev, compactSize: newValue })) }
+                        getOptionLabel={(option) => option}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Compactness"
+                            />
+                        )}
+                    />
+                    Change how compactness of recipe ingredients and steps
+                </div>
+                <div className={"container row explanation"}>
+                    <ColorLensIcon />
+                    <Autocomplete
+                        autoHighlight
+                        id="theme"
+                        sx={{ width: 300 }}
+                        options={themeOptions}
+                        value={userPrefs.theme}
+                        onChange={(event, newValue) => setUserPrefs(prev => ({ ...prev, theme: newValue })) }
+                        getOptionLabel={(option) => option}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Theme"
+                            />
+                        )}
+                    />
+                    Change the website color theme
                 </div>
                 <h2>FONT SETTINGS</h2>
                 <div className={"container row"}>
@@ -278,6 +335,10 @@ export default function Preferences({ isConnected }) {
                                 variant="outlined"
                                 sx={{ width: "10rem" }}
                                 value={userPrefs.categories[value] || "#ffffff"}
+                                onChange={(e) => {
+                                    const newColor = e.target.value;
+                                    debouncedColorChange(value, newColor); // Use debounced color change
+                                }}
                             />
                         </div>
                     </div>

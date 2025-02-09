@@ -10,7 +10,7 @@
     margin: 0;
 }
 #preferences-page .container {
-    padding: 1rem; border: 2px solid black;
+    padding: 1rem; border: 2px solid var(--fc-main);
     display: flex; flex-direction: column;
     gap: 1rem;
 }
@@ -39,7 +39,7 @@
     min-width: 8rem;
 }
 .pref-cat-color-block {
-    border: 2px solid black;
+    border: 2px solid var(--fc-main);
     width: 2rem; height: 2rem;
 }
 
@@ -57,5 +57,8 @@
     #preferences-page-header {
         display: flex !important;
         flex-direction: column !important;
+    }
+    .container.row.explanation {
+        flex-wrap: wrap;
     }
 }

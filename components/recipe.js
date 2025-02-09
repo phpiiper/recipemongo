@@ -13,7 +13,12 @@ export default function Recipe({ recipe, status, userPrefs }) {
     }
 
     // Get the category color from userPrefs, default to blank if not available
-    const categoryColor = userPrefs && userPrefs.categories && userPrefs.categories[r.cat] ? userPrefs.categories[r.cat]+80 : '';
+    let cs = userPrefs && userPrefs.categories ? userPrefs.categories : undefined;
+    let th = userPrefs && userPrefs.theme;
+    let num = 80;
+        if (th && th.includes("Dark")){   num = 33;  }
+        if (th && th.includes("Light")){   num = 80;  }
+    const categoryColor = cs ? cs[r.cat]+num : ""
 
     return (
         <div className={'recipe-div'} style={{ backgroundColor: categoryColor }}>

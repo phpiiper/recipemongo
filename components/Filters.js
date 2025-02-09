@@ -8,7 +8,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Icon from "@/components/Icon"
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
-export default function Filters({Filters, onChangeFunction, List}) {
+export default function Filters({Filters, onChangeFunction, List, value=""}) {
     const [open, setOpen] = React.useState(false);
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -20,6 +20,7 @@ export default function Filters({Filters, onChangeFunction, List}) {
             <Drawer anchor={'top'} open={open} onClose={toggleDrawer(false)} id={"homepage-filter"}>
                 <div id={"homepage-filter-header"}>
                     <h1>FILTERS</h1>
+                    <span style={{marginLeft: "1rem"}}>Total Recipes [{value}]</span>
                     <Icon
                         children={<CloseFullscreenIcon />}
                         clickEvent={() => {

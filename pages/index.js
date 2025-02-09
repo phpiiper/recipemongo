@@ -94,6 +94,7 @@ export default function Home({ isConnected }) {
                             ? [...new Set(data.map((x) => x.cat).filter(Boolean).map(String))]
                             : []
                     }}
+                    value={data?.length || ""}
                 />
             </div>
             </div>

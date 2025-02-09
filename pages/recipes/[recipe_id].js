@@ -11,7 +11,6 @@ import {useUserPreferences} from "@/contexts/UserPreferencesContext";
 import Icon from "@/components/Icon";
 import HomeIcon from "@mui/icons-material/Home";
 const fetcher = (url) => fetch(url).then(res => res.json())
-
 export default function RecipePage() {
     const { status } = useSession();
     const [sizing, setSizing] = useState(1);
@@ -28,6 +27,7 @@ export default function RecipePage() {
     }
     let ig = data.ingredients;
     const sizingArray = [0.25,0.5,0.75,1,1.25,1.5,1.75,2]
+    let compactClass = getComputedStyle(document.documentElement).getPropertyValue('--compactSize');
     function handleSizing(event){
         let prev_btn = document.getElementById("checkedSizingBtn");
         if (prev_btn){prev_btn.id = null}
@@ -48,7 +48,7 @@ export default function RecipePage() {
         <Head>
             <title>{"RecipesV4" + " | " + data.name}</title>
         </Head>
-        <div id={"recipe-page"}>
+        <div id={"recipe-page"} className={compactClass}>
             <div className={"top"}>
                 <div className={"icon-btn-group row"}>
                     <Icon children={<HomeIcon />} href={"/"} btnText={"HOME"} />

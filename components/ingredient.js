@@ -24,14 +24,16 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
             pound: "lbs",
             ounce: "oz",
             cup: "cup",
-        }
+            clove: "clove",
+            bunch: "bunch",
+        };
+        let doShorten = getComputedStyle(document.documentElement).getPropertyValue('--shorten-measurements');
         function mapUnit(input) {
             const unitMap = rec;
             const normalizedInput = input.trim().toLowerCase().replace(/s$/, '');
-
             return unitMap[normalizedInput] || input; // Return mapped value or null if not found
         }
-        size = mapUnit(i.size);
+        size = doShorten === 'true' ? mapUnit(i.size) : i.size;
     }
     if (i.type){
         return (

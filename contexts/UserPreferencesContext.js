@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import {createTheme, ThemeProvider} from "@mui/material/styles";
 
 const UserPreferencesContext = createContext();
 
@@ -7,9 +8,46 @@ export const useUserPreferences = () => {
 };
 
 export const UserPreferencesProvider = ({ children }) => {
-    const [fontFamily, setFontFamily] = useState('Calibri'); // Default font family
-    const [fontSize, setFontSize] = useState('22px'); // Default font size
+    const [fontFamily, setFontFamily] = useState('Calibri')
+    const [fontSize, setFontSize] = useState('22px');
     const [iconBtnVisibility, setIconBtnVisibility] = useState(true);
+    const [shortenMeasurements, setShortenMeasurements] = useState(false);
+    const [compactSize, setCompactSize] = useState('Standard');
+    const [theme, setTheme] = useState('Light');
+    const DarkTheme = createTheme({
+        palette: {
+            mode: 'dark',
+            primary: {
+                main: '#d2d2d2',
+            },
+            text: {
+                primary: '#fff',
+            },
+            background: {
+                paper: '#121212',
+                default: '#121212'
+            },
+        },
+    });
+    const LightTheme = createTheme({
+        palette: {
+            mode: 'light',
+            primary: {
+                main: '#121212',
+            },
+            text: {
+                primary: '#121212',
+            },
+            background: {
+                paper: '#fff',
+                default: '#fff'
+            },
+        },
+    });
+    const BlankTheme = createTheme({})
+    const [themeActual, setThemeActual] = useState(BlankTheme);
+
+
     const [loading, setLoading] = useState(true); // To track loading state
 
     useEffect(() => {
@@ -22,6 +60,9 @@ export const UserPreferencesProvider = ({ children }) => {
                     if (data?.fontFamily) setFontFamily(data.fontFamily);
                     if (data?.fontSize) setFontSize(data.fontSize);
                     if ('iconTextHelp' in data) setIconBtnVisibility(data.iconTextHelp);
+                    if ('shortenMeasurements' in data) setShortenMeasurements(data.shortenMeasurements);
+                    if (data?.compactSize) setCompactSize(data.compactSize);
+                    if (data?.theme) setTheme(data.theme + "Theme");
                 } else {
                     console.warn('Failed to fetch preferences, using defaults');
                 }
@@ -44,12 +85,20 @@ export const UserPreferencesProvider = ({ children }) => {
             root.style.setProperty('--ff-header', fontFamily);
             root.style.setProperty('--ff-text', fontFamily);
             root.style.setProperty('--icon-btn-visibility', iconBtnVisibility ? 'true' : 'false');
+            root.style.setProperty('--shorten-measurements', shortenMeasurements ? 'true' : 'false');
+            root.style.setProperty('--compactSize', compactSize);
+            root.classList.add(theme);
+            if (theme.includes("Dark")){setThemeActual(DarkTheme);}
+            else if (theme.includes("Light")){setThemeActual(LightTheme);}
+            else {setThemeActual(BlankTheme) }
         }
-    }, [fontFamily, fontSize, iconBtnVisibility, loading]);
+    }, [fontFamily, fontSize, iconBtnVisibility, shortenMeasurements, compactSize, theme, loading]);
 
     return (
-        <UserPreferencesContext.Provider value={{ fontFamily, setFontFamily, fontSize, setFontSize, iconBtnVisibility, setIconBtnVisibility }}>
+        <UserPreferencesContext.Provider value={{ fontFamily, setFontFamily, fontSize, setFontSize, iconBtnVisibility, setIconBtnVisibility, shortenMeasurements, setShortenMeasurements, compactSize, setCompactSize }}>
+            <ThemeProvider theme={themeActual}>
             {loading ? <div></div> : children}
+            </ThemeProvider>
         </UserPreferencesContext.Provider>
     );
 };
