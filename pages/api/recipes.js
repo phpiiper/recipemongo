@@ -48,8 +48,7 @@ export default async (req, res) => {
             }
         }
 
-        // If no filters exist, fetch all recipes
-        const query = Object.keys(filters).length > 0 ? filters : {};
+        const query = filters;
 
         console.log("Final MongoDB Query:", JSON.stringify(query, null, 2)); // Debugging
 

@@ -189,18 +189,7 @@ button.recipes-button:hover,button.recipes-button:active {
 .alert-div button {
   width: 100%; height: 100%;
 }
-
-
-
-@media (max-width: 600px){
-/* HOMEPAGE */
-#home-bar {
-  flex-direction: column;
-  gap: 0.5rem;
+.icon-btn.back-to-top {
+  margin-top: 1rem;
+  width: 100%;
 }
-
-#homepage-filter .container.filter {
-    flex-direction: column;
-}
-
-} /* END MEDIA QUERY 1 */

@@ -15,17 +15,7 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
         const { id } = e.target;
         setRecipe((prevRecipe) => ({
             ...prevRecipe,
-            [id.split("-")[0]]: newValue || e.target.value,  // Ensure you update the value properly
-        }));
-    };
-
-
-    const handleTimeChange = (e) => {
-        const value = parseInt(e.target.value, 10); // Ensure it's a number
-        // noinspection JSCheckFunctionSignatures
-        setRecipe((prevRecipe) => ({
-            ...prevRecipe,
-            time: value,
+            [id.split("-")[0]]: newValue || e.target.value,
         }));
     };
 
@@ -74,6 +64,17 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
                     id={"cat"}
                     onChange={(e, newValue) => handleInputChange(e, newValue)}
                     value={recipe.cat}
+                />
+
+                <OutlinedInput
+                    id="servings"
+                    endAdornment={<InputAdornment
+                        position="end">servings</InputAdornment>}
+                    inputProps={{
+                        'aria-label': 'servings', 'type':'number', 'width': '2rem'
+                    }}
+                    onChange={(e, newValue) => handleInputChange(e, newValue)}
+                    value={recipe.servings || 0}
                 />
             </div>
     );

@@ -30,6 +30,7 @@
     padding: 0.25rem 0.5rem;
 }
 input#edit-time {width: 4rem;}
+input#servings {width: 2rem;}
 
 #editor-page-steps, #editor-page-ingredients {
     width: 98%; padding: 0.5rem;
@@ -148,7 +149,7 @@ input#edit-time {width: 4rem;}
     width: 100%;
 }
 .edit-ingredient-group-div .top {
-    background-color: #c7c7c7;
+    background-color: var(--bc-main);
     display: flex; align-items: center;
     padding: 1rem;
     gap: 1rem;
@@ -213,6 +214,18 @@ input#edit-time {width: 4rem;}
 
     .edit-step-div {
         flex-direction: column-reverse;
+    }
+
+    .edit-ingredient-group-div {
+        overflow-x: auto;
+    }
+    .edit-ingredient-group-div .top {
+        flex-wrap: wrap;
+        gap: 0.5rem 0;
+        padding: 0.5rem;
+    }
+    .edit-ingredient-group-div .top h1 {
+        width: calc(100% - 3rem);
     }
 
     .edit-step-options {

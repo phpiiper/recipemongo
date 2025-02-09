@@ -8,9 +8,13 @@ import EditorPageMeta from "@/components/editorpagemeta";
 import EditStep from "@/components/EditStep";
 import EditIngredient from "@/components/EditIngredient";
 import Icon from "@/components/Icon";
+// icons
 import ContentPasteGoOutlinedIcon from '@mui/icons-material/ContentPasteGoOutlined';
 import KeyboardDoubleArrowUpOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowUpOutlined';
 import KeyboardDoubleArrowDownOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowDownOutlined';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+// components
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -138,7 +142,9 @@ export default function Editor({ isConnected }) {
                 body: JSON.stringify(recipe),
             })
                 .then((response) => response.json())
-                .then((data) => {console.log("PUT response", data); setSnackbarText("Edited successfully!"); setOpenSnackBar(true); setInterval(() => {location.href = "/"}, 500); });
+                .then((data) => {console.log("PUT response", data); setSnackbarText("Edited successfully!"); setOpenSnackBar(true);
+                    if (process.env.NODE_ENV === "production") {setInterval(() => {location.href = "/"}, 500);}
+                });
         } else {
             fetch('/api/recipe.handler', {
                 method: 'POST',
@@ -195,6 +201,11 @@ export default function Editor({ isConnected }) {
                 message={snackbarText}
             />
             <div id={"editor-page-header"}>
+                <Icon
+                    children={<ExitToAppIcon />}
+                    btnText={"HOME"}
+                    href={id ? `recipes/${id}` : "/"}
+                />
                 <Icon
                     children={<HelpOutlineIcon />}
                     btnText={"Help"}
@@ -257,15 +268,16 @@ export default function Editor({ isConnected }) {
                     </div>
                 </Modal>
                 <Icon
-                    children={<ExitToAppIcon />}
-                    btnText={"HOME"}
-                    href={id ? `recipes/${id}` : "/"}
-                />
-                <Icon
                     children={<AddToQueueIcon />}
                     btnText={"Add to DB"}
                     clickEvent={handleOpenConf}
                 />
+                {process.env.NODE_ENV !== 'production' ? <Icon
+                    children={<CodeIcon />}
+                    btnText={"Log Recipe"}
+                    clickEvent={() => {console.log(recipe)}}
+                /> : <></>
+                }
                 <Dialog
                     open={openConfirmation}
                     onClose={handleCloseConf}
@@ -313,10 +325,18 @@ export default function Editor({ isConnected }) {
                     <EditIngredient key={"ingredient" + index} Index={index} ingredient={value} setRecipe={setRecipe} recipe={recipe}/>
                 ))}
                 <div id={"edit-bot-btns"}>
-                    <button className={"add"} onClick={() => {addIngrFunc(); handleClickSnackBar(); setSnackbarText("Added Ingredient to Ingredients!");}}
-                    > + Add Ingredient </button>
-                    <button className={"group"} onClick={() => {addGroupFunc(); handleClickSnackBar(); setSnackbarText("Added Group to Ingredients!");}}
-                    > + Add Group </button>
+                    <Icon
+                        children={<NoteAddIcon />}
+                        btnClass={"add const"}
+                        clickEvent={() => {addIngrFunc(); handleClickSnackBar(); setSnackbarText("Added Ingredient to Ingredients!");}}
+                        btnText={"Add Ingredient"}
+                    ></Icon>
+                    <Icon
+                        children={<CreateNewFolderIcon />}
+                        btnClass={"group const"}
+                        clickEvent={() => {addGroupFunc(); handleClickSnackBar(); setSnackbarText("Added Group to Ingredients!");}}
+                        btnText={"Add Group"}
+                    ></Icon>
                 </div>
             </div>
 
@@ -329,10 +349,18 @@ export default function Editor({ isConnected }) {
                     ))}
                 </div>
                 <div id={"edit-bot-btns"}>
-                    <button className={"add"} onClick={() => {addStepFunc(); handleClickSnackBar(); setSnackbarText("Added step!");}}
-                    >  + Add Step </button>
-                    <button className={"copy"} onClick={() => {stepPaste(); handleClickSnackBar(); setSnackbarText("Pasted step from clipboard!");}}
-                    > + Paste From Clipboard </button>
+                    <Icon
+                        children={<NoteAddIcon />}
+                        btnClass={"add const"}
+                        clickEvent={() => {addStepFunc(); handleClickSnackBar(); setSnackbarText("Added step to recipe!");}}
+                        btnText={"Add Step"}
+                    ></Icon>
+                    <Icon
+                        children={<ContentPasteGoOutlinedIcon />}
+                        btnClass={"group const"}
+                        clickEvent={() => {stepPaste(); handleClickSnackBar(); setSnackbarText("Pasted new step from clipboard!");}}
+                        btnText={"Paste From Clipboard"}
+                    ></Icon>
                 </div>
             </div>
             <Icon

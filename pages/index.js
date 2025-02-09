@@ -10,10 +10,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import SearchIcon from '@mui/icons-material/Search';
 // CUSTOM COMPONENTS
 import RecipeList from "@/components/recipelist";
 import Filters from "@/components/Filters";
 import Icon from "@/components/Icon";
+import Head from "next/head";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -75,9 +79,26 @@ export default function Home({ isConnected }) {
     if (status === "loading") return <div>Loading...</div>;
     if (!isConnected) return <h1>NOT CONNECTED</h1>;
     return (
+        <>
+        <Head>
+            <title>Recipes V4</title>
+        </Head>
         <div id="content">
             <div id={"home-bar"}>
                 <h1 style={{ textAlign: "center", lineHeight: "1" }}>Recipes V4</h1>
+                <div id={"home-bar-search-bar"}>
+                    <FormControl variant="outlined" style={{ width: "80%", display: "flex", gap:"0.5rem" , flexDirection: "row", alignItems: "center", marginLeft: "10%"}}>
+                        <label htmlFor={"search-name-home-page"}><SearchIcon /></label>
+                        <TextField
+                            id="search-name-home-page"
+                            className={"search-forms"}
+                            placeholder="Search by name..."
+                            value={filterList.name}
+                            onChange={(event) => handleInputChange("name", event.target.value)}
+                            label="Recipe Name"
+                        />
+                    </FormControl>
+                </div>
             <div id={"home-bar-button-list"}>
                 {status === "unauthenticated" ? (<Icon children={<LoginIcon />} clickEvent={() => signIn()} btnText={"Sign In"} />) : <></>}
                 {status === "authenticated" ? (<Icon children={<LogoutIcon />} clickEvent={() => signOut()} btnText={"Sign Out"} />) : <></>}
@@ -101,6 +122,14 @@ export default function Home({ isConnected }) {
 
             {/* Pass userPrefs to RecipeList */}
             <RecipeList status={status} recipes={data || []} userPrefs={userPrefs} />
+            <Icon
+                btnText={"Back to Top"}
+                btnClass={"back-to-top"}
+                clickEvent={(event) => {
+                    console.log(event)
+                    window.scrollTo({top: 0, behavior: "smooth"})
+                }}
+            />
         </div>
-    );
+    </>)
 }
