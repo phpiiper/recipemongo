@@ -21,7 +21,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
     // Ensure ingredient values are never undefined or null
     const safeIngredient = {
         ingredient: ingredient.ingredient || "",
-        amount: ingredient.amount || "",
+        amount: (ingredient.amount) || "",
         size: ingredient.size || "",
         comment: ingredient.comment || "",
     };
@@ -35,7 +35,12 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
             if (!isNaN(ev) && Number(ev) === 0) {
                 delete newIngr[e.target.id];
             } else {
-                newIngr[e.target.id] = ev;
+                if (e.target.id === "amount"){
+                    if (ev.split("-").filter(x => x.length > 0).length > 1) { ev = ev.split("-") }
+                    newIngr[e.target.id] = ev;
+                } else {
+                    newIngr[e.target.id] = ev;
+                }
             }
             setRecipe((prevRecipe) => ({
                 ...prevRecipe,
@@ -222,7 +227,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
             >  <RemoveIcon />  </button>
             <TextField
                 id="amount"
-                value={safeIngredient.amount}
+                value={Array.isArray(safeIngredient.amount) ? safeIngredient.amount.join("-") : safeIngredient.amount}
                 onChange={handleInputChange}
                 placeholder={"##"}
                 style={{ width: "4rem", minWidth: "4rem" }}
@@ -264,7 +269,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 })}><ContentPasteGoOutlinedIcon /></button>
                 <TextField
                     id="comment"
-                    value={safeIngredient.comment}
+                    value={Array.isArray(safeIngredient.comment) ? safeIngredient.comment.join(", ") : safeIngredient.comment}
                     onChange={handleInputChange}
                     placeholder={"Comments"}
                     style={{ width: "10rem" }}

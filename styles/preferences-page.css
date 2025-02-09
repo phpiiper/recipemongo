@@ -33,6 +33,7 @@
 .pref-cat-container {
     display: flex; gap: 1rem; align-items: center;
     overflow-x: auto;
+    min-height: 75px;
 }
 .pref-cat-container > span {
     min-width: 8rem;

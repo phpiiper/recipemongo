@@ -171,7 +171,7 @@ html:has(#recipe-page), body:has(#recipe-page) {
 @media (max-width: 1200px){
     #recipe-page #steps-div, #recipe-page #ingredients-div {
         height: 100%;
-        max-height: calc(100vh - 50px - 115px - 4rem) !important;
+        max-height: calc(100vh - 50px - 4rem - 200px) !important;
     }
 } /* END MEDIA QUERY 2 */
 

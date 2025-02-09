@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Fraction from "fraction.js";
 export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
-    let i = ingredient; let amount;
+    let i = ingredient; let amount; let size;
     if (i.amount){
         let amt = Array.isArray(i.amount) ? i.amount.map(x => x*sizing) : (i.amount * sizing);
         if (Array.isArray(amt)){
@@ -16,6 +16,22 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
             amount = <><span>{f1}</span><span className={"fraction"}>{f2}</span></>
 
         }
+    }
+    if (i.size){
+        let rec = {
+            tablespoon: "tbs",
+            teaspoon: "tsp",
+            pound: "lbs",
+            ounce: "oz",
+            cup: "cup",
+        }
+        function mapUnit(input) {
+            const unitMap = rec;
+            const normalizedInput = input.trim().toLowerCase().replace(/s$/, '');
+
+            return unitMap[normalizedInput] || input; // Return mapped value or null if not found
+        }
+        size = mapUnit(i.size);
     }
     if (i.type){
         return (
@@ -33,7 +49,7 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
         return (
             <div className={"ingredient-div"}>
                 {i.amount ? <span className={"ingredient-div-amount"}>{amount}</span> : <></>}
-                {i.size ? <span className={"ingredient-div-size"}>{i.size}</span> : <></>}
+                {size ? <span className={"ingredient-div-size"}>{size}</span> : <></>}
                 {i.ingredient ? <span className={"ingredient-div-ingredient"}>{i.ingredient}</span> : <></>}
                 {i.comment ? <span className={"ingredient-div-comments"}>{
                     i.comment.join("; ")
