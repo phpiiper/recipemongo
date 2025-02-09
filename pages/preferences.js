@@ -118,7 +118,7 @@ export default function Preferences({ isConnected }) {
                 console.log("Preferences saved:", result.message);
                 if (typeof func === "function") {func();}
                 setOpenSnackBar(true); setSnackbarText("Successfully Updated! Refreshing!")
-                location.reload();
+                setInterval(() => {location.reload()}, 500);
             } else {
                 const errorData = await response.json();
                 console.error("Error saving preferences:", errorData.message);
