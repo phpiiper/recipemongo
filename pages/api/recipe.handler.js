@@ -1,6 +1,7 @@
 import clientPromise from "../../lib/mongoconnect";
 import NextAuth from "@/pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import {ObjectId} from "mongodb";
 
 export default async (req, res) => {
     const session = await getServerSession(req, res, NextAuth);
@@ -10,7 +11,6 @@ export default async (req, res) => {
         res.status(418).json({
             message: `Data not pushed! ${x ? x : ""}`,
         });
-        return; // Ensures no further code runs after the error is sent
     }
 
     // Check for session
@@ -53,10 +53,11 @@ export default async (req, res) => {
                 const client = await clientPromise;
                 const db = client.db("recipes");
                 recipe.lastUpdated = new Date().toJSON();
+                const testID = new ObjectId(recipe._id) || recipe._id;
+                delete recipe._id
 
-                // Ensure you're querying with the correct primary field (usually _id)
                 const updateResult = await db.collection("recipelist").updateOne(
-                    { _id: recipe._id }, // Assuming you're using _id for identification
+                    { _id: testID },
                     { $set: recipe }
                 );
 
@@ -77,7 +78,7 @@ export default async (req, res) => {
                 }
             } catch (e) {
                 console.error(e);
-                res.status(500).json({ message: 'Internal Server Error' });
+                res.status(500).json({ message: `Internal Server Error; ${e}` });
             }
         }
         // Handle unsupported HTTP methods

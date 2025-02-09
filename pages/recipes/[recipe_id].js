@@ -7,7 +7,6 @@ import Step from "@/components/step"
 import {useState} from "react";
 import { useSession } from "next-auth/react"
 import EditIcon from '@mui/icons-material/Edit';
-import {useUserPreferences} from "@/contexts/UserPreferencesContext";
 import Icon from "@/components/Icon";
 import HomeIcon from "@mui/icons-material/Home";
 const fetcher = (url) => fetch(url).then(res => res.json())
@@ -59,10 +58,11 @@ export default function RecipePage() {
                 <div className={"meta"}>
                     <span className={"recipe-name"}>{data.name}</span>
                     <span className={"recipes-category"}>{data.cat}</span>
+                    {data.servings ? <span className={"recipe-serving-size"}>{!isNaN(data.servings) ? JSON.parse(data.servings)*sizing : 0} Serving{Number(data.servings) * sizing > 1 ? 's' : ''} </span> : <></>}
                     <span className={"recipe-time"}>{time}</span>
                 </div>
                 <div className={"sizing"}>
-                    <span className={"sizing-text"}>SIZING</span>
+                    <span className={"sizing-text"}>INGREDIENT SCALE</span>
                     {sizingArray.map(x => <button key={"sizing-btn-"+x} id={x===1 ? "checkedSizingBtn" : ""} className={"sizing-button"} data-data={x} onClick={handleSizing}>{x.toFixed(2) +"x"}</button> )}
                 </div>
             </div>
@@ -76,5 +76,12 @@ export default function RecipePage() {
                     {ig.map((x,index) => <Ingredient ingredient={x} key={data.id + "-i-" + index} sizing={sizing} ingIndex={index}/>) }
                 </div>
             </div>
+            <Icon
+                btnText={"Back to Top"}
+                btnClass={"back-to-top"}
+                clickEvent={() => {
+                    window.scrollTo({top: 0, behavior: "smooth"})
+                }}
+            />
         </div>
     </>)}
