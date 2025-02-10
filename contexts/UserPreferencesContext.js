@@ -23,6 +23,7 @@ export const UserPreferencesProvider = ({ children }) => {
             },
             text: {
                 primary: '#fff',
+                secondary: '#afafaf',
             },
             secondary : {
                 main: '#dc1d1d',  // if necessary
@@ -53,7 +54,7 @@ export const UserPreferencesProvider = ({ children }) => {
             },
             text: {
                 primary: '#121212',
-                secondary: '#121212',  // labels in inputs
+                secondary: '#afafaf',  // labels in inputs
             },
             background: {
                 paper: '#fff',
