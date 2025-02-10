@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-
+import fontColorContrast from 'font-color-contrast';
 const UserPreferencesContext = createContext();
 
 export const useUserPreferences = () => {
@@ -14,18 +14,32 @@ export const UserPreferencesProvider = ({ children }) => {
     const [shortenMeasurements, setShortenMeasurements] = useState(false);
     const [compactSize, setCompactSize] = useState('Standard');
     const [theme, setTheme] = useState('Light');
+    const [highlight, setHighlight] = useState('#3669ef');
     const DarkTheme = createTheme({
         palette: {
             mode: 'dark',
             primary: {
-                main: '#d2d2d2',
+                main: highlight,
             },
             text: {
                 primary: '#fff',
+                secondary: '#afafaf',
+            },
+            secondary : {
+                main: '#dc1d1d',  // if necessary
             },
             background: {
                 paper: '#121212',
                 default: '#121212'
+            },
+            action: {
+                active: '#121212', // input ui buttons
+                selected: highlight,
+                selectedOpacity: 0.01
+            },
+            typography: {
+                fontFamily: fontFamily,
+                fontSize: fontFamily
             },
         },
     });
@@ -33,14 +47,27 @@ export const UserPreferencesProvider = ({ children }) => {
         palette: {
             mode: 'light',
             primary: {
-                main: '#121212',
+                main: highlight, // highlight color
+            },
+            secondary : {
+                main: '#dc1d1d',  // if necessary
             },
             text: {
                 primary: '#121212',
+                secondary: '#afafaf',  // labels in inputs
             },
             background: {
                 paper: '#fff',
                 default: '#fff'
+            },
+            action: {
+                active: '#121212', // input ui buttons
+                selected: highlight,
+                selectedOpacity: 0.01
+            },
+            typography: {
+                fontFamily: fontFamily,
+                fontSize: fontFamily
             },
         },
     });
@@ -63,6 +90,7 @@ export const UserPreferencesProvider = ({ children }) => {
                     if ('shortenMeasurements' in data) setShortenMeasurements(data.shortenMeasurements);
                     if (data?.compactSize) setCompactSize(data.compactSize);
                     if (data?.theme) setTheme(data.theme + "Theme");
+                    if (data?.highlight) setHighlight(data.highlight);
                 } else {
                     console.warn('Failed to fetch preferences, using defaults');
                 }
@@ -87,6 +115,10 @@ export const UserPreferencesProvider = ({ children }) => {
             root.style.setProperty('--icon-btn-visibility', iconBtnVisibility ? 'true' : 'false');
             root.style.setProperty('--shorten-measurements', shortenMeasurements ? 'true' : 'false');
             root.style.setProperty('--compactSize', compactSize);
+            root.style.setProperty('--fc-highlight', `${highlight}`);
+            root.style.setProperty('--fc-highlight-text', `${fontColorContrast(highlight)}`);
+            root.style.setProperty('--fc-highlight-recipe', `${highlight}`);
+            root.style.setProperty('--fc-highlight-recipe-text', `${fontColorContrast(highlight)}`);
             root.classList.add(theme);
             if (theme.includes("Dark")){setThemeActual(DarkTheme);}
             else if (theme.includes("Light")){setThemeActual(LightTheme);}

@@ -92,13 +92,20 @@ export default function Preferences({ isConnected }) {
     // Debounced function for updating category color
     const debouncedColorChange = useCallback(
         debounce((category, color) => {
-            setUserPrefs((prev) => ({
-                ...prev,
-                categories: {
-                    ...prev.categories,
-                    [category]: color,
-                },
-            }));
+            if (category === "highlight"){
+                setUserPrefs((prev) => ({
+                    ...prev,
+                    highlight: color ,
+                }));
+            } else {
+                setUserPrefs((prev) => ({
+                    ...prev,
+                    categories: {
+                        ...prev.categories,
+                        [category]: color,
+                    },
+                }));
+            }
         }, 500),
         [] // Ensure the debounced function is only created once
     );
@@ -239,7 +246,7 @@ export default function Preferences({ isConnected }) {
                             />
                         )}
                     />
-                    Change how compactness of recipe ingredients and steps
+                    Change how compact the ingredient and steps are on the Recipe Page
                 </div>
                 <div className={"container row explanation"}>
                     <ColorLensIcon />
@@ -263,6 +270,7 @@ export default function Preferences({ isConnected }) {
                 <h2>FONT SETTINGS</h2>
                 <div className={"container row"}>
                     <FontDownloadIcon />
+                    <span>Font Family</span>
                     <Autocomplete
                         autoHighlight
                         id="fontFamily"
@@ -295,6 +303,7 @@ export default function Preferences({ isConnected }) {
                 </div>
                 <div className={"container row"}>
                     <FormatSizeIcon />
+                    <span>Font Size</span>
                     <Autocomplete
                         autoHighlight
                         id="fontSize"
@@ -309,6 +318,31 @@ export default function Preferences({ isConnected }) {
                                 label="Font Size"
                             />
                         )}
+                    />
+                </div>
+                <div className={"container row"}>
+                    <FormatSizeIcon />
+                    <span>Highlight Color</span>
+                    <TextField
+                        label="Color Picker"
+                        variant="outlined"
+                        sx={{ width: "6rem" }}
+                        type={'color'}
+                        value={userPrefs.highlight || "#3669ef"}
+                        onChange={(e) => {
+                            const newColor = e.target.value;
+                            debouncedColorChange("highlight", newColor); // Use debounced color change
+                        }}
+                    />
+                    <TextField
+                        label="Color"
+                        variant="outlined"
+                        sx={{ width: "10rem" }}
+                        value={userPrefs.highlight || "#3669ef"}
+                        onChange={(e) => {
+                            const newColor = e.target.value;
+                            debouncedColorChange("highlight", newColor); // Use debounced color change
+                        }}
                     />
                 </div>
                 <h2>CATEGORY SETTINGS</h2>
