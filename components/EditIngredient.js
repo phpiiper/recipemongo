@@ -7,6 +7,9 @@ import KeyboardDoubleArrowDownOutlinedIcon from '@mui/icons-material/KeyboardDou
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Alert from '@/components/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import Icon from "@/components/Icon";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 
 export default function EditIngredient({ ingredient = {}, recipe, Index, setRecipe }) {
     // >>>> SNACK BAR <<< //
@@ -32,7 +35,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
             // NORMAL
             let newIngr = JSON.parse(JSON.stringify(recipe.ingredients[Index]));
             let ev = e.target.value;
-            if (!isNaN(ev) && Number(ev) === 0) {
+            if (!isNaN(ev) && Number(ev) === 0 && e.target.id !== "type") {
                 delete newIngr[e.target.id];
             } else {
                 if (e.target.id === "amount"){
@@ -67,9 +70,9 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
     };
 
     const del = (func) => {
+        if (func) {  func();  }
         let newRecipe = JSON.parse(JSON.stringify(recipe));
         if (typeof Index === "number") {
-            if (func) {  func();  }
             newRecipe.ingredients = newRecipe.ingredients.filter((value, index) => Index !== index);
             setRecipe(newRecipe);
             return true
@@ -199,9 +202,29 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 />
                 <div className={"top"}>
                     <button onClick={() => {del(() => {handleClickSnackBar(); setSnackbarText("Deleted Group")})}}><RemoveIcon /></button>
-                    <h1>{ingredient.type.toUpperCase()}</h1>
-                    <button className={"border-btn"} onClick={() => { addNew("ingr"); }}>Add Ingredient</button>
-                    <button className={"border-btn"} onClick={() => { addNew("group"); }}>Add Group</button>
+                    <TextField
+                        id="type"
+                        value={ingredient.type}
+                        onChange={handleInputChange}
+                        placeholder={"Group Name"}
+                        style={{ width: "10rem", minWidth: "8rem" }}
+                        inputProps={{
+                            'aria-label': 'size'
+                        }}
+                        label="Group Name"
+                    />
+                    <Icon
+                        children={<NoteAddIcon />}
+                        btnClass={"border-btn const"}
+                        clickEvent={() => {addNew("ingr"); handleClickSnackBar(); setSnackbarText("Added Ingredient to Group!");}}
+                        btnText={"Add Ingredient"}
+                    ></Icon>
+                    <Icon
+                        children={<CreateNewFolderIcon />}
+                        btnClass={"border-btn const"}
+                        clickEvent={() => {addNew("group"); handleClickSnackBar(); setSnackbarText("Added Group to Group!");}}
+                        btnText={"Add Group"}
+                    ></Icon>
                 </div>
                 <div className={"bot"}>
                     {ingredient.ingredients.map((value, index) => <div key={"ingredient" + Index.toString() + "-" + index}><ChevronRightIcon /><EditIngredient recipe={recipe} Index={typeof Index === "number" ? [Index, index] : Index.concat(index)} ingredient={value} setRecipe={setRecipe} /></div>)}
