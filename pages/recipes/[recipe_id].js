@@ -11,7 +11,7 @@ import Icon from "@/components/Icon";
 import HomeIcon from "@mui/icons-material/Home";
 const fetcher = (url) => fetch(url).then(res => res.json())
 export default function RecipePage() {
-    const { status } = useSession();
+    const { status, data: sessionData } = useSession();
     const [sizing, setSizing] = useState(1);
     const r = useRouter();
     const { recipe_id } = r.query;
@@ -51,7 +51,7 @@ export default function RecipePage() {
             <div className={"top"}>
                 <div className={"icon-btn-group row"}>
                     <Icon children={<HomeIcon />} href={"/"} btnText={"HOME"} />
-                    {status === "authenticated" ?
+                    {status === "authenticated" && sessionData.user.name === data.author ?
                         <Icon children={<EditIcon />} href={`../editor?id=${recipe_id}`} btnText={"Edit Recipe"} /> : <></>
                     }
                 </div>

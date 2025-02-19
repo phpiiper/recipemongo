@@ -54,7 +54,7 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
                 {size ? <span className={"ingredient-div-size"}>{size}</span> : <></>}
                 {i.ingredient ? <span className={"ingredient-div-ingredient"}>{i.ingredient}</span> : <></>}
                 {i.comment ? <span className={"ingredient-div-comments"}>{
-                    i.comment.join("; ")
+                    Array.isArray(i.comment) ? i.comment.join("; ") : i.comment
                 }</span> : <></>}
             </div>
         )
