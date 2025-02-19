@@ -121,7 +121,7 @@ export default function Home({ isConnected }) {
             </div>
 
             {/* Pass userPrefs to RecipeList */}
-            <RecipeList status={status} recipes={data || []} userPrefs={userPrefs} />
+            <RecipeList status={status} session={sessionData} recipes={data || []} userPrefs={userPrefs} />
             <Icon
                 btnText={"Back to Top"}
                 btnClass={"back-to-top"}

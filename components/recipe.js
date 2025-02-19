@@ -3,7 +3,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import EditIcon from '@mui/icons-material/Edit';
 import Icon from "@/components/Icon";
 
-export default function Recipe({ recipe, status, userPrefs }) {
+export default function Recipe({ recipe, status, session, userPrefs }) {
     let r = recipe;
     let time = "";
     if (r.time) {
@@ -27,7 +27,7 @@ export default function Recipe({ recipe, status, userPrefs }) {
             <span className={'recipe-time'}>{time}</span>
             <div style={{ display: "flex", gap: "1rem" }}>
                 <Icon children={<MenuBookIcon />} href={`/recipes/${r.id}`} btnText={"View Recipe"} />
-                {status === "authenticated" ? (
+                {status === "authenticated" && session.user.name === r.author ? (
                     <Icon children={<EditIcon />} href={`/editor?id=${r.id}`} btnText={"Edit Recipe"} />
                 ) : <></>}
             </div>
