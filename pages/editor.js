@@ -52,6 +52,7 @@ export default function Editor({ isConnected }) {
         time: 30,
         ingredients: [],
         steps: [],
+        access: "public"
     });
 
     const [categories, setCategories] = useState([]);
@@ -122,7 +123,7 @@ export default function Editor({ isConnected }) {
         );
     }
 
-    if (status === "unauthenticated") {
+    if (status === "unauthenticated" || (data && data.user && recipe.author && data.user.name !== recipe.author)) {
         return (
             <div id={"editor-page"}>
                 <h1>NOT ALLOWED</h1>
@@ -249,19 +250,37 @@ export default function Editor({ isConnected }) {
                             </div>
                         </div>
                         <div className={"container"}>
+                            <h2>Recipe</h2>
+                            <i>Properties</i>
+                            <ul>
+                                <li>[Access] Who can view it? If set public, anyone can view it. Set to private so only you can access it!</li>
+                                <li>[Recipe Name] Name of the recipe.</li>
+                                <li>[Time] | The time is set in minutes</li>
+                                <li>[Category] What type of recipe this is by category; choose a premade one, or come up with your own!</li>
+                                <li>[Servings] Determine how many servings this is!</li>
+                            </ul>
+                        </div>
+                        <div className={"container"}>
                             <h2>Ingredients</h2>
                             <i>Properties</i>
                             <ul>
                                 <li>[Required] [Text] Name - The name of the recipe (Lemon)</li>
                                 <li>[Optional] [Text] Measurement - The measurement method of the ingredient (Large)</li>
-                                <li>[Optional] [Num] [-] Amount - The numeric amount of an ingredient (2)</li>
+                                <li>[Optional] [Num] Amount - The numeric amount of an ingredient (2)</li>
                                 <li>[Optional] [Text] Comments - The extra comments for an ingredient (zested)</li>
                             </ul>
+                            <i>Example Ingredients</i>
+                            <ul>
+                                <li>[1] [Large] [Onion] :::: [Amount] [Measurement] [Name]</li>
+                                <li>[Salt] :::: [Name]</li>
+                                <li>[Small] [Lemon] [Zested] :::: [Measurement] [Name] [Comment]</li>
+                            </ul>
+
                         </div>
                         <div className={"container"}>
                             <h2>Notes</h2>
                             <ul>
-                                <li>Scroll down the editor to view the Ingredients!</li>
+                                <li>Scroll down the editor to view the Ingredients if it's long!</li>
                                 <li>Use the extra space to the right to scroll down without scrolling down the Ingredient container!</li>
                             </ul>
                         </div>
