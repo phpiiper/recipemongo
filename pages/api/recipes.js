@@ -22,7 +22,7 @@ export default async (req, res) => {
             filters.access = { $ne: "private" };
         }
 
-        console.log("Received Query Params:", req.query); // Debugging
+        // console.log("Received Query Params:", req.query); // Debugging
 
         // Handle name & category search with `$regex`
         if (name?.trim()) {
@@ -50,13 +50,13 @@ export default async (req, res) => {
 
         const query = filters;
 
-        console.log("Final MongoDB Query:", JSON.stringify(query, null, 2)); // Debugging
+        // console.log("Final MongoDB Query:", JSON.stringify(query, null, 2)); // Debugging
 
         // Check if we need to fetch categories instead of recipes
         if (getCategories === "yes") {
             const categories = await db.collection("recipelist")
                 .distinct("cat", query);
-            return res.json(categories);
+            return res.json(categories.sort());
         }
         if (getIngredients == "yes"){
             let recs = await db.collection('recipelist')

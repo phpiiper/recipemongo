@@ -9,7 +9,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Icon from "@/components/Icon"
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
-import SearchIcon from "@mui/icons-material/Search";
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import HelpIcon from '@mui/icons-material/Help';
 import Modal from "@mui/material/Modal";
 export default function Filters({FilterList, onChangeFunction, List, value=""}) {
@@ -76,7 +76,19 @@ export default function Filters({FilterList, onChangeFunction, List, value=""}) 
                         </Modal>
                     </div>
                 </div>
-                <span>Total Recipes [{value}]</span>
+                <span>Recipes [{value}]</span>
+                <Icon
+                    children={<RestartAltIcon />}
+                    btnText={"Reset Filters"}
+                    clickEvent={()=> {onChangeFunction("reset")}}
+                />
+                {process.env.NODE_ENV === "development" ?
+                    <Icon
+                    children={<RestartAltIcon />}
+                    btnText={"Log Filters"}
+                    clickEvent={()=> { console.log(FilterList)  }}
+                    /> : <></>
+                }
         <div className={'flex filter-list'}>
             <div className={'container filter'}>
                     <label htmlFor={"search-name"}><MenuBookIcon /></label>

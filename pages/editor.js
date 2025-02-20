@@ -137,6 +137,7 @@ export default function Editor({ isConnected }) {
     // Handle database save logic (add or update recipe)
     const handlePush = () => {
         if (allRecipes.find((x) => x.id === recipe.id)) {
+            // recipe exists | edit
             fetch('/api/recipe.handler', {
                 method: 'PUT',
                 headers: {
@@ -146,9 +147,10 @@ export default function Editor({ isConnected }) {
             })
                 .then((response) => response.json())
                 .then((data) => {console.log("PUT response", data); setSnackbarText("Edited successfully!"); setOpenSnackBar(true);
-                    setInterval(() => {location.href = "/"}, 500);
+                   // setInterval(() => {location.href = "/"}, 500);
                 });
         } else {
+            if (recipe.author){return}
             fetch('/api/recipe.handler', {
                 method: 'POST',
                 headers: {
@@ -336,7 +338,7 @@ export default function Editor({ isConnected }) {
                 </Modal>
                 <Icon
                     children={<AddToQueueIcon />}
-                    btnText={"Add to DB"}
+                    btnText={recipe.author ? "Update Recipe" : "Save Recipe"}
                     clickEvent={handleOpenConf}
                 />
                 {process.env.NODE_ENV !== 'production' ? <Icon

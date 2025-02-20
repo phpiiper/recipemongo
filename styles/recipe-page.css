@@ -181,13 +181,14 @@ html:has(#recipe-page), body:has(#recipe-page) {
     }
     #recipe-page {
         height: unset;
+        padding: 0.5rem;
     }
     #recipe-page > .top > .meta {
         gap: 0 1rem;
         flex-wrap: wrap;
     }
     #recipe-page .meta .recipe-name {
-        width: 100%;
+        width: calc(100% - 5rem);
     }
     #recipe-page >.top >.meta > button {width: 100%; text-align: center; top: 0; font-weight: bolder;}
     #recipe-page .recipe-name {
@@ -204,7 +205,7 @@ html:has(#recipe-page), body:has(#recipe-page) {
     }
     #recipe-page #steps-div, #recipe-page #ingredients-div {
         width: 100%;
-        height: unset;
+        height: calc(100vh - 450px);
         max-height: unset !important;
     }
 
