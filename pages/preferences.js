@@ -64,7 +64,7 @@ export default function Preferences({ isConnected }) {
             try {
                 const response = await fetch('/api/recipes?getCategories=yes');
                 const categoriesData = await response.json();
-                setCategoryOptions(categoriesData.categories); // Assuming the response is a list of categories
+                setCategoryOptions(categoriesData); // Assuming the response is a list of categories
             } catch (error) {
                 console.error("Error fetching categories:", error);
             }

@@ -12,7 +12,7 @@ import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import SearchIcon from "@mui/icons-material/Search";
 import HelpIcon from '@mui/icons-material/Help';
 import Modal from "@mui/material/Modal";
-export default function Filters({Filters, onChangeFunction, List, value=""}) {
+export default function Filters({FilterList, onChangeFunction, List, value=""}) {
     const [open, setOpen] = React.useState(false);
     const [openHelpGuide, setOpenHelpGuide] = React.useState(false);
     const handleHelpClose = () => setOpenHelpGuide(false);
@@ -85,8 +85,11 @@ export default function Filters({Filters, onChangeFunction, List, value=""}) {
                             id="search-name"
                             className={"search-forms"}
                             placeholder="Search by name..."
-                            value={Filters.name}
-                            onChange={(event) => onChangeFunction("name", event.target.value)}
+                            value={FilterList.name}
+                            onChange={(event) => {
+                                event.preventDefault();
+                                onChangeFunction("name", event.target.value)
+                            }}
                             label="Recipe Name"
                         />
                     </FormControl>
@@ -103,7 +106,7 @@ export default function Filters({Filters, onChangeFunction, List, value=""}) {
                         renderInput={(params) => <TextField {...params} label="Category" />}
                         id="cat"
                         onChange={(event, newValue) => onChangeFunction("cat", newValue || "")}
-                        value={Filters.cat ? Filters.cat.toString() : ""}
+                        value={FilterList.cat ? FilterList.cat.toString() : ""}
                     />
 
                 </FormControl>
@@ -111,12 +114,22 @@ export default function Filters({Filters, onChangeFunction, List, value=""}) {
             <div className={'container filter'}>
                 <label htmlFor={"search-ingredients"}><KitchenIcon /></label>
                 <FormControl variant="outlined">
-                    <TextField
+                    <Autocomplete
+                        disablePortal
+                        autoHighlight
+                        options={Array.isArray(List.ingredients) ? List.ingredients : typeof List.ingredients === "string" ? List.ingredients.split(",").filter(x => x.length > 0) : []}
+                        getOptionLabel={(option) => option?.toString() || ""}
+                        freeSolo
+                        multiple
+                        renderInput={(params) => <TextField {...params} label="Ingredients"  sx={{ minWidth: 200 }} />}
                         id="search-ingredients"
                         className="search-forms"
                         placeholder="Search by ingredients (comma-separated)..."
-                        value={Filters.ingredients}
-                        onChange={(event) => onChangeFunction("ingredients", event.target.value)}
+                        value={ FilterList.ingredients.split(",").filter(x => x.length > 0) }
+                        onChange={(event, value) => {
+                            event.preventDefault();
+                            onChangeFunction("ingredients", value.join(","))
+                        }}
                         label="Ingredients"
                     />
                 </FormControl>

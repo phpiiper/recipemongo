@@ -9,7 +9,7 @@ export default async (req, res) => {
         const db = client.db("recipes");
 
         // Extract query parameters
-        const { name, cat, ingredients, getCategories } = req.query;
+        const { name, cat, ingredients, getCategories, getIngredients } = req.query;
         let filters = {};
 
         // Check for valid session
@@ -42,8 +42,8 @@ export default async (req, res) => {
 
             if (ingredientArray.length > 0) {
                 filters.$or = [
-                    { "ingredients.ingredient": { $in: ingredientArray.map(ing => new RegExp(ing, "i")) } }, // Direct ingredient match
-                    { "ingredients.ingredients.ingredient": { $in: ingredientArray.map(ing => new RegExp(ing, "i")) } } // Nested ingredient match
+                    { "ingredients.ingredient": { $all: ingredientArray.map(ing => new RegExp(ing, "i")) } }, // Direct ingredient match
+                    { "ingredients.ingredients.ingredient": { $all: ingredientArray.map(ing => new RegExp(ing, "i")) } } // Nested ingredient match
                 ];
             }
         }
@@ -56,7 +56,35 @@ export default async (req, res) => {
         if (getCategories === "yes") {
             const categories = await db.collection("recipelist")
                 .distinct("cat", query);
-            return res.json({ categories });
+            return res.json(categories);
+        }
+        if (getIngredients == "yes"){
+            let recs = await db.collection('recipelist')
+            .find(query)
+            .toArray();
+            let recIG = recs.map(x=> x.ingredients);
+           let ingredientList = []
+           function getIngredients(ig){
+                let list = []
+                if (ig.ingredients){
+                    list.concat(ig.ingredients.map(x => getIngredients(x)))
+                } else {
+                    if (!ingredientList.find(x => x.toLowerCase() === ig.ingredient.toLowerCase())) { list.push(ig.ingredient) }
+                }
+                return list
+           }
+           for (var i=0; i<recIG.length; i++){
+                let igs = recIG[i]
+                for (var x=0; x<igs.length;x++){
+                    let igx = igs[x]
+                    ingredientList = ingredientList.concat(getIngredients(igx))
+                }
+           }
+
+           ingredientList = ingredientList.filter(x => x !== null && x !== undefined).sort()
+            return res.json(
+                ingredientList
+            );
         }
 
         // Fetch matching recipes (handle empty filters gracefully)
