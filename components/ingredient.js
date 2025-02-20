@@ -3,11 +3,21 @@ import Fraction from "fraction.js";
 export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
     let i = ingredient; let amount; let size;
     if (i.amount){
-        let amt = Array.isArray(i.amount) ? i.amount.map(x => x*sizing) : (i.amount * sizing);
+        let amt;
+        if (typeof i.amount === "string" && i.amount.includes("/")){
+            amt = new Fraction(i.amount)
+            // expect: 1/4, 1/8, etc (fractions)
+        }
+        else {
+            amt = Array.isArray(i.amount) ? i.amount.map(x => x * sizing) : (i.amount * sizing);
+            // expect: [1,2], 0.25, 0.8
+        }
+
+
         if (Array.isArray(amt)){
             amount = amt.join(" - ")
         }
-        else if (Number.isInteger(amt)){
+        else if (Number.isInteger(amt) || (!Number.isInteger(amt) && typeof amt === "string" && !amt.includes("/") && !amt.includes("."))){
             amount = amt;
         } else {
             let f = new Fraction(amt).simplify(0.1).toFraction(true).split(" ");

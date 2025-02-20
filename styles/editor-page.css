@@ -69,7 +69,7 @@ input#servings {width: 2rem;}
 }
 #edit-bot-btns button:hover {
     cursor: pointer;
-    background-color: var(--fc-highlight);
+    border-color: var(--fc-highlight);
 }
 #recipe-editor-helper {
     margin: 2rem;

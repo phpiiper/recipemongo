@@ -22,7 +22,7 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
 
     return (
             <div id={"editor-page-meta"}>
-                {status==="authenticated" && session.user && session.user.name === recipe.author ? (<FormControl sx={{ m: 1, minWidth: 120 }}>
+                {status==="authenticated" && ((session.user && session.user.name === recipe.author) || !recipe.author) ? (<FormControl sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel>Access</InputLabel>
                         <Select
                             id="access"
