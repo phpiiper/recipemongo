@@ -19,22 +19,22 @@ export const UserPreferencesProvider = ({ children }) => {
         palette: {
             mode: 'dark',
             primary: {
-                main: highlight,
+                main: highlight, // highlight
             },
             text: {
-                primary: '#fff',
-                secondary: '#afafaf',
+                primary: '#fff', // col-t-1
+                secondary: '#afafaf', // col-t-2
             },
             secondary : {
-                main: '#dc1d1d',  // if necessary
+                main: '#dc1d1d',  // col-s-1
             },
             background: {
-                paper: '#121212',
-                default: '#121212'
+                paper: '#121212', // col-b
+                default: '#121212' // col-b
             },
             action: {
-                active: '#121212', // input ui buttons
-                selected: highlight,
+                active: '#121212', // col-a-a
+                selected: highlight, // highlight
                 selectedOpacity: 0.01
             },
             typography: {

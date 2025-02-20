@@ -226,6 +226,11 @@ export default function Editor({ isConnected }) {
                                 <ExitToAppIcon />
                                 <span>Leave Editor (go back to recipe if not new)</span>
                             </div>
+                            {process.env.NODE_ENV !== 'production' ?<div className={"symbol-help"}>
+                                <CodeIcon />
+                                <span>DEBUG: View Recipe in console</span>
+                            </div> : <></>
+                            }
                             <h3>Editing</h3>
                             <div className={"symbol-help"}>
                                 <ContentPasteGoOutlinedIcon />
@@ -243,45 +248,85 @@ export default function Editor({ isConnected }) {
                                 <KeyboardDoubleArrowDownOutlinedIcon />
                                 <span>Move This DOWN</span>
                             </div>
-                            <h3>General</h3>
-                            <div className={"symbol-help"}>
-                                <CodeIcon />
-                                <span>DEBUG: View Recipe in console</span>
-                            </div>
                         </div>
                         <div className={"container"}>
                             <h2>Recipe</h2>
                             <i>Properties</i>
-                            <ul>
-                                <li>[Access] Who can view it? If set public, anyone can view it. Set to private so only you can access it!</li>
-                                <li>[Recipe Name] Name of the recipe.</li>
-                                <li>[Time] | The time is set in minutes</li>
-                                <li>[Category] What type of recipe this is by category; choose a premade one, or come up with your own!</li>
-                                <li>[Servings] Determine how many servings this is!</li>
-                            </ul>
+                            <table>
+                            <thead>
+                                <tr>
+                                    <th>TERM</th>
+                                    <th>DESCRIPTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Access</td>
+                                    <td>Who can view it? If set public, anyone can view it. Set to private so only you can access it!</td>
+                                </tr>
+                                <tr>
+                                    <td>Recipe Name</td>
+                                    <td>Name of the recipe.</td>
+                                </tr>
+                                <tr>
+                                    <td>Time</td>
+                                    <td>How long it takes (prep and cooking) in minutes</td>
+                                </tr>
+                                <tr>
+                                    <td>Category</td>
+                                    <td>What type of recipe this is by category; you can make a new one up!</td>
+                                </tr>
+                                <tr>
+                                    <td>Servings</td>
+                                    <td>Determine how many servings this recipe produces.</td>
+                                </tr>
+                            </tbody></table>
                         </div>
                         <div className={"container"}>
                             <h2>Ingredients</h2>
                             <i>Properties</i>
-                            <ul>
-                                <li>[Required] [Text] Name - The name of the recipe (Lemon)</li>
-                                <li>[Optional] [Text] Measurement - The measurement method of the ingredient (Large)</li>
-                                <li>[Optional] [Num] Amount - The numeric amount of an ingredient (2)</li>
-                                <li>[Optional] [Text] Comments - The extra comments for an ingredient (zested)</li>
-                            </ul>
-                            <i>Example Ingredients</i>
-                            <ul>
-                                <li>[1] [Large] [Onion] :::: [Amount] [Measurement] [Name]</li>
-                                <li>[Salt] :::: [Name]</li>
-                                <li>[Small] [Lemon] [Zested] :::: [Measurement] [Name] [Comment]</li>
-                            </ul>
 
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Term</th>
+                                    <th>Requirements</th>
+                                    <th>Description</th>
+                                    <th>Example</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Ingredient Name</td>
+                                    <td>Text</td>
+                                    <td>A REQUIRED field. The name of the ingredient.</td>
+                                    <td>Flour, Lemon</td>
+                                </tr>
+                                <tr>
+                                    <td>Measurement</td>
+                                    <td>Text</td>
+                                    <td>The measurement method of the ingredient</td>
+                                    <td>Cups, Large</td>
+                                </tr>
+                                <tr>
+                                    <td>Amount</td>
+                                    <td>Number</td>
+                                    <td>The numeric amount of the ingredient</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>Comments</td>
+                                    <td>Text</td>
+                                    <td>The extra comments for an ingredient</td>
+                                    <td>Enriched, Zested</td>
+                                </tr>
+                                </tbody></table>
                         </div>
                         <div className={"container"}>
                             <h2>Notes</h2>
                             <ul>
-                                <li>Scroll down the editor to view the Ingredients if it's long!</li>
-                                <li>Use the extra space to the right to scroll down without scrolling down the Ingredient container!</li>
+                                <li>Scroll down the editor to view the Ingredients/Steps if it's long!</li>
+                                <li>Copy steps, then click the paste from clipboard button to make it easier!</li>
                             </ul>
                         </div>
                     </div>

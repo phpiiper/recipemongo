@@ -38,19 +38,39 @@ export default function Filters({Filters, onChangeFunction, List, value=""}) {
                             children={<HelpIcon />}
                             clickEvent={() => {
                                 setOpenHelpGuide(true);
-                                console.log("???", openHelpGuide)
                             }}
                             btnText={"Help"}
                         />
                         <Modal open={openHelpGuide} onClose={handleHelpClose} id={"filter-helper-modal"}>
                             <div id={"filter-helper"}>
                                 <div className={"container"}>
-                                    <h2>Filter: Recipe Name</h2>
-                                    <p>Filter recipes by name</p>
-                                    <h2>Filter: Category</h2>
-                                    <p>Filter recipes by category</p>
-                                    <h2>Filter: Ingredients</h2>
-                                    <p>Filter recipes by ingredients; separate items with commas (,)</p>
+                                    <h1>Filter Guide</h1>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Filter</th>
+                                                <th>Description</th>
+                                                <th>Input</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Recipe Name</td>
+                                                <td>Filter recipes by name</td>
+                                                <td>[Text] Matches by name</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Category</td>
+                                                <td>Filter recipes by recipe category</td>
+                                                <td>[Pick] Choose by list of categories</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ingredients</td>
+                                                <td>Filter recipes by ingredients</td>
+                                                <td>[Text] Match by ingredient name, separate items with commas (,)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </Modal>
