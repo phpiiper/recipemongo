@@ -50,8 +50,13 @@ export default function Home({ isConnected }) {
         []
     );
     const handleInputChange = (type, value) => {
-        setFilterList((prev) => ({ ...prev, [type]: value }));
-        debouncedUpdateSearch(value, type);
+        if (type === "reset"){
+            setFilterList({ name: "", ingredients: "", cat: "" });
+            setDebouncedSearch({ name: "", ingredients: "", cat: "" });
+        } else {
+            setFilterList((prev) => ({ ...prev, [type]: value }));
+            debouncedUpdateSearch(value, type);
+        }
     };
     // Construct API URL dynamically (only add parameters if they have values)
     const queryParams = new URLSearchParams(
