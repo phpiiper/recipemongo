@@ -38,8 +38,6 @@ export const getServerSideProps = async () => {
 
 export default function Home({ isConnected }) {
     const { status, data: sessionData } = useSession();
-    // >>>> USER PREFERENCES <<<< //
-    // >>>> USER PREFERENCES END <<<< //
     const [filterList, setFilterList] = useState({   name: "", ingredients: "", cat: ""   });
     const [debouncedSearch, setDebouncedSearch] = useState({ name: "", ingredients: "", cat: "" });
     const debouncedUpdateSearch = useCallback(
@@ -63,6 +61,8 @@ export default function Home({ isConnected }) {
     const recipeListURL = `/api/recipes?${queryParams.toString()}`;
     // Use SWR for fetching data
     const { data, error } = useSWR(recipeListURL, fetcher, { revalidateOnFocus: false });
+    const { data: ingredients, error: ingredientsError, isLoading: ingredientsLoading } = useSWR(`${recipeListURL}&getIngredients=yes`, fetcher, { revalidateOnFocus: false });
+    const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useSWR(`${recipeListURL}&getCategories=yes`, fetcher, { revalidateOnFocus: false });
     // Fetch user preferences if authenticated
     const [userPrefs, setUserPrefs] = useState(null);
     useEffect(() => {
@@ -110,12 +110,15 @@ export default function Home({ isConnected }) {
                 ) : <></>}
 
                 <Filters
-                    Filters={filterList}
+                    FilterList={filterList}
                     onChangeFunction={handleInputChange}
                     List={{
-                        categories: data
-                            ? [...new Set(data.map((x) => x.cat).filter(Boolean).map(String))]
-                            : []
+                        categories: !categoriesError
+                            ? categories
+                            : [],
+                        ingredients: !ingredientsError
+                            ? ingredients
+                            : [],
                     }}
                     value={data?.length || ""}
                 />

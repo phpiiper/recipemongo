@@ -81,6 +81,21 @@ export default async (req, res) => {
                 res.status(500).json({ message: `Internal Server Error; ${e}` });
             }
         }
+        else if (req.method === "DELETE"){
+            const client = await clientPromise;
+            const db = client.db("recipes");
+            recipe.lastUpdated = new Date().toJSON();
+            const testID = new ObjectId(recipe._id) || recipe._id;
+            delete recipe._id
+            recipe.originalAuthor = String(recipe.author);
+            recipe.author = "admin";
+            recipe.access = "private";
+            const updateResult = await db.collection("recipelist").updateOne(
+                { _id: testID },
+                { $set: recipe }
+            );
+
+        }
         // Handle unsupported HTTP methods
         else {
             res.status(405).json({ message: 'Method Not Allowed' });

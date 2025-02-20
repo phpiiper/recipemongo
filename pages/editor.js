@@ -26,6 +26,8 @@ import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import CodeIcon from '@mui/icons-material/Code';
 import RemoveIcon from '@mui/icons-material/Remove';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Confirm from "@/components/Confirm";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 export const getServerSideProps = async () => {
     try {
@@ -144,7 +146,7 @@ export default function Editor({ isConnected }) {
             })
                 .then((response) => response.json())
                 .then((data) => {console.log("PUT response", data); setSnackbarText("Edited successfully!"); setOpenSnackBar(true);
-                    if (process.env.NODE_ENV === "production") {setInterval(() => {location.href = "/"}, 500);}
+                    setInterval(() => {location.href = "/"}, 500);
                 });
         } else {
             fetch('/api/recipe.handler', {
@@ -155,7 +157,8 @@ export default function Editor({ isConnected }) {
                 body: JSON.stringify(recipe),
             })
                 .then((response) => response.json())
-                .then((data) => {console.log("POST response", data); setSnackbarText("Added successfully!"); setOpenSnackBar(true); setInterval(() => {location.href = "/"}, 500); });
+                .then((data) => {console.log("POST response", data); setSnackbarText("Added successfully!"); setOpenSnackBar(true) });
+            setInterval(() => {location.href = "/"}, 500);
         }
     };
 
@@ -364,6 +367,27 @@ export default function Editor({ isConnected }) {
             <EditorPageMeta recipe={recipe} categories={categories} setRecipe={setRecipe} status={status} session={data ? data : false}/>
 
             <div className={"container flex"}>
+                {recipe.author ? <Confirm
+                    btnClasses={"const"}
+                    btnText={"Delete Recipe"}
+                    children={<DeleteOutlineIcon />}
+                    dialogHeader={"Confirmation"}
+                    dialogText={"Are you sure you want to delete this recipe?"}
+                    dialogFunction={() => {
+                        fetch('/api/recipe.handler', {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(recipe),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {console.log("DELETE response", data); setSnackbarText("Removed successfully!"); setOpenSnackBar(true) });
+                        setInterval(() => {location.href = "/"}, 500); ;
+                        // setTimeout(() => {location.href = "/"}, 1000);
+                    }}
+                /> : <></>
+                }
                 <Icon
                     btnClass={"const " + (viewGroup === "Ingredients" ? "selected" : "")}
                     children={<VisibilityIcon />}
