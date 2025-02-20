@@ -193,3 +193,7 @@ button.recipes-button:hover,button.recipes-button:active {
   margin-top: 1rem;
   width: 100%;
 }
+
+.mobile-only-viewer {
+  display: none !important;
+}
