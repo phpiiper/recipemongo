@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Icon from "@/components/Icon";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import KeyIcon from "@mui/icons-material/Key";
 import Drawer from '@mui/material/Drawer';
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import FormControl from "@mui/material/FormControl";
@@ -48,7 +48,7 @@ return (
         onClose={handleClose}
         message={alertText}
     />
-    <Icon children={<FilterAltIcon />} clickEvent={toggleDrawer(true)} btnText={"Sign Up"} />
+    <Icon children={<KeyIcon />} clickEvent={toggleDrawer(true)} btnText={"Sign Up"} />
     <Drawer anchor={'top'} open={open} onClose={toggleDrawer(false)} id={"signup-drawer"}>
         <div id={"signup-div"}>
             <h2>Sign Up</h2>
