@@ -54,7 +54,7 @@ body {
 div, input, textarea, button, select {
   margin: 0; padding: 0;
 }
-div, input, span, a, h1, h2, h3, p, textarea, button, select, li, ul, table, td {
+div, input, span, a, h1, h2, h3, p, textarea, button, select, li, ul, table, td, tr, th, tbody, thead {
   position: relative;
   box-sizing: border-box;
   border: none; outline: none;
@@ -82,14 +82,18 @@ h3 {
 }
 table {
   padding: 1rem;
-  border: 2px solid var(--fc-main);;
   display: block;
   width: 100%;
   overflow-x: auto;
 }
+th {
+  background-color: var(--fc-main);
+  color: var(--bc-main);
+}
 td, th {
   min-width: 125px;
-  border: 1px solid var(--fc-main);;
+  padding: 0.5rem;
+  margin: 0;
 }
 
 #content {

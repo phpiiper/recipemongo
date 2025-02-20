@@ -15,6 +15,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
     // >>>> SNACK BAR <<< //
     const [openSnackBar, setOpenSnackBar] = React.useState(false);
     const [snackbarText, setSnackbarText] = React.useState("Alert!");
+    const [amountError, setAmountError] = React.useState(false);
     const handleClickSnackBar = () => { setOpenSnackBar(true);};
     const handleSnackBarClose = (event, reason) => {
         if (reason === 'clickaway') { return; }
@@ -251,19 +252,29 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
             <TextField
                 id="amount"
                 value={Array.isArray(safeIngredient.amount) ? safeIngredient.amount.join("-") : safeIngredient.amount}
-                onChange={handleInputChange}
-                placeholder={"##"}
+                onChange={(event) => {
+                    handleInputChange(event);
+                    let valid = /^([0-9/.]*)$/.test(event.target.value);
+                    if (valid) {
+                        setAmountError(false)
+                    } else {
+                        setAmountError(true)
+                    }
+                }}
+                placeholder={"1/2"}
                 style={{ width: "4rem", minWidth: "4rem" }}
-                inputProps={{
+                slotProps={{
                     'aria-label': 'amount'
                 }}
                 label="Amount"
+                error={amountError}
+                helperText={amountError ? "Invalid Number" : undefined}
             />
             <TextField
                 id="size"
                 value={safeIngredient.size}
                 onChange={handleInputChange}
-                placeholder={"Measurement"}
+                placeholder={"Cups"}
                 style={{ width: "10rem", minWidth: "8rem" }}
                 inputProps={{
                     'aria-label': 'size'
@@ -278,7 +289,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                     id="ingredient"
                     value={safeIngredient.ingredient}
                     onChange={handleInputChange}
-                    placeholder={"Ingredient Name"}
+                    placeholder={"Flour"}
                     style={{ width: "10rem" }}
                     inputProps={{
                         'aria-label': 'ingredient'
@@ -294,7 +305,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                     id="comment"
                     value={Array.isArray(safeIngredient.comment) ? safeIngredient.comment.join(", ") : safeIngredient.comment}
                     onChange={handleInputChange}
-                    placeholder={"Comments"}
+                    placeholder={"Enriched"}
                     style={{ width: "10rem" }}
                     inputProps={{
                         'aria-label': 'comment'

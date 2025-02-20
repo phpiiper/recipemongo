@@ -5,8 +5,11 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
     if (i.amount){
         let amt;
         if (typeof i.amount === "string" && i.amount.includes("/")){
-            amt = new Fraction(i.amount)
+            amt = new Fraction(i.amount).mul(sizing)
             // expect: 1/4, 1/8, etc (fractions)
+        }
+        else if (typeof amt === "string" && !Number.isInteger(i.amount) && !i.amount.includes("/") && !i.amount.includes(".")){
+            amt = i.amount;
         }
         else {
             amt = Array.isArray(i.amount) ? i.amount.map(x => x * sizing) : (i.amount * sizing);
