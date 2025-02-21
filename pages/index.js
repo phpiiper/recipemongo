@@ -18,7 +18,7 @@ import Icon from "@/components/Icon";
 import Head from "next/head";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
-import SignUp from "@/components/SignUp"
+import SignIn from "@/components/SignIn"
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -106,8 +106,7 @@ export default function Home({ isConnected }) {
                     </FormControl>
                 </div>
             <div id={"home-bar-button-list"}>
-                {status === "unauthenticated" ? (<Icon children={<LoginIcon />} clickEvent={() => signIn()} btnText={"Sign In"} />) : <></>}
-                {status === "unauthenticated" ? (<SignUp />) : <></>}
+                {status === "unauthenticated" ? (<SignIn status={status}/>) : <></>}
                 {status === "authenticated" ? (<Icon children={<LogoutIcon />} clickEvent={() => signOut()} btnText={"Sign Out"} />) : <></>}
                 {status === "authenticated" ? (<Icon children={<AccountBoxIcon />} href={"/preferences"} btnText={"Preferences"} />) : <></>}
                 {status === "authenticated" ? (

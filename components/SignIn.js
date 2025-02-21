@@ -6,10 +6,8 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import { signIn } from "next-auth/react";
-import useSWR from "swr";
 import Snackbar from "@mui/material/Snackbar";
-const fetcher = (url) => fetch(url).then((res) => res.json());
-export default function SignUp({}){
+export default function SignIn({status}){
     const [open, setOpen] = React.useState(false);
     const [alertText, setAlertText] = React.useState("");
     const toggleDrawer = (newOpen) => () => {
@@ -38,6 +36,18 @@ export default function SignUp({}){
             setOpenSnack(true)
          }
     }
+    const signInFunction = async function(){
+        let user = document.getElementById("signup-username").value
+        let pw = document.getElementById("signup-password").value
+        let res = await signIn("credentials", {
+            user: user, password: pw, redirect: false
+        } );
+        if (res.error){
+            let message = res.error
+            setAlertText(`ERROR: ${message}`)
+            setOpenSnack(true)
+        }
+    }
 
 return (
 <>
@@ -48,10 +58,10 @@ return (
         onClose={handleClose}
         message={alertText}
     />
-    <Icon children={<KeyIcon />} clickEvent={toggleDrawer(true)} btnText={"Sign Up"} />
+    <Icon children={<KeyIcon />} clickEvent={toggleDrawer(true)} btnText={"Sign In"} />
     <Drawer anchor={'top'} open={open} onClose={toggleDrawer(false)} id={"signup-drawer"}>
         <div id={"signup-div"}>
-            <h2>Sign Up</h2>
+            <h2>Account</h2>
             <div className={'container'}>
                 <label htmlFor={"signup-username"}><MenuBookIcon /></label>
                 <FormControl variant="outlined" style={{ marginRight: "10px" }}>
@@ -74,11 +84,20 @@ return (
                     />
                 </FormControl>
             </div>
-            <div>
+            <div
+                style={{
+                    display: "flex", gap: "1rem"
+                }}
+            >
                 <button
                     onClick={signUp}
                 >
                     Sign Up
+                </button>
+                <button
+                    onClick={signInFunction}
+                >
+                    Sign In
                 </button>
             </div>
         </div>

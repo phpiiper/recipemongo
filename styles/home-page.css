@@ -119,6 +119,9 @@
     text-align: center;
     font-family: 'Gowun Dodum', sans-serif;
 }
+.recipe-div .recipe-name a:hover {
+    text-shadow: var(--recipe-name-shadow) 0 0 1px, var(--recipe-name-shadow) 0 0 1px;
+}
 .recipe-div .recipe-time {
     font-size: 0.9rem;
     text-align: center;
