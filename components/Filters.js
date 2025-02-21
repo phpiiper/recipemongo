@@ -129,7 +129,7 @@ export default function Filters({FilterList, onChangeFunction, List, value=""}) 
                     <Autocomplete
                         disablePortal
                         autoHighlight
-                        options={Array.isArray(List.ingredients) ? List.ingredients : typeof List.ingredients === "string" ? List.ingredients.split(",").filter(x => x.length > 0) : []}
+                        options={Array.isArray(List.ingredients) ? List.ingredients.filter(x => !FilterList.ingredients.includes(x)) : typeof List.ingredients === "string" ? List.ingredients.split(",").filter(x => x.length > 0 && !FilterList.ingredients.includes(x)) : []}
                         getOptionLabel={(option) => option?.toString() || ""}
                         freeSolo
                         multiple
