@@ -2,6 +2,7 @@ import * as React from 'react';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import EditIcon from '@mui/icons-material/Edit';
 import Icon from "@/components/Icon";
+import fontColorContrast from "font-color-contrast";
 
 export default function Recipe({ recipe, status, session, userPrefs }) {
     let r = recipe;
@@ -19,11 +20,19 @@ export default function Recipe({ recipe, status, session, userPrefs }) {
         if (th && th.includes("Dark")){   num = 33;  }
         if (th && th.includes("Light")){   num = 80;  }
     const categoryColor = cs ? cs[r.cat]+num : ""
+    let borderColor = fontColorContrast(categoryColor)
 
     return (
         <div className={'recipe-div'} style={{ backgroundColor: categoryColor }}>
             <span className={'recipe-category'}>{r.cat}</span>
-            <span className={'recipe-name'}><a href={`/recipes/${r.id}`}>{r.name}</a></span>
+            <span
+                className={'recipe-name'}
+                style={{
+                    "--recipe-name-shadow": borderColor
+                }}
+            ><a href={`/recipes/${r.id}`}>
+                {r.name}
+            </a></span>
             <span className={'recipe-time'}>{time}</span>
             <div style={{ display: "flex", gap: "1rem" }}>
                 <Icon children={<MenuBookIcon />} href={`/recipes/${r.id}`} btnText={"View Recipe"} />

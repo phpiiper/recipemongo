@@ -30,21 +30,15 @@ export default NextAuth({
             async authorize(credentials) {
                 const dbClient = await connectToDatabase();
                 const usersCollection = dbClient.db("recipes").collection('users');
-
-                // Find preferences by username
                 const user = await usersCollection.findOne({ user: credentials.user });
-
                 if (!user) {
-                    throw new Error('No preferences found with the username');
+                    throw new Error('No account found with the username');
                 }
-
                 // Compare password with bcrypt
                 const isValidPassword = await compare(credentials.password, user.password);
                 if (!isValidPassword) {
                     throw new Error('Password doesn’t match');
                 }
-
-                // Return the preferences data
                 return { id: user._id, name: user.user};
             },
             credentials: {
@@ -59,15 +53,11 @@ export default NextAuth({
             // Here, you can log preferences data or perform extra checks
             return true;
         },
-
-        // Redirect callback after sign-in (ensures valid redirect paths)
         async redirect({ url, baseUrl }) {
             if (url.startsWith("/")) return `${baseUrl}${url}`;
             else if (new URL(url).origin === baseUrl) return url;
             return baseUrl;
         },
-
-        // JWT callback to attach preferences data to JWT
         async jwt({ token, user, credentials }) {
             if (user) {
                 token.id = user.id;
@@ -75,8 +65,6 @@ export default NextAuth({
             }
             return token;
         },
-
-        // Session callback to include preferences data in the session object
         async session({ session, token, credentials }) {
             if (token) {
                 session.user.id = token.id;
