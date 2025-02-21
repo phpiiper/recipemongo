@@ -49,8 +49,8 @@ export default function Editor({ isConnected }) {
     const { id } = r.query;
 
     const [recipe, setRecipe] = useState({
-        name: "New Recipe",
-        cat: "New Category",
+        name: "",
+        cat: "",
         time: 30,
         ingredients: [],
         steps: [],
@@ -166,7 +166,7 @@ export default function Editor({ isConnected }) {
 
     const addStepFunc = (value) => {
         let newRecipe = JSON.parse(JSON.stringify(recipe));
-        newRecipe.steps.push(typeof value === "string" ? value : "New Step");
+        newRecipe.steps.push(typeof value === "string" ? value : "");
         setRecipe(newRecipe);
     };
 
@@ -182,7 +182,7 @@ export default function Editor({ isConnected }) {
         newRecipe.ingredients.push(
             typeof value === "object" && !Array.isArray(value) && value.ingredient
                 ? value
-                : { ingredient: "New Ingredient" }
+                : { ingredient: "" }
         );
         setRecipe(newRecipe);
     };
@@ -192,7 +192,7 @@ export default function Editor({ isConnected }) {
         newRecipe.ingredients.push(
             typeof value === "object" && !Array.isArray(value) && value.ingredient
                 ? value
-                : { type: "New Group", ingredients: [] }
+                : { type: "Group", ingredients: [] }
         );
         setRecipe(newRecipe);
     };
