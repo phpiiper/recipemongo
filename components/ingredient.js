@@ -1,18 +1,23 @@
 import * as React from 'react';
 import Fraction from "fraction.js";
 export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
-    let i = ingredient; let amount; let size;
+    let i = ingredient; let amount; let size; let finSizing;
+    if ((!Number.isFinite(sizing) || sizing !== undefined) && sizing !== 0 &&  !isNaN(Number(sizing))) {
+        finSizing = sizing
+    } else {
+        finSizing = 1;
+    }
     if (i.amount){
         let amt;
         if (typeof i.amount === "string" && i.amount.includes("/")){
-            amt = new Fraction(i.amount).mul(sizing)
+            amt = new Fraction(i.amount).mul(finSizing)
             // expect: 1/4, 1/8, etc (fractions)
         }
         else if (typeof amt === "string" && !Number.isInteger(i.amount) && !i.amount.includes("/") && !i.amount.includes(".")){
             amt = i.amount;
         }
         else {
-            amt = Array.isArray(i.amount) ? i.amount.map(x => x * sizing) : (i.amount * sizing);
+            amt = Array.isArray(i.amount) ? i.amount.map(x => x * finSizing) : (i.amount * finSizing);
             // expect: [1,2], 0.25, 0.8
         }
 
@@ -55,7 +60,7 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
                 {i.ingredients.map((value,index) => (
                 <div className={"ingredient-div-category-item"} key={"ing-cat-"+index}>
                     <span>{">"}</span>
-                    <Ingredient ingredient={value} sizing={sizing} ingIndex={typeof ingIndex === "number" ? [ingIndex,index] : ingIndex.concat(index)}/>
+                    <Ingredient ingredient={value} sizing={finSizing} ingIndex={typeof ingIndex === "number" ? [ingIndex,index] : ingIndex.concat(index)}/>
                 </div>
                 ))}
             </div>
