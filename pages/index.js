@@ -66,8 +66,8 @@ export default function Home({ isConnected }) {
     const recipeListURL = `/api/recipes?${queryParams.toString()}`;
     // Use SWR for fetching data
     const { data, error } = useSWR(recipeListURL, fetcher, { revalidateOnFocus: false });
-    const { data: ingredients, error: ingredientsError, isLoading: ingredientsLoading } = useSWR(`${recipeListURL}&getIngredients=yes`, fetcher, { revalidateOnFocus: false });
-    const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useSWR(`${recipeListURL}&getCategories=yes`, fetcher, { revalidateOnFocus: false });
+    const { data: ingredients, error: ingredientsError } = useSWR(`${recipeListURL}&getIngredients=yes`, fetcher, { revalidateOnFocus: false });
+    const { data: categories, error: categoriesError } = useSWR(`${recipeListURL}&getCategories=yes`, fetcher, { revalidateOnFocus: false });
     // Fetch user preferences if authenticated
     const [userPrefs, setUserPrefs] = useState(null);
     useEffect(() => {
