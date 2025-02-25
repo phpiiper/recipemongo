@@ -201,3 +201,24 @@ button.recipes-button:hover,button.recipes-button:active {
 .mobile-only-viewer {
   display: none !important;
 }
+
+
+
+@keyframes loading {
+  0%   {background-color:white; color: black;}
+  25%  {background-color:black; color: white;}
+  50%  {background-color:white; color: black;}
+  75%  {background-color:black; color: white;}
+}
+#loading-div {
+  border: 2px solid black;
+  color: black;
+  background-color: white;
+
+  padding: 1rem;
+  text-align: center;
+
+  animation-name: loading;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+}

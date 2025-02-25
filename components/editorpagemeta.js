@@ -62,7 +62,7 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
                     sx={{ width: 300 }}
                     renderInput={(params) => <TextField {...params} label="Category" />}
                     id={"cat"}
-                    onChange={(e, newValue) => handleInputChange(e, newValue)}
+                    onKeyUp={(e, newValue) => handleInputChange(e, newValue)}
                     value={recipe.cat}
                 />
 
