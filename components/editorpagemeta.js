@@ -41,7 +41,7 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
                 placeholder={"Recipe Name"}
                 onChange={(e, newValue) => handleInputChange(e, newValue)}
                 value={recipe.name}
-                label="Recipe Name"
+                label="Recipe Name*"
             />
 
                 <OutlinedInput
@@ -60,9 +60,10 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
                     freeSolo
                     options={categories}
                     sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Category" />}
+                    renderInput={(params) => <TextField {...params} label="Category*" />}
                     id={"cat"}
                     onKeyUp={(e, newValue) => handleInputChange(e, newValue)}
+                    onChange={(e, newValue) => handleInputChange(e, newValue)}
                     value={recipe.cat}
                 />
 
