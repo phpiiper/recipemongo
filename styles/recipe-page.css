@@ -253,3 +253,6 @@ html:has(#recipe-page), body:has(#recipe-page) {
 #recipe-page >.top>.meta > button {
     position: absolute; right: 0;
 }
+#recipe-editor-helper.recipe-page {
+    height: unset;
+}

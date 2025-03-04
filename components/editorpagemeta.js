@@ -59,7 +59,7 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
                     disablePortal
                     freeSolo
                     options={categories}
-                    sx={{ width: 300 }}
+                    sx={{ width: 200 }}
                     renderInput={(params) => <TextField {...params} label="Category*" />}
                     id={"cat"}
                     onKeyUp={(e, newValue) => handleInputChange(e, newValue)}
@@ -76,6 +76,17 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
                     }}
                     onChange={(e, newValue) => handleInputChange(e, newValue)}
                     value={recipe.servings || 0}
+                />
+
+
+                <TextField
+                    label="Recipe Notes"
+                    id="notes"
+                    multiline
+                    rows={2}
+                    value={recipe.notes}
+                    onChange={handleInputChange}
+                    style={{width: "100%"}}
                 />
             </div>
     );
