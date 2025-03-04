@@ -12,6 +12,15 @@ import HomeIcon from "@mui/icons-material/Home";
 import TextField from "@mui/material/TextField";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useMediaQuery } from 'react-responsive'
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import Modal from "@mui/material/Modal";
+import AddToQueueIcon from "@mui/icons-material/AddToQueue";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import CodeIcon from "@mui/icons-material/Code";
+import ContentPasteGoOutlinedIcon from "@mui/icons-material/ContentPasteGoOutlined";
+import RemoveIcon from "@mui/icons-material/Remove";
+import KeyboardDoubleArrowUpOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowUpOutlined";
+import KeyboardDoubleArrowDownOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowDownOutlined";
 
 
 const fetcher = (url) => fetch(url).then(res => res.json())
@@ -20,6 +29,9 @@ export default function RecipePage() {
     const [sizing, setSizing] = useState(1);
     const [visibleIngredient, setVisibleIngredient] = useState(true);
     const [visibleSteps, setVisibleSteps] = useState(true);
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const r = useRouter();
     const { recipe_id } = r.query;
     let { data, error } = useSWR(recipe_id ? `/api/getrecipe?id=${recipe_id}` : null, recipe_id ? fetcher : null)
@@ -60,6 +72,19 @@ export default function RecipePage() {
             <div className={"top"}>
                 <div className={"icon-btn-group row"}>
                     <Icon children={<HomeIcon />} href={"/"} btnText={"HOME"} />
+                    {data.notes && data.notes.trim().length > 0 ?
+                        <><Icon
+                            children={<HelpOutlineIcon />}
+                            btnText={"Notes"}
+                            clickEvent={handleOpen}
+                        />
+                            <Modal open={open} onClose={handleClose}>
+                                <div id={"recipe-editor-helper"} className={"recipe-page"}>
+                                    <h1>Recipe Notes</h1>
+                                    <span>{data.notes}</span>
+                                </div>
+                            </Modal></>: <></>
+                    }
                     {status === "authenticated" && sessionData.user.name === data.author ?
                         <Icon children={<EditIcon />} href={`../editor?id=${recipe_id}`} btnText={"Edit Recipe"} /> : <></>
                     }
@@ -69,6 +94,9 @@ export default function RecipePage() {
                             id="sizing"
                             value={sizing}
                             onChange={(event) => {
+                                setSizing(event.target.value)
+                            }}
+                            onKeyUp={(event) => {
                                 setSizing(event.target.value)
                             }}
                             style={{ width: "4rem" }}

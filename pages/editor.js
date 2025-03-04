@@ -54,7 +54,8 @@ export default function Editor({ isConnected }) {
         time: 30,
         ingredients: [],
         steps: [],
-        access: "public"
+        access: "public",
+        notes: ""
     });
 
     const [categories, setCategories] = useState([]);
@@ -347,6 +348,27 @@ export default function Editor({ isConnected }) {
                     clickEvent={() => {console.log(recipe)}}
                 /> : <></>
                 }
+                {recipe.author ? <Confirm
+                    btnClasses={"const"}
+                    btnText={"Delete Recipe"}
+                    children={<DeleteOutlineIcon />}
+                    dialogHeader={"Confirmation"}
+                    dialogText={"Are you sure you want to delete this recipe?"}
+                    dialogFunction={() => {
+                        fetch('/api/recipe.handler', {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(recipe),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {console.log("DELETE response", data); setSnackbarText("Removed successfully!"); setOpenSnackBar(true) });
+                        setInterval(() => {location.href = "/"}, 500); ;
+                        // setTimeout(() => {location.href = "/"}, 1000);
+                    }}
+                /> : <></>
+                }
                 <Dialog
                     open={openConfirmation}
                     onClose={handleCloseConf}
@@ -369,27 +391,6 @@ export default function Editor({ isConnected }) {
             <EditorPageMeta recipe={recipe} categories={categories} setRecipe={setRecipe} status={status} session={data ? data : false}/>
 
             <div className={"container flex"}>
-                {recipe.author ? <Confirm
-                    btnClasses={"const"}
-                    btnText={"Delete Recipe"}
-                    children={<DeleteOutlineIcon />}
-                    dialogHeader={"Confirmation"}
-                    dialogText={"Are you sure you want to delete this recipe?"}
-                    dialogFunction={() => {
-                        fetch('/api/recipe.handler', {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(recipe),
-                        })
-                            .then((response) => response.json())
-                            .then((data) => {console.log("DELETE response", data); setSnackbarText("Removed successfully!"); setOpenSnackBar(true) });
-                        setInterval(() => {location.href = "/"}, 500); ;
-                        // setTimeout(() => {location.href = "/"}, 1000);
-                    }}
-                /> : <></>
-                }
                 <Icon
                     btnClass={"const " + (viewGroup === "Ingredients" ? "selected" : "")}
                     children={<VisibilityIcon />}

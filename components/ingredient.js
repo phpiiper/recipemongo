@@ -2,16 +2,18 @@ import * as React from 'react';
 import Fraction from "fraction.js";
 export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
     let i = ingredient; let amount; let size; let finSizing;
-    if ((!Number.isFinite(sizing) || sizing !== undefined) && sizing !== 0 &&  !isNaN(Number(sizing)) && (typeof sizing === "string" && sizing.trim().length === 0)) {
+    if (typeof sizing == "number" || !isNaN(Number(sizing)) && sizing !== 0 && Number(sizing) !== 0){
+        finSizing = sizing;
+    }
+    else if (typeof sizing === "string" && (sizing.includes("."))){
         finSizing = sizing
     } else {
-        finSizing = 1;
+        finSizing = sizing === 0 ? sizing : 1;
     }
     if (i.amount){
         let amt;
         if (typeof i.amount === "string" && i.amount.includes("/")){
-            console.log(i.amount,new Fraction(i.amount),finSizing)
-            amt = new Fraction(i.amount).mul(finSizing ? finSizing : 1)
+            amt = new Fraction(i.amount).mul(finSizing)
             // expect: 1/4, 1/8, etc (fractions)
         }
         else if (typeof amt === "string" && !Number.isInteger(i.amount) && !i.amount.includes("/") && !i.amount.includes(".")){

@@ -15,7 +15,8 @@ export default async (req, res) => {
 
     // Check for session
     if (session) {
-        let recipe = req.body;
+        let recipe = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+        console.log(recipe)
 
         // Ensure recipe exists and fields are valid
         if (!recipe) {
@@ -28,6 +29,14 @@ export default async (req, res) => {
             return errMsg("Recipe category name is not long enough");
         }
 
+        /*
+        // all blank values should be deleted
+        for (let key in recipe){
+            if (recipe[key] && recipe[key].trim().length === 0){
+                delete recipe[key]
+            }
+        }
+         */
         // Handle POST request to insert data
         if (req.method === 'POST') {
             try {
@@ -94,7 +103,7 @@ export default async (req, res) => {
                 { _id: testID },
                 { $set: recipe }
             );
-
+            res.status(201).json({message: "Successful delete", updateResult})
         }
         // Handle unsupported HTTP methods
         else {
