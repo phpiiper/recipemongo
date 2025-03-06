@@ -286,12 +286,15 @@ export default function Editor({ isConnected }) {
                                     <td>Servings</td>
                                     <td>Determine how many servings this recipe produces.</td>
                                 </tr>
+                                <tr>
+                                    <td>Recipe Notes</td>
+                                    <td>Optional field. Use to write notes about the whole recipe rather than a specific ingredient.</td>
+                                </tr>
                             </tbody></table>
                         </div>
                         <div className={"container"}>
                             <h2>Ingredients</h2>
                             <i>Properties</i>
-
                             <table>
                                 <thead>
                                 <tr>
@@ -303,10 +306,10 @@ export default function Editor({ isConnected }) {
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>Ingredient Name</td>
-                                    <td>Text</td>
-                                    <td>A REQUIRED field. The name of the ingredient.</td>
-                                    <td>Flour, Lemon</td>
+                                    <td>Amount</td>
+                                    <td>Number</td>
+                                    <td>The numeric amount of the ingredient</td>
+                                    <td>2</td>
                                 </tr>
                                 <tr>
                                     <td>Measurement</td>
@@ -315,16 +318,51 @@ export default function Editor({ isConnected }) {
                                     <td>Cups, Large</td>
                                 </tr>
                                 <tr>
-                                    <td>Amount</td>
-                                    <td>Number</td>
-                                    <td>The numeric amount of the ingredient</td>
-                                    <td>2</td>
+                                    <td>Ingredient Name</td>
+                                    <td>Text</td>
+                                    <td>A REQUIRED field. The name of the ingredient.</td>
+                                    <td>Flour, Lemon</td>
                                 </tr>
                                 <tr>
                                     <td>Comments</td>
                                     <td>Text</td>
                                     <td>The extra comments for an ingredient</td>
                                     <td>Enriched, Zested</td>
+                                </tr>
+                                </tbody></table>
+                            <i>Examples</i>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Measurement</th>
+                                    <th>Ingredient Name</th>
+                                    <th>Comments</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Tablespoons</td>
+                                    <td>Sesame Oil</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Dried Red Peppers</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>3lb</td>
+                                    <td>Veal Chops</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Pork Chops</td>
+                                    <td>Loin</td>
                                 </tr>
                                 </tbody></table>
                         </div>

@@ -42,3 +42,6 @@ next-env.d.ts
 
 #others
 pages/api/createuser.js
+/.idea/frontend.iml
+/.idea/modules.xml
+/.idea/vcs.xml
