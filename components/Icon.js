@@ -7,12 +7,12 @@ export default function Icon({children, clickEvent=()=>{}, href, btnClass="", bt
     }
     if (href){
         return (
+            <a href={href}>
             <button className={classes}>
-                <a href={href}>
                     <div className={"icon-div"}>{children}</div>
                     <span>{btnText}</span>
-                </a>
             </button>
+            </a>
         );
     }
     return (

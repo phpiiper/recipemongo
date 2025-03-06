@@ -59,7 +59,7 @@
     component/Ingredient
  */
 .ingredient-div-category {
-    border: 2px solid var(--fc-main);
+    border: 1px solid var(--fc-main);
     padding: 0.5rem;
     display: flex; flex-direction: column;
     gap: 0.5rem;

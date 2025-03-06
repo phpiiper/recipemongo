@@ -67,7 +67,7 @@ export default function Filters({FilterList, onChangeFunction, List, value=""}) 
                                             <tr>
                                                 <td>Ingredients</td>
                                                 <td>Filter recipes by ingredients</td>
-                                                <td>[Text] Match by ingredient name, separate items with commas (,)</td>
+                                                <td>[Pick] [Multiple] Choose by ingredients in recipes</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -77,34 +77,41 @@ export default function Filters({FilterList, onChangeFunction, List, value=""}) 
                     </div>
                 </div>
                 <span>Recipes [{value}]</span>
-                <Icon
-                    children={<RestartAltIcon />}
-                    btnText={"Reset Filters"}
-                    clickEvent={()=> {onChangeFunction("reset")}}
-                />
-                {process.env.NODE_ENV === "development" ?
+                <div className={"flex"}>
                     <Icon
-                    children={<RestartAltIcon />}
-                    btnText={"Log Filters"}
-                    clickEvent={()=> { console.log(FilterList)  }}
-                    /> : <></>
-                }
+                        children={<RestartAltIcon />}
+                        btnText={"Reset Filters"}
+                        clickEvent={()=> {onChangeFunction("reset")}}
+                    />
+                    {process.env.NODE_ENV === "development" ?
+                        <Icon
+                            children={<RestartAltIcon />}
+                            btnText={"Log Filters"}
+                            clickEvent={()=> { console.log(FilterList)  }}
+                        /> : <></>
+                    }
+                </div>
         <div className={'flex filter-list'}>
             <div className={'container filter'}>
-                    <label htmlFor={"search-name"}><MenuBookIcon /></label>
-                    <FormControl variant="outlined" style={{ marginRight: "10px" }}>
-                        <TextField
-                            id="search-name"
-                            className={"search-forms"}
-                            placeholder="Search by name..."
-                            value={FilterList.name}
-                            onChange={(event) => {
-                                event.preventDefault();
-                                onChangeFunction("name", event.target.value)
-                            }}
-                            label="Recipe Name"
-                        />
-                    </FormControl>
+                <label htmlFor={"search-name"}><MenuBookIcon /></label>
+                <FormControl variant="outlined" style={{marginRight: "10px"}}>
+                    <Autocomplete
+                        freeSolo
+                        autoHighlight
+                        options={List.recipes && Array.isArray(List.recipes) ? List.recipes : []}
+                        getOptionLabel={(option) => option || ""}
+                        sx={{ minWidth: 200 }}
+                        renderInput={(params) => <TextField {...params} label="Recipe Name" />}
+                        id="search-name"
+                        onChange={(event, newValue) => {
+                             onChangeFunction("name", newValue || event.target.value)
+                        }}
+                        onKeyUp={(event) => {
+                            onChangeFunction("name", event.target.value || "");
+                        }}
+                        value={FilterList.name ? FilterList.name : ""}
+                    />
+                </FormControl>
             </div>
             <div className={'container filter'}>
                 <label htmlFor={"cat"}><LocalDiningIcon /></label>

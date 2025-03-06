@@ -48,13 +48,18 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
             clove: "clove",
             bunch: "bunch",
         };
+        let opRec = {}; for (let key in rec){opRec[rec[key]] = key;}
         let doShorten = getComputedStyle(document.documentElement).getPropertyValue('--shorten-measurements');
-        function mapUnit(input) {
-            const unitMap = rec;
+        function mapUnit(input,unitMap) {
             const normalizedInput = input.trim().toLowerCase().replace(/s$/, '');
+            let found = Object.keys(unitMap).find(x => normalizedInput.includes(x))
+            if (found){
+                // console.log(`INCLUDES::${normalizedInput}::${found}`)
+                return normalizedInput.replace(found,unitMap[found])
+            }
             return unitMap[normalizedInput] || input; // Return mapped value or null if not found
         }
-        size = doShorten === 'true' ? mapUnit(i.size) : i.size;
+        size = doShorten === 'true' ? mapUnit(i.size,rec) : mapUnit(i.size,opRec);
     }
     if (i.type){
         return (

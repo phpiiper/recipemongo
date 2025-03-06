@@ -19,6 +19,7 @@ import Head from "next/head";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import SignIn from "@/components/SignIn"
+import Autocomplete from "@mui/material/Autocomplete";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -65,9 +66,10 @@ export default function Home({ isConnected }) {
     );
     const recipeListURL = `/api/recipes?${queryParams.toString()}`;
     // Use SWR for fetching data
-    const { data, error } = useSWR(recipeListURL, fetcher, { revalidateOnFocus: false });
+    const { data, error, isLoading } = useSWR(recipeListURL, fetcher, { revalidateOnFocus: false });
     const { data: ingredients, error: ingredientsError } = useSWR(`${recipeListURL}&getIngredients=yes`, fetcher, { revalidateOnFocus: false });
     const { data: categories, error: categoriesError } = useSWR(`${recipeListURL}&getCategories=yes`, fetcher, { revalidateOnFocus: false });
+    const { data: recipesName, error: recipesError } = useSWR(`${recipeListURL}&getRecipes=yes`, fetcher, { revalidateOnFocus: false });
     // Fetch user preferences if authenticated
     const [userPrefs, setUserPrefs] = useState(null);
     useEffect(() => {
@@ -95,13 +97,24 @@ export default function Home({ isConnected }) {
                 <div id={"home-bar-search-bar"}>
                     <FormControl variant="outlined" style={{ width: "80%", display: "flex", gap:"0.5rem" , flexDirection: "row", alignItems: "center", marginLeft: "10%"}}>
                         <label htmlFor={"search-name-home-page"}><SearchIcon /></label>
-                        <TextField
+                        <Autocomplete
+                            freeSolo
+                            autoHighlight
+                            options={Array.isArray(recipesName) ? recipesName : []}
+                            getOptionLabel={(option) => option || ""}
+                            sx={{ minWidth: 200 }}
+                            renderInput={(params) => <TextField {...params} label="Recipe Name" />}
                             id="search-name-home-page"
+                            label={"recipe Name"}
                             className={"search-forms"}
                             placeholder="Search by name..."
-                            value={filterList.name}
-                            onChange={(event) => handleInputChange("name", event.target.value)}
-                            label="Recipe Name"
+                            onChange={(event, newValue) => {
+                                handleInputChange("name", newValue || event.target.value)
+                            }}
+                            onKeyUp={(event) => {
+                                handleInputChange("name", event.target.value || "");
+                            }}
+                            value={filterList.name ? filterList.name : ""}
                         />
                     </FormControl>
                 </div>
@@ -123,6 +136,9 @@ export default function Home({ isConnected }) {
                         ingredients: !ingredientsError
                             ? ingredients
                             : [],
+                        recipes: !recipesError
+                            ? recipesName
+                            : [],
                     }}
                     value={data?.length || ""}
                 />
@@ -130,7 +146,7 @@ export default function Home({ isConnected }) {
             </div>
 
             {/* Pass userPrefs to RecipeList */}
-            <RecipeList status={status} session={sessionData} recipes={data || []} userPrefs={userPrefs} />
+            <RecipeList status={status} session={sessionData} recipes={data || []} userPrefs={userPrefs} isLoading={isLoading}/>
             <Icon
                 btnText={"Back to Top"}
                 btnClass={"back-to-top"}

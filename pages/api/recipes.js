@@ -9,7 +9,7 @@ export default async (req, res) => {
         const db = client.db("recipes");
 
         // Extract query parameters
-        const { name, cat, ingredients, getCategories, getIngredients } = req.query;
+        const { name, cat, ingredients, getCategories, getIngredients, getRecipes } = req.query;
         let filters = {};
 
         // Check for valid session
@@ -26,7 +26,14 @@ export default async (req, res) => {
 
         // Handle name & category search with `$regex`
         if (name?.trim()) {
-            filters.name = { $regex: new RegExp(name.trim(), "i") }; // Case-insensitive regex search
+            let fname = name;
+            let ops = ["(",")",",","*","&","{","}","|","+","?","^",".","$","[","]"]
+            for (var i=0; i<ops.length; i++){
+                if (fname.includes(ops[i])) {
+                    fname = fname.replaceAll(ops[i],`\\${ops[i]}`)
+                }
+            }
+            filters.name = { $regex: new RegExp(fname, "i") }; // Case-insensitive regex search
         }
 
         if (cat?.trim()) {
@@ -85,6 +92,11 @@ export default async (req, res) => {
             return res.json(
                 ingredientList
             );
+        }
+        if (getRecipes === "yes") {
+            const recipes = await db.collection("recipelist")
+                .distinct("name", query);
+            return res.json(recipes.sort());
         }
 
         // Fetch matching recipes (handle empty filters gracefully)
