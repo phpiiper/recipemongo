@@ -10,6 +10,7 @@ import FormControl from '@mui/material/FormControl';
 
 
 export default function EditorPageMeta({recipe, categories, setRecipe, status, session}) {
+    const [amountError, setAmountError] = React.useState(false);
     // >>> HANDLERS <<< //
     const handleInputChange = (e, newValue) => {
         const { id } = e.target;
@@ -67,15 +68,25 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
                     value={recipe.cat}
                 />
 
-                <OutlinedInput
+
+                <TextField
                     id="servings"
-                    endAdornment={<InputAdornment
-                        position="end">servings</InputAdornment>}
-                    inputProps={{
-                        'aria-label': 'servings', 'type':'number', 'width': '2rem'
+                    value={recipe.servings}
+                    style={{
+                       'width': '4rem'
                     }}
-                    onChange={(e, newValue) => handleInputChange(e, newValue)}
-                    value={recipe.servings || 0}
+                    onChange={(event) => {
+                        handleInputChange(event);
+                        let valid = /^([0-9-]*)$/.test(event.target.value);
+                        if (valid) {
+                            setAmountError(false)
+                        } else {
+                            setAmountError(true)
+                        }
+                    }}
+                    label="Servings"
+                    error={amountError}
+                    helperText={amountError ? "Invalid Number" : undefined}
                 />
 
 

@@ -63,6 +63,19 @@ export default function RecipePage() {
         if (th > 0) {time += th + " hr" + (th>1 ? "s " : " ")}
         if (tm > 0) {time += tm + " min"}
     }
+    let servings = "";
+    if (data.servings){
+        let s = data.servings;
+        if (typeof s === "number") { servings = s*sizing }
+        if (typeof s === "string"){
+            if (s.includes("-")){
+                s = s.split("-").map(x => Number(x) * sizing);
+                servings = s.join(" - ")
+            } else {
+                if (Number(s)){ servings = Number(s)*sizing }
+            }
+        }
+    }
 
     return (<>
         <Head>
@@ -110,7 +123,7 @@ export default function RecipePage() {
                         />
                     <span className={"recipe-name"}>{data.name}</span>
                     <span className={"recipes-category"}>{data.cat}</span>
-                    {data.servings ? <span className={"recipe-serving-size"}>{!isNaN(data.servings) ? JSON.parse(data.servings)*sizing : 0} Serving{Number(data.servings) * sizing > 1 ? 's' : ''} </span> : <></>}
+                    {servings ? <span className={"recipe-serving-size"}>{servings} Serving{servings !== 1 ? "s" : ""} </span> : <></>}
                     <span className={"recipe-time"}>{time}</span>
                 </div>
             </div>
