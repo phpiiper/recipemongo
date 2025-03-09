@@ -12,8 +12,19 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
     }
     if (i.amount){
         let amt;
-        if (typeof i.amount === "string" && i.amount.includes("/")){
+        if (typeof i.amount === "string" && i.amount.includes("/") && !i.amount.includes("-")) {
             amt = new Fraction(i.amount).mul(finSizing)
+            // expect: 1/4, 1/8, etc (fractions)
+        }
+        else if (typeof i.amount === "string" && i.amount.includes("-")){
+        // expect: 1-2, 3/4-5/4
+            if (i.amount.includes("/")){
+                // expect 3/4-5/4
+                amt = i.amount.split("-").map(x => new Fraction(x).mul(finSizing).toFraction())
+            } else {
+                // expect 1-2, 3-4
+                amt = i.amount.split("-").map(x => Number(x) * finSizing)
+            }
             // expect: 1/4, 1/8, etc (fractions)
         }
         else if (typeof amt === "string" && !Number.isInteger(i.amount) && !i.amount.includes("/") && !i.amount.includes(".")){
@@ -42,7 +53,7 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
         let rec = {
             tablespoon: "tbs",
             teaspoon: "tsp",
-            pound: "lbs",
+            pound: "lb",
             ounce: "oz",
             cup: "cup",
             clove: "clove",
@@ -55,7 +66,13 @@ export default function Ingredient( {ingredient, ingIndex=0, sizing=1} ){
             let found = Object.keys(unitMap).find(x => normalizedInput.includes(x))
             if (found){
                 // console.log(`INCLUDES::${normalizedInput}::${found}`)
-                return normalizedInput.replace(found,unitMap[found])
+                let v = normalizedInput.replace(found,unitMap[found])
+                let plural = "";
+                // console.log(unitMap)
+                if (unitMap.tbs) {
+                    if (i.amount && Number(i.amount) && i.amount !== 1) {plural = "s"}
+                }
+                return v[0].toUpperCase() + v.substring(1) + plural
             }
             return unitMap[normalizedInput] || input; // Return mapped value or null if not found
         }

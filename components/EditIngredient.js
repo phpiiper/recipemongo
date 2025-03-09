@@ -39,12 +39,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
             if (!isNaN(ev) && Number(ev) === 0 && e.target.id !== "type") {
                 delete newIngr[e.target.id];
             } else {
-                if (e.target.id === "amount"){
-                    if (ev.split("-").filter(x => x.length > 0).length > 1) { ev = ev.split("-") }
-                    newIngr[e.target.id] = ev.trim ? ev.trim() : ev;
-                } else {
-                    newIngr[e.target.id] = ev.trim ? ev.trim() : ev;
-                }
+                newIngr[e.target.id] = ev;
             }
             setRecipe((prevRecipe) => ({
                 ...prevRecipe,
@@ -254,7 +249,7 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
                 value={Array.isArray(safeIngredient.amount) ? safeIngredient.amount.join("-") : safeIngredient.amount}
                 onChange={(event) => {
                     handleInputChange(event);
-                    let valid = /^([0-9/.-]*)$/.test(event.target.value.trim());
+                    let valid = /^([0-9/.-]*)$/.test(event.target.value);
                     if (valid) {
                         setAmountError(false)
                     } else {
