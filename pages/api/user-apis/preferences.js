@@ -36,11 +36,14 @@ export default async (req, res) => {
             const user = await db.collection("users").findOne({ user: userID });
             if (user) {
                 // Update the user's preferences in the database
-                await db.collection("users").updateOne(
+                const result = await db.collection("users").updateOne(
                     { user: userID },
                     { $set: { "prefs": prefs } }
                 );
-                return res.status(200).json({ message: "Preferences updated successfully" });
+                if (result.modifiedCount !== 1){
+                    return res.status(400).json({message: "No preferences were modified.", result, prefs})
+                }
+                return res.status(200).json({ message: "Preferences updated successfully: " + JSON.stringify(result) });
             } else {
                 return res.status(404).json({ message: "User not found" });
             }

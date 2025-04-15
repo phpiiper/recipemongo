@@ -141,29 +141,18 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
     };
 
     const addNew = (type) => {
-        // Define the new ingredient or category
-        let newType = type === "ingr" ? { ingredient: "New Ingredient" } : { type: "New Category", ingredients: [] };
-
-        // Clone the recipe to avoid direct mutation
+        let newType = type === "ingr" ? { ingredient: "" } : { type: "Group", ingredients: [] };
         let newRecipe = JSON.parse(JSON.stringify(recipe));
-
-        // Ensure Index is always an array
         const indexArray = Array.isArray(Index) ? Index : [Index];
 
-        // Function to recursively traverse and add new ingredient/category
         const addRecursively = (rec, indexArray) => {
             if (indexArray.length === 0) {
-                // When we reach the last level, we add the new type (ingredient or category)
-                if (!rec.ingredients) {
-                    rec.ingredients = [];
-                }
+                if (!rec.ingredients) { rec.ingredients = []; }
                 rec.ingredients.push(newType);
                 return true
             } else {
-                // Traverse to the next level
                 const nextIndex = indexArray[0];
                 if (rec.ingredients && rec.ingredients[nextIndex]) {
-                    // Recursively move to the next ingredient in the array
                     addRecursively(rec.ingredients[nextIndex], indexArray.slice(1));
                     return true
                 }
@@ -171,10 +160,8 @@ export default function EditIngredient({ ingredient = {}, recipe, Index, setReci
             return false
         };
 
-        // Start the recursion from the root of the recipe
         addRecursively(newRecipe, indexArray);
 
-        // Update the recipe state with the new structure
         setRecipe(newRecipe);
     };
 

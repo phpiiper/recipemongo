@@ -58,6 +58,7 @@ export default function Editor({ isConnected }) {
         notes: ""
     });
 
+    const [editingError, setEditingError] = useState(false);
     const [categories, setCategories] = useState([]);
     const [allRecipes, setAllRecipes] = useState([]);
     const [open, setOpen] = React.useState(false);
@@ -426,7 +427,7 @@ export default function Editor({ isConnected }) {
                 <h1>Recipes V4 Editor</h1>
             </div>
 
-            <EditorPageMeta recipe={recipe} categories={categories} setRecipe={setRecipe} status={status} session={data ? data : false}/>
+            <EditorPageMeta recipe={recipe} categories={categories} setRecipe={setRecipe} status={status} session={data ? data : false} setError={setEditingError}/>
 
             <div className={"container flex"}>
                 <Icon

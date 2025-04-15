@@ -15,6 +15,7 @@ export const UserPreferencesProvider = ({ children }) => {
     const [compactSize, setCompactSize] = useState('Standard');
     const [theme, setTheme] = useState('Light');
     const [highlight, setHighlight] = useState('#3669ef');
+    const [favorites, setFavorites] = useState([]);
     const DarkTheme = createTheme({
         palette: {
             mode: 'dark',
@@ -124,10 +125,10 @@ export const UserPreferencesProvider = ({ children }) => {
             else if (theme.includes("Light")){setThemeActual(LightTheme);}
             else {setThemeActual(BlankTheme) }
         }
-    }, [fontFamily, fontSize, iconBtnVisibility, shortenMeasurements, compactSize, theme, loading]);
+    }, [fontFamily, fontSize, iconBtnVisibility, shortenMeasurements, compactSize, theme, loading, favorites]);
 
     return (
-        <UserPreferencesContext.Provider value={{ fontFamily, setFontFamily, fontSize, setFontSize, iconBtnVisibility, setIconBtnVisibility, shortenMeasurements, setShortenMeasurements, compactSize, setCompactSize }}>
+        <UserPreferencesContext.Provider value={{ fontFamily, setFontFamily, fontSize, setFontSize, iconBtnVisibility, setIconBtnVisibility, shortenMeasurements, setShortenMeasurements, compactSize, setCompactSize, setFavorites, favorites }}>
             <ThemeProvider theme={themeActual}>
             {loading ? <div></div> : children}
             </ThemeProvider>

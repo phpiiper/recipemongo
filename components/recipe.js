@@ -3,8 +3,18 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import EditIcon from '@mui/icons-material/Edit';
 import Icon from "@/components/Icon";
 import fontColorContrast from "font-color-contrast";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useState, useEffect } from "react";
 
-export default function Recipe({ recipe, status, session, userPrefs }) {
+export default function Recipe({ recipe, status, session, userPrefs, setUserPrefs, functions={} }) {
+    const [isEffect, setIsEffect] = useState(false)
+    useEffect(() => {
+        if (isEffect && functions) {
+            const result = functions.savePreferences(userPrefs);
+        }
+    }, [isEffect]);
+
     let r = recipe;
     let time = "";
     if (r.time) {
@@ -35,6 +45,24 @@ export default function Recipe({ recipe, status, session, userPrefs }) {
             </a></span>
             <span className={'recipe-time'}>{time}</span>
             <div style={{ display: "flex", gap: "1rem" }}>
+                {status === "authenticated" ? (
+                    <Icon btnClass="icons-hidden" children={userPrefs && userPrefs.favorites.includes(r.id) ? <FavoriteIcon /> : <FavoriteBorderIcon />} clickEvent={() => {
+                        let newFavs;
+                        if (userPrefs.favorites.includes(r.id)) {
+                            // REMOVE RECIPE TO FAVORITES
+                            newFavs = userPrefs.favorites.filter(x => x !== r.id)
+                        } else {
+                            // ADD RECIPE TO FAVORITES
+                            newFavs = userPrefs.favorites.concat([r.id])
+                        }
+                        setUserPrefs((prevUserPrefs) => ({
+                            ...prevUserPrefs,
+                            favorites: newFavs,
+                        }))
+                        setIsEffect(true)
+
+                    }} btnText={"Favorite"} />
+                ) : <></>}
                 <Icon children={<MenuBookIcon />} href={`/recipes/${r.id}`} btnText={"View Recipe"} />
                 {status === "authenticated" && session.user.name === r.author ? (
                     <Icon children={<EditIcon />} href={`/editor?id=${r.id}`} btnText={"Edit Recipe"} />

@@ -39,7 +39,8 @@ export default function Preferences({ isConnected }) {
         iconTextHelp: true,
         shortenMeasurements: false,
         compactSize: "Standard",
-        theme: "Light"
+        theme: "Light",
+        favorites: []
     });
     const [categoryOptions, setCategoryOptions] = useState([]); // State for category options
 
@@ -49,8 +50,6 @@ export default function Preferences({ isConnected }) {
                 const response = await fetch('/api/user-apis/preferences');
                 const data = await response.json();
                 const updatedCategories = { ...data.categories };
-
-                // Set categories from the user preferences response
                 setUserPrefs({
                     ...data,
                     categories: updatedCategories,
@@ -64,7 +63,7 @@ export default function Preferences({ isConnected }) {
             try {
                 const response = await fetch('/api/recipes?getCategories=yes');
                 const categoriesData = await response.json();
-                setCategoryOptions(categoriesData); // Assuming the response is a list of categories
+                setCategoryOptions(categoriesData);
             } catch (error) {
                 console.error("Error fetching categories:", error);
             }
@@ -381,9 +380,6 @@ export default function Preferences({ isConnected }) {
                     /*
 
                     FUTURE IMPLEMENTATIONS
-                    >>> Check:
-                        - size recipes on homepage based on font-size
-                        - predetermined small, normal, larger
                     >>> Favorites:
                         - view favorites
                         - filter for favorites

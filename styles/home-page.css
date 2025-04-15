@@ -108,6 +108,7 @@
     align-items: center;
 
     border: 2px solid var(--fc-main); border-radius: 2px;
+    overflow-x: auto;
 }
 .recipe-category {
     font-size: 0.85rem;

@@ -40,7 +40,8 @@ export default async (req, res) => {
                         iconTextHelp: true,
                         shortenMeasurements: false,
                         compactSize: "Standard",
-                        theme: "Light"
+                        theme: "Light",
+                        favorites: []
                     }
 
                 const recipes = await db.collection("users").insertOne(acc);
