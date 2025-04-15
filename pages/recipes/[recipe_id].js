@@ -21,6 +21,8 @@ import ContentPasteGoOutlinedIcon from "@mui/icons-material/ContentPasteGoOutlin
 import RemoveIcon from "@mui/icons-material/Remove";
 import KeyboardDoubleArrowUpOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowUpOutlined";
 import KeyboardDoubleArrowDownOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowDownOutlined";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 
 const fetcher = (url) => fetch(url).then(res => res.json())
@@ -47,6 +49,50 @@ export default function RecipePage() {
             setVisibleSteps(true)
         }
     }, [data]);
+    const [isEffect, setIsEffect] = useState(false)
+    useEffect(() => {
+        if (isEffect) {
+            const result = savePreferences(userPrefs);
+        }
+    }, [isEffect]);
+
+
+    const [userPrefs, setUserPrefs] = useState(null);
+    useEffect(() => {
+        if (status === "authenticated" && sessionData.user) {
+            const fetchUserPrefs = async () => {
+                const response = await fetch(`/api/user-apis/preferences`);
+                const data = await response.json();
+                setUserPrefs(data);
+            };
+            fetchUserPrefs();
+        }
+    }, [status, sessionData]);
+
+
+    const savePreferences = async () => {
+        try {
+            const response = await fetch("/api/user-apis/preferences", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ prefs: userPrefs }),
+            });
+            if (response.ok) {
+                const result = await response.json();
+                // console.log("Preferences saved:", result.message);
+                return result
+            } else {
+                const errorData = await response.json();
+                // console.error("Error saving preferences:", errorData.message);
+                return errorData
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
     if (error) return (<div style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: "2rem", padding: "2rem"}}>
         <h2>Unknown Recipe (or invalid access)</h2>
         <button><a href={"/"}>GO BACK</a></button>
@@ -125,6 +171,24 @@ export default function RecipePage() {
                     <span className={"recipes-category"}>{data.cat}</span>
                     {servings ? <span className={"recipe-serving-size"}>{servings} Serving{servings !== 1 ? "s" : ""} </span> : <></>}
                     <span className={"recipe-time"}>{time}</span>
+                    {status === "authenticated" ? (
+                        <Icon btnClass="icons-hidden" children={userPrefs && userPrefs.favorites.includes(data.id) ? <FavoriteIcon /> : <FavoriteBorderIcon />} clickEvent={() => {
+                            let newFavs;
+                            if (userPrefs.favorites.includes(data.id)) {
+                                // REMOVE RECIPE TO FAVORITES
+                                newFavs = userPrefs.favorites.filter(x => x !== data.id)
+                            } else {
+                                // ADD RECIPE TO FAVORITES
+                                newFavs = userPrefs.favorites.concat([data.id])
+                            }
+                            setUserPrefs((prevUserPrefs) => ({
+                                ...prevUserPrefs,
+                                favorites: newFavs,
+                            }))
+                            setIsEffect(true)
+
+                        }} btnText={"Favorite"} />
+                    ) : <></>}
                 </div>
             </div>
             <div className={"mobile-only-viewer container"}>

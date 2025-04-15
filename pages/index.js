@@ -4,10 +4,9 @@ import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import useSWR from "swr";
-import { debounce } from "lodash"; // Import lodash for debouncing
+import { debounce } from "lodash";
 // ICONS
 import EditIcon from '@mui/icons-material/Edit';
-import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SearchIcon from '@mui/icons-material/Search';
@@ -20,49 +19,46 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import SignIn from "@/components/SignIn"
 import Autocomplete from "@mui/material/Autocomplete";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export const getServerSideProps = async () => {
     try {
         await client.connect();
-        return {
-            props: { isConnected: true },
-        };
+        return { props: { isConnected: true },  };
     } catch (e) {
         console.error(e);
-        return {
-            props: { isConnected: false },
-        };
+        return {  props: { isConnected: false },   };
     }
 };
 
 export default function Home({ isConnected }) {
     const { status, data: sessionData } = useSession();
-    const [filterList, setFilterList] = useState({   name: "", ingredients: "", cat: ""   });
-    const [debouncedSearch, setDebouncedSearch] = useState({ name: "", ingredients: "", cat: "" });
+    const [filterList, setFilterList] = useState({   name: "", ingredients: "", cat: "", showFavorites: false   });
+    const [debouncedSearch, setDebouncedSearch] = useState({ name: "", ingredients: "", cat: "", showFavorites: false });
     const debouncedUpdateSearch = useCallback(
         debounce((value, type) => {
             setDebouncedSearch((prev) => ({
                 ...prev,
-                [type]: value ? value.trim() : "",
+                [type]: typeof value === "boolean" ? value: (value ? value.trim() : ""),
             }));
         }, 500),
         []
     );
     const handleInputChange = (type, value) => {
         if (type === "reset"){
-            setFilterList({ name: "", ingredients: "", cat: "" });
-            setDebouncedSearch({ name: "", ingredients: "", cat: "" });
+            setFilterList({ name: "", ingredients: "", cat: "", showFavorites: false });
+            setDebouncedSearch({ name: "", ingredients: "", cat: "", showFavorites: false });
         } else {
             setFilterList((prev) => ({ ...prev, [type]: value }));
             debouncedUpdateSearch(value, type);
         }
     };
-    // Construct API URL dynamically (only add parameters if they have values)
+
     const queryParams = new URLSearchParams(
         Object.entries(debouncedSearch)
-            .filter(([_, value]) => value) // Remove empty values
+            .filter(([_, value]) => value)
     );
     const recipeListURL = `/api/recipes?${queryParams.toString()}`;
     // Use SWR for fetching data
@@ -82,6 +78,29 @@ export default function Home({ isConnected }) {
             fetchUserPrefs();
         }
     }, [status, sessionData]);
+
+    const savePreferences = async () => {
+        try {
+            const response = await fetch("/api/user-apis/preferences", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ prefs: userPrefs }),
+            });
+            if (response.ok) {
+                const result = await response.json();
+                // console.log("Preferences saved:", result.message);
+                return result
+            } else {
+                const errorData = await response.json();
+                // console.error("Error saving preferences:", errorData.message);
+                return errorData
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
 
     if (error) return <div>Failed to load: {JSON.stringify(error)}</div>;
     if (status === "loading") return <div>Loading...</div>;
@@ -103,13 +122,21 @@ export default function Home({ isConnected }) {
                             options={Array.isArray(recipesName) ? recipesName : []}
                             getOptionLabel={(option) => option || ""}
                             sx={{ minWidth: 200 }}
-                            renderInput={(params) => <TextField {...params} label="Recipe Name" />}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Recipe Name"
+                                />)}
                             id="search-name-home-page"
                             label={"recipe Name"}
                             className={"search-forms"}
                             placeholder="Search by name..."
                             onChange={(event, newValue) => {
-                                handleInputChange("name", newValue || event.target.value)
+                                let r = data.find(x => x.name === newValue);
+                                if (r){
+                                    window.location.href = `/recipes/${r.id}`
+                                }
+                                // handleInputChange("name", newValue || event.target.value)
                             }}
                             onKeyUp={(event) => {
                                 handleInputChange("name", event.target.value || "");
@@ -124,6 +151,11 @@ export default function Home({ isConnected }) {
                 {status === "authenticated" ? (<Icon children={<AccountBoxIcon />} href={"/preferences"} btnText={"Preferences"} />) : <></>}
                 {status === "authenticated" ? (
                     <Icon children={<EditIcon />} href={"/editor"} btnText={"Create Recipe"} />
+                ) : <></>}
+                {status === "authenticated" && process.env.NODE_ENV !== 'production' ? (
+                    <Icon children={<FavoriteIcon />} clickEvent={()=> {
+                        console.log(userPrefs)
+                    }} btnText={"Print Prefs"} />
                 ) : <></>}
 
                 <Filters
@@ -141,12 +173,24 @@ export default function Home({ isConnected }) {
                             : [],
                     }}
                     value={data?.length || ""}
+                    recipes={data}
+                    userPrefs={userPrefs}
                 />
             </div>
             </div>
 
             {/* Pass userPrefs to RecipeList */}
-            <RecipeList status={status} session={sessionData} recipes={data || []} userPrefs={userPrefs} isLoading={isLoading}/>
+            <RecipeList
+                status={status}
+                session={sessionData}
+                recipes={data || []}
+                userPrefs={userPrefs}
+                isLoading={isLoading}
+                setUserPrefs={setUserPrefs}
+                functions={{
+                    savePreferences: savePreferences
+                }}
+            />
             <Icon
                 btnText={"Back to Top"}
                 btnClass={"back-to-top"}

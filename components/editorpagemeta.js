@@ -9,7 +9,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 
 
-export default function EditorPageMeta({recipe, categories, setRecipe, status, session}) {
+export default function EditorPageMeta({recipe, categories, setRecipe, status, session, setError}) {
     const [amountError, setAmountError] = React.useState(false);
     // >>> HANDLERS <<< //
     const handleInputChange = (e, newValue) => {
@@ -79,9 +79,9 @@ export default function EditorPageMeta({recipe, categories, setRecipe, status, s
                         handleInputChange(event);
                         let valid = /^([0-9-]*)$/.test(event.target.value);
                         if (valid) {
-                            setAmountError(false)
+                            setAmountError(false);
                         } else {
-                            setAmountError(true)
+                            setAmountError(true);
                         }
                     }}
                     label="Servings"

@@ -12,8 +12,11 @@ import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import HelpIcon from '@mui/icons-material/Help';
 import Modal from "@mui/material/Modal";
-export default function Filters({FilterList, onChangeFunction, List, value=""}) {
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+export default function Filters({FilterList, onChangeFunction, List, value="", recipes, userPrefs}) {
     const [open, setOpen] = React.useState(false);
+    const [filterFavorites, setFilterFavorites] = React.useState(false)
     const [openHelpGuide, setOpenHelpGuide] = React.useState(false);
     const handleHelpClose = () => setOpenHelpGuide(false);
     const toggleDrawer = (newOpen) => () => {
@@ -31,7 +34,7 @@ export default function Filters({FilterList, onChangeFunction, List, value=""}) 
                             children={<CloseFullscreenIcon />}
                             clickEvent={() => {
                                 setOpen(false)
-                                }}
+                            }}
                             btnText={"Close"}
                         />
                         <Icon
@@ -92,6 +95,15 @@ export default function Filters({FilterList, onChangeFunction, List, value=""}) 
                     }
                 </div>
         <div className={'flex filter-list'}>
+            {userPrefs ? <Icon
+                children={filterFavorites ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                clickEvent={() => {
+                    setFilterFavorites(!filterFavorites)
+                        onChangeFunction("showFavorites", !filterFavorites)
+                }}
+                btnText={filterFavorites ? "Showing Favorites" : "Showing All"}
+            /> : <></>
+            }
             <div className={'container filter'}>
                 <label htmlFor={"search-name"}><MenuBookIcon /></label>
                 <FormControl variant="outlined" style={{marginRight: "10px"}}>
@@ -104,7 +116,10 @@ export default function Filters({FilterList, onChangeFunction, List, value=""}) 
                         renderInput={(params) => <TextField {...params} label="Recipe Name" />}
                         id="search-name"
                         onChange={(event, newValue) => {
-                             onChangeFunction("name", newValue || event.target.value)
+                            const r = recipes.find(x => x.name === newValue)
+                            if (r) {
+                                window.location.href = `recipes/${r.id}`
+                            }
                         }}
                         onKeyUp={(event) => {
                             onChangeFunction("name", event.target.value || "");

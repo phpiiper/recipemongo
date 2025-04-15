@@ -9,7 +9,7 @@ export default async (req, res) => {
         const db = client.db("recipes");
 
         // Extract query parameters
-        const { name, cat, ingredients, getCategories, getIngredients, getRecipes } = req.query;
+        const { name, cat, showFavorites, ingredients, getCategories, getIngredients, getRecipes } = req.query;
         let filters = {};
 
         // Check for valid session
@@ -52,6 +52,14 @@ export default async (req, res) => {
                     { "ingredients.ingredient": { $all: ingredientArray.map(ing => new RegExp(ing, "i")) } }, // Direct ingredient match
                     { "ingredients.ingredients.ingredient": { $all: ingredientArray.map(ing => new RegExp(ing, "i")) } } // Nested ingredient match
                 ];
+            }
+        }
+
+
+        if (showFavorites){
+            if (session.user){
+                const user = await db.collection('users').findOne({user: session.user.name})
+                filters.id = {"$in": user.prefs.favorites}
             }
         }
 
