@@ -14,15 +14,10 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useMediaQuery } from 'react-responsive'
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Modal from "@mui/material/Modal";
-import AddToQueueIcon from "@mui/icons-material/AddToQueue";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import CodeIcon from "@mui/icons-material/Code";
-import ContentPasteGoOutlinedIcon from "@mui/icons-material/ContentPasteGoOutlined";
-import RemoveIcon from "@mui/icons-material/Remove";
-import KeyboardDoubleArrowUpOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowUpOutlined";
-import KeyboardDoubleArrowDownOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowDownOutlined";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import {isMobile} from "react-device-detect";
 
 
 const fetcher = (url) => fetch(url).then(res => res.json())
@@ -48,7 +43,7 @@ export default function RecipePage() {
             setVisibleIngredient(true)
             setVisibleSteps(true)
         }
-    }, [data]);
+    }, [data,isMobile]);
     const [isEffect, setIsEffect] = useState(false)
     useEffect(() => {
         if (isEffect) {
@@ -68,7 +63,6 @@ export default function RecipePage() {
             fetchUserPrefs();
         }
     }, [status, sessionData]);
-
 
     const savePreferences = async () => {
         try {
@@ -131,6 +125,22 @@ export default function RecipePage() {
             <div className={"top"}>
                 <div className={"icon-btn-group row"}>
                     <Icon children={<HomeIcon />} href={"/"} btnText={"HOME"} />
+                    {status === "authenticated" ? (
+                        <Icon btnClass="icons-hidden" children={userPrefs && userPrefs.favorites.includes(data.id) ? <FavoriteIcon /> : <FavoriteBorderIcon />} clickEvent={() => {
+                            let newFavs;
+                            if (userPrefs.favorites.includes(data.id)) {
+                                newFavs = userPrefs.favorites.filter(x => x !== data.id)
+                            } else {
+                                newFavs = userPrefs.favorites.concat([data.id])
+                            }
+                            setUserPrefs((prevUserPrefs) => ({
+                                ...prevUserPrefs,
+                                favorites: newFavs,
+                            }))
+                            setIsEffect(true)
+
+                        }} btnText={"Favorite"} />
+                    ) : <></>}
                     {data.notes && data.notes.trim().length > 0 ?
                         <><Icon
                             children={<HelpOutlineIcon />}
@@ -171,24 +181,6 @@ export default function RecipePage() {
                     <span className={"recipes-category"}>{data.cat}</span>
                     {servings ? <span className={"recipe-serving-size"}>{servings} Serving{servings !== 1 ? "s" : ""} </span> : <></>}
                     <span className={"recipe-time"}>{time}</span>
-                    {status === "authenticated" ? (
-                        <Icon btnClass="icons-hidden" children={userPrefs && userPrefs.favorites.includes(data.id) ? <FavoriteIcon /> : <FavoriteBorderIcon />} clickEvent={() => {
-                            let newFavs;
-                            if (userPrefs.favorites.includes(data.id)) {
-                                // REMOVE RECIPE TO FAVORITES
-                                newFavs = userPrefs.favorites.filter(x => x !== data.id)
-                            } else {
-                                // ADD RECIPE TO FAVORITES
-                                newFavs = userPrefs.favorites.concat([data.id])
-                            }
-                            setUserPrefs((prevUserPrefs) => ({
-                                ...prevUserPrefs,
-                                favorites: newFavs,
-                            }))
-                            setIsEffect(true)
-
-                        }} btnText={"Favorite"} />
-                    ) : <></>}
                 </div>
             </div>
             <div className={"mobile-only-viewer container"}>
@@ -212,7 +204,8 @@ export default function RecipePage() {
                 />
             </div>
             <div className={"bot"}>
-                <div id={"steps-div"} style={{display: visibleSteps ? "flex" : "none"}}>
+            {   /*
+                <div id={"steps-div"} style={{display: visibleSteps ? "flex" : "none"}} >
                     <h1>STEPS</h1>
                     {data.steps.map((x,index) => <Step step={x} num={index+1} key={data.id + "-s-" + index} />) }
                 </div>
@@ -220,6 +213,31 @@ export default function RecipePage() {
                     <h1>INGREDIENTS</h1>
                     {ig.map((x,index) => <Ingredient ingredient={x} key={data.id + "-i-" + index} sizing={sizing} ingIndex={index}/>) }
                 </div>
+                */
+            }
+            <PanelGroup autoSaveId={"mongorecipes-recipe-panel"} direction={"horizontal"} className={"recipe-panel"}>
+                {visibleSteps && (<Panel
+                    defaultSize={60}
+                    minSize={30}
+                    collapsible={false}
+                    >
+                    <div id={"steps-div"}>
+                        <h1>STEPS</h1>
+                        {data.steps.map((x,index) => <Step step={x} num={index+1} key={data.id + "-s-" + index} />) }
+                    </div>
+                </Panel>)}
+                {!isPhone && (<PanelResizeHandle className={"panel-resize-handle"}/>) }
+                {visibleIngredient && (<Panel
+                    minSize={30}
+                    collapsible={false}
+                    >
+                    <div id={"ingredients-div"}>
+                        <h1>INGREDIENTS</h1>
+                        {ig.map((x,index) => <Ingredient ingredient={x} key={data.id + "-i-" + index} sizing={sizing} ingIndex={index}/>) }
+                    </div>
+                </Panel>
+                )}
+            </PanelGroup>
             </div>
             {isPhone ? <></> : <Icon
                 btnText={"Back to Top"}
