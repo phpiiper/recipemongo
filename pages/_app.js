@@ -1,5 +1,6 @@
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { SessionProvider } from "next-auth/react";
+import "react-resizable/css/styles.css";
 import "@/styles/globals.css";
 import "@/styles/home-page.css"
 import "@/styles/editor-page.css";
