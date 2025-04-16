@@ -168,7 +168,7 @@ export default function RecipePage() {
                             onKeyUp={(event) => {
                                 setSizing(event.target.value)
                             }}
-                            style={{ width: "4rem" }}
+                            style={{ width: "4rem", marginTop: "0.5rem" }}
                             inputProps={{
                                 'aria-label': 'sizing',
                                 'min': 0, 'step': 0.25,
