@@ -187,9 +187,7 @@ export default function Home({ isConnected }) {
                 userPrefs={userPrefs}
                 isLoading={isLoading}
                 setUserPrefs={setUserPrefs}
-                functions={{
-                    savePreferences: savePreferences
-                }}
+                savePreferences={savePreferences}
             />
             <Icon
                 btnText={"Back to Top"}
