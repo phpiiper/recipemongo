@@ -378,12 +378,7 @@ export default function Preferences({ isConnected }) {
                 ))}
                 {
                     /*
-
                     FUTURE IMPLEMENTATIONS
-                    >>> Favorites:
-                        - view favorites
-                        - filter for favorites
-                        - delete favorites
                     >>> Group Recipes:
                         - /create-group
                         - add to group | push to user.groups = [id,id,id]

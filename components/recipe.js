@@ -7,11 +7,12 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useState, useEffect } from "react";
 
-export default function Recipe({ recipe, status, session, userPrefs, setUserPrefs, functions={} }) {
+export default function Recipe({ recipe, status, session, userPrefs, setUserPrefs, savePreferences}) {
     const [isEffect, setIsEffect] = useState(false)
     useEffect(() => {
-        if (isEffect && functions) {
-            const result = functions.savePreferences(userPrefs);
+        if (isEffect && savePreferences) {
+            const result = savePreferences(userPrefs);
+            setIsEffect(false)
         }
     }, [isEffect]);
 
