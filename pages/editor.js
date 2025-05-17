@@ -14,6 +14,7 @@ import KeyboardDoubleArrowUpOutlinedIcon from '@mui/icons-material/KeyboardDoubl
 import KeyboardDoubleArrowDownOutlinedIcon from '@mui/icons-material/KeyboardDoubleArrowDownOutlined';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import AssistantOutlinedIcon from '@mui/icons-material/AssistantOutlined';
 // components
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -28,6 +29,10 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Confirm from "@/components/Confirm";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import {GoogleGenAI} from "@google/genai";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import axios from "axios";
 
 export const getServerSideProps = async () => {
     try {
@@ -77,6 +82,50 @@ export default function Editor({ isConnected }) {
         setOpenSnackBar(false);
     };
     // >>> END SNACKBAR <<< //
+
+
+
+    // >>> GEMMA AI FEATURE <<< ///
+    const [openPrompt, setOpenPrompt] = useState(false);
+    const handlePrompt = (value) => setOpenPrompt(value ? value : !openPrompt);
+
+    const [isWaiting, setIsWaiting] = useState(false);
+    const ai_function = async (url) => {
+    try {
+        setIsWaiting(true)
+        const response = await axios.get(`api/parseRecipe?url=${url}`)
+        const newRecipe = JSON.parse(response.data)
+        if (Object.keys(newRecipe).length === 0) {
+            setIsWaiting(false)
+            setSnackbarText("Invalid recipe URL. Please try again.")
+            setOpenSnackBar(true)
+            return
+        }
+
+        const allowedKeys = ["name", "cat", "time", "ingredients", "steps", "access", "notes"];
+        const updatedRecipe = allowedKeys.reduce((acc, key) => {
+            if (key in newRecipe) {
+                acc[key] = newRecipe[key];
+            }
+            return acc;
+        }, {});
+        setRecipe(prev => ({
+            ...prev,
+            ...updatedRecipe
+        }));
+        setSnackbarText("Successfully parsed recipe!")
+        setOpenSnackBar(true)
+        setIsWaiting(false)
+        setOpenPrompt(false)
+        return
+    } catch (error) {
+        console.log(error)
+        setIsWaiting(false)
+        setSnackbarText("Error parsing recipe. Please try again.")
+        setOpenSnackBar(true)
+        return
+    }
+    }
 
     useEffect(() => {
         if (status === "authenticated") {
@@ -381,6 +430,28 @@ export default function Editor({ isConnected }) {
                     btnText={recipe.author ? "Update Recipe" : "Save Recipe"}
                     clickEvent={handleOpenConf}
                 />
+                <Icon
+                    children={<AssistantOutlinedIcon />}
+                    btnText={"Parse Recipe"}
+                    clickEvent={() => handlePrompt(true)}
+                />
+                <Modal open={openPrompt} onClose={() => {setOpenPrompt(false)}}>
+                    <div id={"recipe-editor-ai-prompter"}>
+                        <h2>AI Feature (WIP)</h2>
+                        <p>Insert the link of a recipe (works best when on the print-ready page) and AI will parse out the recipe so you don't have to type anything. Always make sure to double check to make sure everything is exactly how you want it!</p>
+                        <TextField
+                            id={"prompt-url"}
+                            placeholder={"https://www.example.com/recipe"}
+                            disabled={isWaiting}
+                        />
+                        <Button
+                            onClick={() => ai_function(document.getElementById("prompt-url").value)}
+                            variant={"contained"}
+                            color={"primary"}
+                            disabled={isWaiting}
+                        >{isWaiting ? "Converting..." : "Convert"}</Button>
+                    </div>
+                </Modal>
                 {process.env.NODE_ENV !== 'production' ? <Icon
                     children={<CodeIcon />}
                     btnText={"Log Recipe"}
