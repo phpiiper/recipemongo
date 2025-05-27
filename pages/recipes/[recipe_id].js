@@ -18,6 +18,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import {isMobile} from "react-device-detect";
+import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 
 
 const fetcher = (url) => fetch(url).then(res => res.json())
@@ -178,9 +179,15 @@ export default function RecipePage() {
                             type={"number"}
                         />
                     <span className={"recipe-name"}>{data.name}</span>
-                    <span className={"recipes-category"}>{data.cat}</span>
+                    <span className={"recipe-category"}>{data.cat}</span>
                     {servings ? <span className={"recipe-serving-size"}>{servings} Serving{servings !== 1 ? "s" : ""} </span> : <></>}
                     <span className={"recipe-time"}>{time}</span>
+                    {data.url && <div className={"recipe-url"}>
+                        <a href={data.url} target={"_blank"}>
+                            <LinkOutlinedIcon />
+                            <span>Link</span>
+                        </a>
+                    </div>}
                 </div>
             </div>
             <div className={"mobile-only-viewer container"}>
@@ -204,17 +211,6 @@ export default function RecipePage() {
                 />
             </div>
             <div className={"bot"}>
-            {   /*
-                <div id={"steps-div"} style={{display: visibleSteps ? "flex" : "none"}} >
-                    <h1>STEPS</h1>
-                    {data.steps.map((x,index) => <Step step={x} num={index+1} key={data.id + "-s-" + index} />) }
-                </div>
-                <div id={"ingredients-div"} style={{display: visibleIngredient ? "flex" : "none"}}>
-                    <h1>INGREDIENTS</h1>
-                    {ig.map((x,index) => <Ingredient ingredient={x} key={data.id + "-i-" + index} sizing={sizing} ingIndex={index}/>) }
-                </div>
-                */
-            }
             <PanelGroup autoSaveId={"mongorecipes-recipe-panel"} direction={"horizontal"} className={"recipe-panel"}>
                 {visibleSteps && (<Panel
                     defaultSize={60}
