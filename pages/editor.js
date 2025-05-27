@@ -84,49 +84,6 @@ export default function Editor({ isConnected }) {
     // >>> END SNACKBAR <<< //
 
 
-
-    // >>> GEMMA AI FEATURE <<< ///
-    const [openPrompt, setOpenPrompt] = useState(false);
-    const handlePrompt = (value) => setOpenPrompt(value ? value : !openPrompt);
-
-    const [isWaiting, setIsWaiting] = useState(false);
-    const ai_function = async (url) => {
-    try {
-        setIsWaiting(true)
-        const response = await axios.get(`api/parseRecipe?url=${url}`)
-        const newRecipe = JSON.parse(response.data)
-        if (Object.keys(newRecipe).length === 0) {
-            setIsWaiting(false)
-            setSnackbarText("Invalid recipe URL. Please try again.")
-            setOpenSnackBar(true)
-            return
-        }
-
-        const allowedKeys = ["name", "cat", "time", "ingredients", "steps", "access", "notes"];
-        const updatedRecipe = allowedKeys.reduce((acc, key) => {
-            if (key in newRecipe) {
-                acc[key] = newRecipe[key];
-            }
-            return acc;
-        }, {});
-        setRecipe(prev => ({
-            ...prev,
-            ...updatedRecipe
-        }));
-        setSnackbarText("Successfully parsed recipe!")
-        setOpenSnackBar(true)
-        setIsWaiting(false)
-        setOpenPrompt(false)
-        return
-    } catch (error) {
-        console.log(error)
-        setIsWaiting(false)
-        setSnackbarText("Error parsing recipe. Please try again.")
-        setOpenSnackBar(true)
-        return
-    }
-    }
-
     useEffect(() => {
         if (status === "authenticated") {
             // Fetch all recipes when the session is authenticated
@@ -430,28 +387,6 @@ export default function Editor({ isConnected }) {
                     btnText={recipe.author ? "Update Recipe" : "Save Recipe"}
                     clickEvent={handleOpenConf}
                 />
-                <Icon
-                    children={<AssistantOutlinedIcon />}
-                    btnText={"Parse Recipe"}
-                    clickEvent={() => handlePrompt(true)}
-                />
-                <Modal open={openPrompt} onClose={() => {setOpenPrompt(false)}}>
-                    <div id={"recipe-editor-ai-prompter"}>
-                        <h2>AI Feature (WIP)</h2>
-                        <p>Insert the link of a recipe (works best when on the print-ready page) and AI will parse out the recipe so you don't have to type anything. Always make sure to double check to make sure everything is exactly how you want it!</p>
-                        <TextField
-                            id={"prompt-url"}
-                            placeholder={"https://www.example.com/recipe"}
-                            disabled={isWaiting}
-                        />
-                        <Button
-                            onClick={() => ai_function(document.getElementById("prompt-url").value)}
-                            variant={"contained"}
-                            color={"primary"}
-                            disabled={isWaiting}
-                        >{isWaiting ? "Converting..." : "Convert"}</Button>
-                    </div>
-                </Modal>
                 {process.env.NODE_ENV !== 'production' ? <Icon
                     children={<CodeIcon />}
                     btnText={"Log Recipe"}

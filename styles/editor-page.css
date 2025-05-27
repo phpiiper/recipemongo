@@ -72,21 +72,26 @@ input#servings {width: 2rem;}
     cursor: pointer;
     border-color: var(--fc-highlight);
 }
-#recipe-editor-helper, #recipe-editor-ai-prompter {
-    margin: 2rem;
-    padding: 1rem;
-    background-color: var(--bc-main);
-    height: calc(100% - 4rem);
-    display: flex; flex-direction: column;
-    gap: 0.5rem;
-    overflow: auto;
-}
 #recipe-editor-ai-prompter {
-    max-width: 700px;
     margin: 2rem auto;
     height: fit-content;
     border-radius: 4px;
+    display: flex; flex-direction: column;
  }
+#recipe-url-div {
+    display: flex; gap: 1rem;
+    align-items: center;
+    width: 100%;
+}
+#recipe-editor-helper {
+    background-color: var(--bc-main);
+    padding: 1rem;
+    margin: 2rem;
+    overflow-y: auto;
+    height: calc(100% - 4rem);
+    display: flex; flex-direction: column;
+    gap: 1rem;
+}
 #recipe-editor-helper .container {
     padding: 1rem; border: 2px solid var(--fc-main);
     display: flex; flex-direction: column;
